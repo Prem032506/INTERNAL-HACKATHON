@@ -1,0 +1,224 @@
+{
+  "states": [
+    {
+      "id": "AS",
+      "name": "Assam",
+      "capital": "Dispur / Guwahati",
+      "lat": 26.1445,
+      "lng": 91.7362,
+      "vulnerabilityScore": 68,
+      "riskStatus": "Moderate",
+      "keyHubs": ["Guwahati", "Dibrugarh", "Silchar", "Tezpur", "Jorhat"]
+    },
+    {
+      "id": "AR",
+      "name": "Arunachal Pradesh",
+      "capital": "Itanagar",
+      "lat": 27.0844,
+      "lng": 93.6053,
+      "vulnerabilityScore": 89,
+      "riskStatus": "Critical (Monsoon Landslides)",
+      "keyHubs": ["Itanagar", "Tawang", "Pasighat", "Ziro", "Tezu"]
+    },
+    {
+      "id": "ML",
+      "name": "Meghalaya",
+      "capital": "Shillong",
+      "lat": 25.5788,
+      "lng": 91.8933,
+      "vulnerabilityScore": 74,
+      "riskStatus": "High (Flash Floods / Fog)",
+      "keyHubs": ["Shillong", "Cherrapunji", "Tura", "Jowai", "Nongpoh"]
+    },
+    {
+      "id": "MN",
+      "name": "Manipur",
+      "capital": "Imphal",
+      "lat": 24.8170,
+      "lng": 93.9368,
+      "vulnerabilityScore": 82,
+      "riskStatus": "High (Single Highway Dependency)",
+      "keyHubs": ["Imphal", "Churachandpur", "Ukhrul", "Senapati", "Moreh"]
+    },
+    {
+      "id": "MZ",
+      "name": "Mizoram",
+      "capital": "Aizawl",
+      "lat": 23.7271,
+      "lng": 92.7176,
+      "vulnerabilityScore": 79,
+      "riskStatus": "High (Slope Collapse)",
+      "keyHubs": ["Aizawl", "Lunglei", "Champhai", "Kolasib", "Serchhip"]
+    },
+    {
+      "id": "NL",
+      "name": "Nagaland",
+      "capital": "Kohima",
+      "lat": 25.6751,
+      "lng": 94.1086,
+      "vulnerabilityScore": 85,
+      "riskStatus": "Critical (NH-29 Sinking Zones)",
+      "keyHubs": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha"]
+    },
+    {
+      "id": "TR",
+      "name": "Tripura",
+      "capital": "Agartala",
+      "lat": 23.8315,
+      "lng": 91.2868,
+      "vulnerabilityScore": 62,
+      "riskStatus": "Moderate (NH-8 Bottlenecks)",
+      "keyHubs": ["Agartala", "Udaipur", "Dharmanagar", "Kailashahar", "Belonia"]
+    },
+    {
+      "id": "SK",
+      "name": "Sikkim",
+      "capital": "Gangtok",
+      "lat": 27.3389,
+      "lng": 88.6065,
+      "vulnerabilityScore": 91,
+      "riskStatus": "Critical (NH-10 Teesta Floods & Landslides)",
+      "keyHubs": ["Gangtok", "Namchi", "Mangan", "Gyalshing", "Rangpo"]
+    }
+  ],
+  "strategicCorridors": [
+    {
+      "id": "COR-01",
+      "name": "Siliguri - Guwahati Expressway (NH-27)",
+      "type": "Arterial Lifeline (Chicken's Neck)",
+      "status": "Operational",
+      "riskLevel": "Low-Moderate",
+      "coordinates": [
+        [26.7271, 88.3953],
+        [26.5467, 89.0758],
+        [26.3328, 90.0034],
+        [26.1445, 91.7362]
+      ]
+    },
+    {
+      "id": "COR-02",
+      "name": "Guwahati - Shillong - Silchar (NH-6)",
+      "type": "Barak Valley Corridor",
+      "status": "Warning (Heavy Fog / Meghalaya Hills)",
+      "riskLevel": "High",
+      "coordinates": [
+        [26.1445, 91.7362],
+        [25.9056, 91.8800],
+        [25.5788, 91.8933],
+        [25.4484, 92.2030],
+        [24.8333, 92.7789]
+      ]
+    },
+    {
+      "id": "COR-03",
+      "name": "Dimapur - Kohima - Imphal Highway (NH-29 / NH-2)",
+      "type": "Nagaland-Manipur Lifeline",
+      "status": "Severe Disruption Risk (PAGALA PAHAR Landslide Zone)",
+      "riskLevel": "Critical",
+      "coordinates": [
+        [25.9068, 93.7273],
+        [25.7500, 93.9000],
+        [25.6751, 94.1086],
+        [25.2700, 94.0200],
+        [24.8170, 93.9368]
+      ]
+    },
+    {
+      "id": "COR-04",
+      "name": "Siliguri - Rangpo - Gangtok Highway (NH-10)",
+      "type": "Sikkim Lifeline",
+      "status": "Partially Blocked (Teesta River Basin Erosion)",
+      "riskLevel": "Critical",
+      "coordinates": [
+        [26.7271, 88.3953],
+        [26.9000, 88.4800],
+        [27.1767, 88.5306],
+        [27.3389, 88.6065]
+      ]
+    },
+    {
+      "id": "COR-05",
+      "name": "Guwahati - Tezpur - Bhalukpong - Tawang (NH-13 / Trans-Arunachal)",
+      "type": "High Altitude Defense & Supply",
+      "status": "Caution (Sela Pass Snow/Rockfall)",
+      "riskLevel": "High",
+      "coordinates": [
+        [26.1445, 91.7362],
+        [26.6528, 92.7926],
+        [27.0100, 92.6500],
+        [27.5000, 92.1500],
+        [27.5861, 91.8687]
+      ]
+    },
+    {
+      "id": "COR-06",
+      "name": "Silchar - Kolasib - Aizawl Highway (NH-306)",
+      "type": "Mizoram Supply Lifeline",
+      "status": "Operational",
+      "riskLevel": "Moderate",
+      "coordinates": [
+        [24.8333, 92.7789],
+        [24.2250, 92.6770],
+        [23.7271, 92.7176]
+      ]
+    }
+  ],
+  "activeIncidents": [
+    {
+      "id": "INC-8091",
+      "title": "Major Landslide on NH-29 (Kohima-Dimapur)",
+      "location": "Pagala Pahar Stretch, Nagaland",
+      "lat": 25.7800,
+      "lng": 93.9400,
+      "severity": "CRITICAL",
+      "type": "Landslide",
+      "reportedBy": "BRO Project Sewak",
+      "time": "22 mins ago",
+      "status": "Blocked",
+      "estimatedDelay": "+7.5 Hours",
+      "alternateRoute": "Via Wokha - Bokajan Bypass Route (NH-61)"
+    },
+    {
+      "id": "INC-8092",
+      "title": "Teesta River Flood Overwash on NH-10",
+      "location": "29th Mile, Kalimpong / Rangpo Border",
+      "lat": 27.0500,
+      "lng": 88.5100,
+      "severity": "HIGH",
+      "type": "Flash Flood",
+      "reportedBy": "Sikkim Disaster Management Authority",
+      "time": "45 mins ago",
+      "status": "Single Lane Passable",
+      "estimatedDelay": "+4.2 Hours",
+      "alternateRoute": "Via Lava - Gorubathan Secondary Hill Route"
+    },
+    {
+      "id": "INC-8093",
+      "title": "Bridge Structural Caution (12T Weight Restriction)",
+      "location": "Umiam River Bridge, Meghalaya",
+      "lat": 25.6600,
+      "lng": 91.9100,
+      "severity": "MODERATE",
+      "type": "Bridge Weakness",
+      "reportedBy": "PWD Meghalaya",
+      "time": "2 hours ago",
+      "status": "Heavy Vehicles Diverted",
+      "estimatedDelay": "+1.5 Hours",
+      "alternateRoute": "Via Umsning Bypass Road"
+    },
+    {
+      "id": "INC-8094",
+      "title": "Rockfall Incident near Sela Tunnel Approach",
+      "location": "West Kameng, Arunachal Pradesh",
+      "lat": 27.5100,
+      "lng": 92.1200,
+      "severity": "HIGH",
+      "type": "Rockfall",
+      "reportedBy": "BRO Project Vartak",
+      "time": "3 hours ago",
+      "status": "Clearing in Progress",
+      "estimatedDelay": "+3.8 Hours",
+      "alternateRoute": "Hold at Dirang Base Camp"
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "regions": [
+    {
+      "id": "NER_INDIA",
+      "name": "North Eastern Region (NER, India)",
+      "country": "India",
+      "centerLat": 26.2006,
+      "centerLng": 92.9376,
+      "zoom": 7,
+      "states": [
+        { "id": "AS", "name": "Assam", "capital": "Dispur / Guwahati", "lat": 26.1445, "lng": 91.7362, "vulnerabilityScore": 68, "riskStatus": "Moderate" },
+        { "id": "AR", "name": "Arunachal Pradesh", "capital": "Itanagar", "lat": 27.0844, "lng": 93.6053, "vulnerabilityScore": 89, "riskStatus": "Critical (Monsoon Landslides)" },
+        { "id": "ML", "name": "Meghalaya", "capital": "Shillong", "lat": 25.5788, "lng": 91.8933, "vulnerabilityScore": 74, "riskStatus": "High (Flash Floods)" },
+        { "id": "MN", "name": "Manipur", "capital": "Imphal", "lat": 24.8170, "lng": 93.9368, "vulnerabilityScore": 82, "riskStatus": "High (Highway Dependency)" },
+        { "id": "MZ", "name": "Mizoram", "capital": "Aizawl", "lat": 23.7271, "lng": 92.7176, "vulnerabilityScore": 79, "riskStatus": "High (Slope Collapse)" },
+        { "id": "NL", "name": "Nagaland", "capital": "Kohima", "lat": 25.6751, "lng": 94.1086, "vulnerabilityScore": 85, "riskStatus": "Critical (NH-29 Sinking Zones)" },
+        { "id": "TR", "name": "Tripura", "capital": "Agartala", "lat": 23.8315, "lng": 91.2868, "vulnerabilityScore": 62, "riskStatus": "Moderate" },
+        { "id": "SK", "name": "Sikkim", "capital": "Gangtok", "lat": 27.3389, "lng": 88.6065, "vulnerabilityScore": 91, "riskStatus": "Critical (NH-10 Teesta Floods)" }
+      ],
+      "corridors": [
+        {
+          "id": "COR-01",
+          "name": "Siliguri - Guwahati Arterial Expressway (NH-27)",
+          "type": "Arterial Lifeline (Chicken's Neck)",
+          "riskLevel": "Low-Moderate",
+          "coordinates": [[26.7271, 88.3953], [26.5467, 89.0758], [26.3328, 90.0034], [26.1445, 91.7362]]
+        },
+        {
+          "id": "COR-03",
+          "name": "Dimapur - Kohima - Imphal Highway (NH-29)",
+          "type": "Nagaland-Manipur Lifeline",
+          "riskLevel": "Critical",
+          "coordinates": [[25.9068, 93.7273], [25.7800, 93.9400], [25.6751, 94.1086], [24.8170, 93.9368]]
+        },
+        {
+          "id": "COR-04",
+          "name": "Siliguri - Rangpo - Gangtok Highway (NH-10)",
+          "type": "Sikkim Lifeline",
+          "riskLevel": "Critical",
+          "coordinates": [[26.7271, 88.3953], [27.0500, 88.5100], [27.3389, 88.6065]]
+        }
+      ],
+      "hubs": [
+        { "name": "Guwahati Central Hub", "lat": 26.1445, "lng": 91.7362 },
+        { "name": "Itanagar Depot", "lat": 27.0844, "lng": 93.6053 },
+        { "name": "Shillong Center", "lat": 25.5788, "lng": 91.8933 },
+        { "name": "Imphal Depot", "lat": 24.8170, "lng": 93.9368 },
+        { "name": "Aizawl Godown", "lat": 23.7271, "lng": 92.7176 },
+        { "name": "Kohima Base", "lat": 25.6751, "lng": 94.1086 },
+        { "name": "Agartala Terminal", "lat": 23.8315, "lng": 91.2868 },
+        { "name": "Gangtok Transit", "lat": 27.3389, "lng": 88.6065 }
+      ]
+    },
+    {
+      "id": "HIMALAYAN_ARC",
+      "name": "Northern Himalayan Arc (Ladakh, J&K, Uttarakhand, Himachal)",
+      "country": "India / Nepal",
+      "centerLat": 32.2000,
+      "centerLng": 77.2000,
+      "zoom": 7,
+      "states": [
+        { "id": "LDK", "name": "Ladakh", "capital": "Leh", "lat": 34.1526, "lng": 77.5771, "vulnerabilityScore": 92, "riskStatus": "Critical (Zoji La & Khardung La Snow Closures)" },
+        { "id": "JK", "name": "Jammu & Kashmir", "capital": "Srinagar", "lat": 34.0837, "lng": 74.7973, "vulnerabilityScore": 84, "riskStatus": "High (NH-44 Ramban Landslides)" },
+        { "id": "HP", "name": "Himachal Pradesh", "capital": "Shimla", "lat": 31.1048, "lng": 77.1734, "vulnerabilityScore": 86, "riskStatus": "Critical (Kullu-Manali Monsoon Flash Floods)" },
+        { "id": "UK", "name": "Uttarakhand", "capital": "Dehradun", "lat": 30.3165, "lng": 78.0322, "vulnerabilityScore": 88, "riskStatus": "Critical (Joshimath Sinking / Char Dham)" }
+      ],
+      "corridors": [
+        {
+          "id": "HIM-01",
+          "name": "Srinagar - Zoji La - Kargil - Leh Lifeline (NH-1)",
+          "type": "High Altitude Defense & Essential Lifeline",
+          "riskLevel": "Critical",
+          "coordinates": [[34.0837, 74.7973], [34.2800, 75.1500], [34.5500, 76.1300], [34.1526, 77.5771]]
+        },
+        {
+          "id": "HIM-02",
+          "name": "Manali - Atal Tunnel - Keylong - Sarchu Highway",
+          "type": "All-Weather Strategic Pass",
+          "riskLevel": "High",
+          "coordinates": [[32.2396, 77.1887], [32.3600, 77.1400], [32.5700, 77.0300], [32.9000, 77.5800]]
+        },
+        {
+          "id": "HIM-03",
+          "name": "Rishikesh - Devprayag - Joshimath - Badrinath (NH-7)",
+          "type": "Char Dham Disaster Vulnerable Corridor",
+          "riskLevel": "Critical",
+          "coordinates": [[30.0869, 78.2676], [30.1450, 78.5980], [30.5500, 79.5600], [30.7433, 79.4938]]
+        }
+      ],
+      "hubs": [
+        { "name": "Leh Defense Logistics Hub", "lat": 34.1526, "lng": 77.5771 },
+        { "name": "Srinagar Central Depot (J&K)", "lat": 34.0837, "lng": 74.7973 },
+        { "name": "Jammu Transit Base (J&K)", "lat": 32.7266, "lng": 74.8570 },
+        { "name": "Shimla Regional Logistics (HP)", "lat": 31.1048, "lng": 77.1734 },
+        { "name": "Manali High-Altitude Transit (HP)", "lat": 32.2396, "lng": 77.1887 },
+        { "name": "Dehradun Supply Gateway (UK)", "lat": 30.3165, "lng": 78.0322 },
+        { "name": "Rishikesh Lifeline Terminal (UK)", "lat": 30.0869, "lng": 78.2676 },
+        { "name": "Joshimath Emergency Camp (UK)", "lat": 30.5500, "lng": 79.5600 }
+      ]
+    },
+    {
+      "id": "EURO_ALPS",
+      "name": "European Alps Transit Network",
+      "country": "Switzerland / Italy / France / Austria",
+      "centerLat": 46.5000,
+      "centerLng": 8.5000,
+      "zoom": 7,
+      "states": [
+        { "id": "CH", "name": "Swiss Alps Transit", "capital": "Bern / Zurich", "lat": 46.8182, "lng": 8.2275, "vulnerabilityScore": 65, "riskStatus": "Gotthard Pass Heavy Snow" },
+        { "id": "IT_N", "name": "Northern Italy Alpine Region", "capital": "Milan / Turin", "lat": 45.4642, "lng": 9.1900, "vulnerabilityScore": 58, "riskStatus": "Brenner Pass Freight Queue" },
+        { "id": "FR_A", "name": "French Alps Corridor", "capital": "Grenoble / Chamonix", "lat": 45.1885, "lng": 5.7245, "vulnerabilityScore": 62, "riskStatus": "Mont Blanc Tunnel Maintenance" },
+        { "id": "AT_T", "name": "Tyrol Corridor (Austria)", "capital": "Innsbruck", "lat": 47.2692, "lng": 11.4041, "vulnerabilityScore": 60, "riskStatus": "Rockfall Caution" }
+      ],
+      "corridors": [
+        {
+          "id": "ALP-01",
+          "name": "Gotthard Motorway Corridor (A2 Switzerland)",
+          "type": "Trans-European North-South Axis",
+          "riskLevel": "High",
+          "coordinates": [[47.0500, 8.3000], [46.6000, 8.6000], [46.2000, 9.0000]]
+        },
+        {
+          "id": "ALP-02",
+          "name": "Brenner Pass Highway (A13/A22 Austria-Italy)",
+          "type": "Heavy Freight Lifeline",
+          "riskLevel": "Low-Moderate",
+          "coordinates": [[47.2692, 11.4041], [47.0000, 11.5000], [46.5000, 11.3500]]
+        }
+      ],
+      "hubs": [
+        { "name": "Zurich Central Logistics", "lat": 47.3769, "lng": 8.5417 },
+        { "name": "Milan Intermodal Terminal", "lat": 45.4642, "lng": 9.1900 },
+        { "name": "Innsbruck Alpine Depot", "lat": 47.2692, "lng": 11.4041 }
+      ]
+    },
+    {
+      "id": "ANDES_CORRIDOR",
+      "name": "South American Andes Mountain Passes",
+      "country": "Chile / Argentina / Peru",
+      "centerLat": -32.8000,
+      "centerLng": -70.0000,
+      "zoom": 7,
+      "states": [
+        { "id": "CL", "name": "Central Chile Corridors", "capital": "Santiago", "lat": -33.4489, "lng": -70.6693, "vulnerabilityScore": 76, "riskStatus": "Paso Los Libertadores Blizzard" },
+        { "id": "AR_M", "name": "Mendoza Andean Gateway", "capital": "Mendoza", "lat": -32.8895, "lng": -68.8458, "vulnerabilityScore": 72, "riskStatus": "Winter Snow Closure Risk" }
+      ],
+      "corridors": [
+        {
+          "id": "AND-01",
+          "name": "Paso Internacional Los Libertadores (Route 60/7)",
+          "type": "Trans-Andean Strategic Lifeline",
+          "riskLevel": "Critical",
+          "coordinates": [[-33.4489, -70.6693], [-32.8200, -70.0700], [-32.8895, -68.8458]]
+        }
+      ],
+      "hubs": [
+        { "name": "Santiago Distribution Hub (Chile)", "lat": -33.4489, "lng": -70.6693 },
+        { "name": "Los Andes Transit Depot (Chile)", "lat": -32.8300, "lng": -70.1000 },
+        { "name": "Mendoza Freight Base (Argentina)", "lat": -32.8895, "lng": -68.8458 },
+        { "name": "Uspallata Mountain Base (Argentina)", "lat": -32.8250, "lng": -69.3500 }
+      ]
+    },
+    {
+      "id": "ODISHA_GUNUPUR",
+      "name": "Odisha & Gunupur Sub-Division Lifeline Network",
+      "country": "India (Odisha)",
+      "centerLat": 19.0714,
+      "centerLng": 83.81488,
+      "zoom": 13,
+      "states": [
+        { "id": "GN_TOWN", "name": "Gunupur Town Center", "capital": "Gandhi Chowk", "lat": 19.0714, "lng": 83.81488, "vulnerabilityScore": 45, "riskStatus": "Operational (Urban Central Core)" },
+        { "id": "GN_SDH", "name": "Hospital & Healthcare Sector", "capital": "SDH Hospital Zone", "lat": 19.0717, "lng": 83.80931, "vulnerabilityScore": 72, "riskStatus": "High Priority (Emergency 24x7 Referral)" },
+        { "id": "GN_GIET", "name": "GIET Campus & University Zone", "capital": "Gobriguda SH-4", "lat": 19.0473, "lng": 83.8311, "vulnerabilityScore": 50, "riskStatus": "Moderate (Educational Hub)" },
+        { "id": "GN_RIVER", "name": "Vamsadhara River Corridor", "capital": "Bansadhara Bridge SH-4", "lat": 19.0664, "lng": 83.8258, "vulnerabilityScore": 84, "riskStatus": "Critical (Monsoon River Swell / Floods)" }
+      ],
+      "corridors": [
+        {
+          "id": "OD-01",
+          "name": "State Highway 4 (SH-4 Gunupur - Rayagada / Paralakhemundi)",
+          "type": "Arterial Highway & River Crossing",
+          "riskLevel": "Moderate",
+          "coordinates": [[19.0825, 83.8052], [19.0714, 83.81488], [19.0664, 83.8258], [19.0473, 83.8311]]
+        }
+      ],
+      "hubs": [
+        { "name": "Gandhi Chowk Town Center", "lat": 19.0714, "lng": 83.81488 },
+        { "name": "Gunupur Central Bus Station", "lat": 19.06926, "lng": 83.81228 },
+        { "name": "Govt. Sub-Divisional Hospital (SDH)", "lat": 19.0717, "lng": 83.80931 },
+        { "name": "GIET University Campus Hub", "lat": 19.0473, "lng": 83.8311 },
+        { "name": "Gunupur Railway Station", "lat": 19.0697, "lng": 83.81044 }
+      ]
+    }
+  ]
+}

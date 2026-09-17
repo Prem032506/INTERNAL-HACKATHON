@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  global-setu:
+    build: .
+    container_name: global-setu-platform
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      - NODE_ENV=production

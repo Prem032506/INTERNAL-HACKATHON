@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global-Setu | AI-Based Smart Logistics & Disaster Accessibility Intelligence Platform</title>
+  <meta name="description" content="Worldwide mission-critical AI logistics visibility, route accessibility intelligence, and disaster-resilient supply chain platform for mountain and vulnerable geographies.">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/map.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="bg-mesh-overlay"></div>
+
+  <div class="app-layout">
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 data-i18n="appTitle">Global-Setu <span class="badge-ner">GLOBAL INTELLIGENCE</span></h1>
+          <p class="brand-subtitle" data-i18n="appSubtitle">AI-Based Smart Logistics & Disaster Accessibility Intelligence Platform</p>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Global Region Selector Dropdown -->
+        <div style="display:flex; align-items:center; gap:0.4rem; background:rgba(255,255,255,0.04); border:1px solid var(--border-glass); padding:0.25rem 0.6rem; border-radius:var(--radius-md);">
+          <span style="font-size:0.85rem;">🌍</span>
+          <select id="global-region-select" style="background:transparent; border:none; color:var(--neon-cyan); font-family:var(--font-heading); font-size:0.82rem; font-weight:700; outline:none; cursor:pointer;">
+            <option value="NER_INDIA" style="background:#0b1424; color:#fff;">🇮🇳 North Eastern Region (NER, India)</option>
+            <option value="HIMALAYAN_ARC" style="background:#0b1424; color:#fff;">🏔️ Northern Himalayan Arc (Ladakh, J&K, HP, UK)</option>
+            <option value="EURO_ALPS" style="background:#0b1424; color:#fff;">🇪🇺 European Alps Corridor (CH, IT, FR, AT)</option>
+            <option value="ANDES_CORRIDOR" style="background:#0b1424; color:#fff;">🏔️ South American Andes (Chile, Argentina)</option>
+            <option value="ODISHA_GUNUPUR" style="background:#0b1424; color:#fff;">📍 Odisha & Gunupur Sector (SH-4 Lifeline)</option>
+          </select>
+        </div>
+
+        <nav class="nav-links">
+          <a href="index.html" class="nav-link-btn active">
+            <span>🗺️</span> Command Center
+          </a>
+          <button class="nav-link-btn" id="btn-open-vehicle-lookup" style="background:transparent;border:1px solid var(--neon-cyan);color:var(--neon-cyan);cursor:pointer;">
+            <span>🔍</span> Vehicle Registry Lookup
+          </button>
+          <a href="presentation.html" class="nav-link-btn">
+            <span>📊</span> Pitch PPT Deck
+          </a>
+          <a href="architecture.html" class="nav-link-btn">
+            <span>📐</span> Block Diagrams
+          </a>
+          <a href="document.html" class="nav-link-btn">
+            <span>📑</span> Solution Document
+          </a>
+        </nav>
+
+        <div class="system-status-pill">
+          <span class="live-dot"></span>
+          <span data-i18n="systemNormal">GLOBAL RADAR ACTIVE</span>
+        </div>
+
+        <!-- Language Selector Button -->
+        <button class="btn-icon" id="lang-selector-btn" title="Change Language / Select Language (11 Languages)">
+          <span id="current-lang-name" style="font-size:0.75rem;font-weight:800;">EN (Global)</span>
+        </button>
+
+        <!-- Offline Sync Indicator -->
+        <button class="btn-icon" id="btn-offline-sync" title="Offline Buffered Reports">
+          <span>📡</span>
+          <span class="badge-count" id="offline-queue-badge" style="display:none;">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Disruption & Emergency Ticker Bar -->
+    <div class="disruption-ticker-bar">
+      <div class="ticker-tag">
+        <span>⚠️</span> <span data-i18n="disruptionAlert">CRITICAL ALERTS</span>:
+      </div>
+      <div class="ticker-content">
+        <div class="ticker-item">
+          <strong>[NH-29 Nagaland, India]</strong> Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
+        </div>
+        <div class="ticker-item">
+          <strong>[NH-1 Ladakh/Kashmir]</strong> Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
+        </div>
+        <div class="ticker-item">
+          <strong>[A2 Gotthard, Switzerland]</strong> Heavy Alpine snowfall warning. Heavy freight metering active.
+        </div>
+        <div class="ticker-item">
+          <strong>[Paso Los Libertadores, Andes]</strong> Blizzard warning on international border pass. Standby clearance units deployed.
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard Body -->
+    <main class="dashboard-grid">
+      <!-- Left Sidebar: Regional Vulnerability Panel -->
+      <aside class="glass-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🏔️</span> <span data-i18n="vulnerabilityIndex">Regional Accessibility</span>
+          </div>
+          <span class="badge-ner" data-i18n="statesTracked">Worldwide</span>
+        </div>
+        <div class="panel-body">
+          <!-- Quick Metric Stats -->
+          <div class="metrics-row">
+            <div class="metric-card">
+              <span class="metric-title">Monitored Corridors</span>
+              <span class="metric-value" style="color:var(--neon-crimson);">18 Active</span>
+              <span class="metric-sub" style="color:#fca5a5;">4 Extreme Risk</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Humanitarian Convoys</span>
+              <span class="metric-value" style="color:var(--neon-emerald);">42 In-Transit</span>
+              <span class="metric-sub" style="color:#a7f3d0;">UN / Red Cross / NDRF</span>
+            </div>
+          </div>
+
+          <div class="metrics-row">
+            <div class="metric-card">
+              <span class="metric-title">Cold-Chain Vaccines</span>
+              <span class="metric-value" style="color:var(--neon-cyan);">4.2°C</span>
+              <span class="metric-sub" style="color:#bae6fd;">WHO Compliant</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Global Rain / Snow Risk</span>
+              <span class="metric-value" style="color:var(--neon-amber);">78% High</span>
+              <span class="metric-sub" style="color:#fde68a;">Extreme Weather</span>
+            </div>
+          </div>
+
+          <div style="margin: 0.75rem 0 0.4rem; font-size:0.75rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">
+            Sector Connectivity Health
+          </div>
+
+          <!-- List of Districts/Sectors -->
+          <div id="state-connectivity-list">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center Viewport: Interactive GIS Map & Route Sandbox -->
+      <section class="map-viewport-panel">
+        <!-- Floating Map Layer Controllers -->
+        <div class="map-floating-bar">
+          <button class="map-control-btn active" data-layer="dark">🌌 Dark Radar</button>
+          <button class="map-control-btn" data-layer="terrain">⛰️ Global Mountain Topo</button>
+          <button class="map-control-btn" data-layer="satellite">🛰️ Satellite InSAR</button>
+        </div>
+
+        <!-- Leaflet Map Container -->
+        <div id="ner-gis-map"></div>
+
+        <!-- Floating Bottom Quick Action Buttons -->
+        <div class="map-bottom-cta">
+          <button class="btn-primary-action" onclick="window.app.showRoutePlanner()">
+            <span>🧭</span> <span data-i18n="routeOptimizer">AI Route Optimizer</span>
+          </button>
+          <button class="btn-secondary-action" onclick="window.app.showFieldReportModal()">
+            <span>📷</span> <span data-i18n="fieldReport">Report Road Disruption</span>
+          </button>
+          <button class="btn-secondary-action" id="btn-simulate-disruption" style="border-color:var(--neon-crimson);color:#fca5a5;">
+            <span>⚡</span> <span data-i18n="simulateDisruption">Simulate Flash Disaster</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Sidebar: Live Fleet GPS Telematics & Disruption Feed -->
+      <aside class="glass-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🚚</span> <span data-i18n="fleetTracking">Live Fleet Telemetry</span>
+          </div>
+          <span class="system-status-pill" style="padding:2px 8px;font-size:0.65rem;">GPS ACTIVE</span>
+        </div>
+        <div class="panel-body" id="fleet-telemetry-feed">
+          <!-- Active Essential Fleet Cards -->
+          <div class="telemetry-card">
+            <div class="truck-header">
+              <span class="truck-id">UN-MED-101</span>
+              <span class="cargo-tag">WHO Vaccine Reefer</span>
+            </div>
+            <div class="truck-route">Regional Central Depot ➔ Mountain District Hospital</div>
+            <div class="truck-meta">
+              <span>Speed: <strong>48 km/h</strong></span>
+              <span>Temp: <strong style="color:var(--neon-emerald);">4.2°C</strong></span>
+              <span>ETA: <strong>18:45 Local</strong></span>
+            </div>
+          </div>
+
+          <div class="telemetry-card" style="border-color:rgba(239, 68, 68, 0.4);background:rgba(239, 68, 68, 0.05);">
+            <div class="truck-header">
+              <span class="truck-id" style="color:var(--neon-crimson);">EMRG-OXY-204 (SOS)</span>
+              <span class="cargo-tag" style="background:rgba(239,68,68,0.2);color:#ef4444;">Cryo Medical O2</span>
+            </div>
+            <div class="truck-route">Oxygen Generating Plant ➔ Highland Hospital</div>
+            <div class="truck-meta">
+              <span>Speed: <strong>22 km/h</strong></span>
+              <span>Cryo: <strong>-183°C</strong></span>
+              <span>Delay: <strong style="color:var(--neon-crimson);">+5.5 hrs</strong></span>
+            </div>
+            <p style="font-size:0.7rem;color:#fca5a5;margin-top:6px;line-height:1.3;">
+              ⚠️ <strong>Diverted:</strong> Mountain landslide ahead. AI routing via secondary pass bypass.
+            </p>
+          </div>
+
+          <div class="telemetry-card">
+            <div class="truck-header">
+              <span class="truck-id">WFP-FOOD-309</span>
+              <span class="cargo-tag" style="background:rgba(245,158,11,0.15);color:#f59e0b;">WFP Food Grain Relief</span>
+            </div>
+            <div class="truck-route">Strategic Grain Silo ➔ Emergency Food Bank</div>
+            <div class="truck-meta">
+              <span>Speed: <strong>38 km/h</strong></span>
+              <span>Cargo: <strong>450 Qtl</strong></span>
+              <span>ETA: <strong>20:30 Local</strong></span>
+            </div>
+          </div>
+
+          <div class="telemetry-card">
+            <div class="truck-header">
+              <span class="truck-id">RESCUE-007</span>
+              <span class="cargo-tag" style="background:rgba(16,185,129,0.15);color:#10b981;">Disaster Response</span>
+            </div>
+            <div class="truck-route">Emergency Depot ➔ Disaster Sector Base</div>
+            <div class="truck-meta">
+              <span>Speed: <strong>54 km/h</strong></span>
+              <span>Status: <strong>Priority Convoy</strong></span>
+              <span>ETA: <strong>19:10 Local</strong></span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Route Optimizer Modal -->
+  <div class="modal-backdrop" id="route-optimizer-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🧭</span> AI Disruption-Resilient Route Optimizer
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="route-planner-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" data-i18n="origin">Origin Logistics Hub</label>
+              <select class="form-select" id="route-origin">
+                <option value="Guwahati">Guwahati Central Gateway Hub</option>
+                <option value="Siliguri">Siliguri Strategic Logistics Depot</option>
+                <option value="Srinagar">Srinagar Base (Himalayan Arc)</option>
+                <option value="Zurich">Zurich Intermodal Hub (Alps)</option>
+                <option value="Santiago">Santiago Logistics Base (Andes)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="destination">Destination District / Terminal</label>
+              <select class="form-select" id="route-dest">
+                <option value="Kohima">Kohima Terminal</option>
+                <option value="Itanagar">Itanagar Civil Center</option>
+                <option value="Gangtok">Gangtok Transit Depot</option>
+                <option value="Leh">Leh High-Altitude Base</option>
+                <option value="Milan">Milan Freight Terminal</option>
+                <option value="Mendoza">Mendoza Trans-Andean Depot</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="commodityType">Essential Cargo Category</label>
+            <select class="form-select" id="route-cargo">
+              <option value="MEDICAL">Medical Vaccines, Insulin & Liquid O2 (High Priority / Cold Chain)</option>
+              <option value="FOOD_SECURITY">Humanitarian Food Grains & Rations (WFP / FCI)</option>
+              <option value="FUEL">POL Petroleum, Diesel & Aviation Fuel</option>
+              <option value="EMERGENCY">Disaster Relief Equipment, Boats & Comms (UN / Red Cross / NDRF)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary-action" style="width:100%;margin-top:0.5rem;">
+            <span>⚡</span> <span data-i18n="planRoute">Calculate Resilient Alternate Routes</span>
+          </button>
+        </form>
+
+        <div id="route-results-container" class="route-results-container">
+          <!-- Dynamically populated route cards -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Field Incident Reporting Modal -->
+  <div class="modal-backdrop" id="field-report-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>📷</span> Field Official Disruption & Road Damage Report
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="field-incident-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" data-i18n="incidentType">Disruption Type</label>
+              <select class="form-select" id="report-type">
+                <option value="Landslide">Landslide / Mudslide / Slope Sinking</option>
+                <option value="Flash Flood">Flash Flood / River Overwash</option>
+                <option value="Bridge Damage">Bridge Weakness / Load Limit Restriction</option>
+                <option value="Rockfall">High Altitude Rockfall / Avalanche / Snow Closure</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="locationName">Corridor / Mountain Pass Name</label>
+              <input type="text" class="form-input" id="report-location" value="Arterial Mountain Highway Km 124" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Incident Headline</label>
+            <input type="text" class="form-input" id="report-title" value="Major slope collapse blocking both carriageways" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Field Description & Clearance Estimate</label>
+            <textarea class="form-textarea" id="report-desc" rows="3" placeholder="Describe extent of debris, bridge condition, estimated clearance time..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="photoEvidence">Geo-Tagged Photo Evidence</label>
+            <div class="photo-upload-zone" onclick="document.getElementById('sim-file-input').click()">
+              <input type="file" id="sim-file-input" style="display:none;" accept="image/*">
+              <span>📸 Click to Capture / Upload Geo-Tagged Field Photograph</span>
+              <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">
+                Auto-tags GPS Latitude, Longitude, Altitude & Local Timestamp. Works 100% Offline in remote mountain passes worldwide.
+              </p>
+            </div>
+          </div>
+
+          <div class="modal-footer" style="padding:0;margin-top:0.5rem;border:none;">
+            <button type="submit" class="btn-primary-action" style="width:100%;">
+              <span>🚀</span> <span data-i18n="submitReport">Submit Geo-Tagged Incident to Central Command</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multilingual Selection Modal (11 Languages) -->
+  <div class="modal-backdrop" id="lang-modal">
+    <div class="modal-dialog" style="max-width:580px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🌐</span> Select Global Language (11 Supported)
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="lang-grid">
+          <div class="lang-card active" data-lang="en">
+            <span class="lang-name-native">English</span>
+            <span class="lang-name-en">Global Official</span>
+          </div>
+          <div class="lang-card" data-lang="es">
+            <span class="lang-name-native">Español</span>
+            <span class="lang-name-en">Spanish</span>
+          </div>
+          <div class="lang-card" data-lang="fr">
+            <span class="lang-name-native">Français</span>
+            <span class="lang-name-en">French</span>
+          </div>
+          <div class="lang-card" data-lang="de">
+            <span class="lang-name-native">Deutsch</span>
+            <span class="lang-name-en">German</span>
+          </div>
+          <div class="lang-card" data-lang="ja">
+            <span class="lang-name-native">日本語</span>
+            <span class="lang-name-en">Japanese</span>
+          </div>
+          <div class="lang-card" data-lang="zh">
+            <span class="lang-name-native">中文</span>
+            <span class="lang-name-en">Mandarin Chinese</span>
+          </div>
+          <div class="lang-card" data-lang="ar">
+            <span class="lang-name-native">العربية</span>
+            <span class="lang-name-en">Arabic</span>
+          </div>
+          <div class="lang-card" data-lang="hi">
+            <span class="lang-name-native">हिन्दी</span>
+            <span class="lang-name-en">Hindi</span>
+          </div>
+          <div class="lang-card" data-lang="as">
+            <span class="lang-name-native">অসমীয়া</span>
+            <span class="lang-name-en">Assamese</span>
+          </div>
+          <div class="lang-card" data-lang="bn">
+            <span class="lang-name-native">বাংলা</span>
+            <span class="lang-name-en">Bengali</span>
+          </div>
+          <div class="lang-card" data-lang="mni">
+            <span class="lang-name-native">মৈতৈলোন্</span>
+            <span class="lang-name-en">Manipuri / Meeteilon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Registry & Owner Lookup Modal -->
+  <div class="modal-backdrop" id="vehicle-lookup-modal">
+    <div class="modal-dialog" style="max-width:620px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🔍</span> Vehicle Registry & Owner Information Lookup
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.75rem;">
+          Query official databases across <strong>Ladakh, Uttarakhand, Himachal Pradesh, Jammu & Kashmir, Chile, Argentina, and Odisha</strong>.
+        </p>
+
+        <form id="vehicle-lookup-form" style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+          <input type="text" id="vehicle-lookup-input" class="form-input" placeholder="e.g. LA-01-AB-1021, UK-01-AB-1021, HP-01-A-1021, JK-01-AB-1021, AB 102 AA, AB-CD-21" style="flex:1;" required>
+          <button type="submit" class="btn-primary-action" style="white-space:nowrap;padding:0.5rem 1rem;">
+            <span>🔎</span> Search Master DB
+          </button>
+        </form>
+
+        <div style="margin-bottom:0.75rem;">
+          <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;">Quick Query Samples:</span>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.35rem;">
+            <button type="button" class="quick-plate-btn" data-plate="LA-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">LA-01-AB-1021 (Ladakh)</button>
+            <button type="button" class="quick-plate-btn" data-plate="UK-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">UK-01-AB-1021 (UK)</button>
+            <button type="button" class="quick-plate-btn" data-plate="HP-01-A-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">HP-01-A-1021 (HP)</button>
+            <button type="button" class="quick-plate-btn" data-plate="JK-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">JK-01-AB-1021 (JK)</button>
+            <button type="button" class="quick-plate-btn" data-plate="AB 102 AA" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">AB 102 AA (Argentina)</button>
+            <button type="button" class="quick-plate-btn" data-plate="AB-CD-21" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">AB-CD-21 (Chile)</button>
+            <button type="button" class="quick-plate-btn" data-plate="OD 18 AB 1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">OD 18 AB 1021 (Odisha)</button>
+          </div>
+        </div>
+
+        <div id="vehicle-lookup-result" style="display:none;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1rem;">
+          <!-- Result injected dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Offline Notification Toast -->
+  <div class="offline-sync-toast" id="offline-sync-toast">
+    <span>📡</span>
+    <span id="toast-message-text" style="font-size:0.85rem;color:var(--text-primary);">Data Synced Successfully</span>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Application JS Modules -->
+  <script src="js/i18n.js"></script>
+  <script src="js/ai-prediction.js"></script>
+  <script src="js/fleet-telemetry.js"></script>
+  <script src="js/field-report.js"></script>
+  <script src="js/map-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

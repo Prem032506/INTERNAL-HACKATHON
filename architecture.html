@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NER-Setu | System Architecture & Interactive Flowcharts</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .diagram-container {
+      padding: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .diagram-tabs {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .diagram-tab {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      color: var(--text-secondary);
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .diagram-tab:hover, .diagram-tab.active {
+      color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.12);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+    }
+
+    .diagram-view {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .diagram-view.active {
+      display: block;
+      animation: modal-fade-in 0.3s ease;
+    }
+
+    /* SVG Flow Diagram Styling */
+    .flow-svg {
+      width: 100%;
+      height: auto;
+      min-height: 480px;
+    }
+
+    .diagram-node {
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .diagram-node:hover {
+      filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.6));
+    }
+
+    .diagram-node rect, .diagram-node polygon {
+      transition: fill 0.2s ease, stroke 0.2s ease;
+    }
+
+    .diagram-node:hover rect {
+      stroke: var(--neon-cyan) !important;
+      stroke-width: 2.5px !important;
+    }
+
+    /* Node Detail Inspection Panel */
+    .node-detail-panel {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-md);
+      background: rgba(11, 20, 36, 0.9);
+      border: 1px solid var(--border-glass);
+      display: none;
+    }
+
+    .node-detail-panel.active {
+      display: block;
+      animation: modal-fade-in 0.25s ease;
+    }
+
+    .detail-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      background: rgba(0, 242, 254, 0.15);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh-overlay"></div>
+
+  <div class="app-layout">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>NER-Setu <span class="badge-ner">ARCHITECTURE</span></h1>
+          <p class="brand-subtitle">System Block Diagrams, Operational Flowcharts & ML Pipelines</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link-btn"><span>🗺️</span> Command Center</a>
+        <a href="presentation.html" class="nav-link-btn"><span>📊</span> Pitch PPT Deck</a>
+        <a href="architecture.html" class="nav-link-btn active"><span>📐</span> Block Diagrams</a>
+        <a href="document.html" class="nav-link-btn"><span>📑</span> Solution Document</a>
+      </nav>
+    </header>
+
+    <main class="diagram-container">
+      <div class="diagram-tabs">
+        <button class="diagram-tab active" data-tab="tab-system-arch">
+          🏗️ 1. High-Level System Architecture
+        </button>
+        <button class="diagram-tab" data-tab="tab-operational-flow">
+          ⚡ 2. End-to-End Operational Workflow
+        </button>
+        <button class="diagram-tab" data-tab="tab-ml-pipeline">
+          🧠 3. AI/ML Disruption Prediction Pipeline
+        </button>
+        <button class="diagram-tab" data-tab="tab-offline-sync">
+          📴 4. Offline-First PWA Synchronization
+        </button>
+      </div>
+
+      <!-- TAB 1: High Level System Architecture -->
+      <section class="diagram-view active" id="tab-system-arch">
+        <h2 style="font-family:'Outfit'; font-size:1.4rem; margin-bottom:0.5rem; color:var(--text-primary);">
+          High-Level Tiered System Architecture
+        </h2>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+          Click any block node to view technical stack specifications, data formats, and protocols.
+        </p>
+
+        <svg class="flow-svg" viewBox="0 0 1000 520">
+          <defs>
+            <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#4facfe" stop-opacity="0.2"/>
+            </linearGradient>
+            <linearGradient id="grad-emerald" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10b981" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#059669" stop-opacity="0.2"/>
+            </linearGradient>
+            <linearGradient id="grad-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#d97706" stop-opacity="0.2"/>
+            </linearGradient>
+            <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#6d28d9" stop-opacity="0.2"/>
+            </linearGradient>
+            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#00f2fe" />
+            </marker>
+          </defs>
+
+          <!-- LAYER 1: DATA INGESTION SOURCES -->
+          <g class="diagram-node" onclick="showNodeDetail('Data Ingestion Layer', 'Aggregates real-time feeds from IMD Doppler Radars, ISRO Bhuvan satellite DEM, GPS IoT fleet trackers, and BRO field control rooms.', 'Protocols: REST, WebSocket, MQTT, GeoJSON')">
+            <rect x="30" y="40" width="200" height="420" rx="14" fill="url(#grad-cyan)" stroke="#00f2fe" stroke-width="1.5" />
+            <text x="130" y="75" fill="#00f2fe" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Outfit', sans-serif">1. DATA SOURCES</text>
+            
+            <!-- Sub-boxes -->
+            <rect x="45" y="100" width="170" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="130" y="128" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">IMD Weather & Rain</text>
+            <text x="130" y="148" fill="#94a3b8" font-size="10" text-anchor="middle">Rainfall, Radar, Warnings</text>
+
+            <rect x="45" y="180" width="170" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="130" y="208" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">ISRO Bhuvan / InSAR</text>
+            <text x="130" y="228" fill="#94a3b8" font-size="10" text-anchor="middle">DEM Elevation & Slope</text>
+
+            <rect x="45" y="260" width="170" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="130" y="288" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">GPS Fleet Telematics</text>
+            <text x="130" y="308" fill="#94a3b8" font-size="10" text-anchor="middle">Vaccine Reefer & Fuel Convoys</text>
+
+            <rect x="45" y="340" width="170" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="130" y="368" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">BRO & Police Reports</text>
+            <text x="130" y="388" fill="#94a3b8" font-size="10" text-anchor="middle">Landslide, Bridge Damage</text>
+          </g>
+
+          <!-- ARROWS 1 -> 2 -->
+          <line x1="230" y1="250" x2="275" y2="250" stroke="#00f2fe" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- LAYER 2: AI & ANALYTICS ENGINE -->
+          <g class="diagram-node" onclick="showNodeDetail('AI & Analytics Engine', 'Houses the core intelligence models: XGBoost Landslide Risk Scoring, Graph Neural Network (GNN) Road Corridor Network, and Constrained A* Rerouting Engine.', 'Tech: Python FastAPI, PyTorch, NetworkX, ONNX Runtime')">
+            <rect x="280" y="40" width="220" height="420" rx="14" fill="url(#grad-emerald)" stroke="#10b981" stroke-width="1.5" />
+            <text x="390" y="75" fill="#10b981" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Outfit', sans-serif">2. AI & ML CORE</text>
+
+            <rect x="295" y="100" width="190" height="75" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="390" y="130" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Hazard Prediction Model</text>
+            <text x="390" y="150" fill="#94a3b8" font-size="10" text-anchor="middle">XGBoost Landslide Classifier</text>
+            <text x="390" y="165" fill="#10b981" font-size="9" text-anchor="middle">Accuracy: 91.4%</text>
+
+            <rect x="295" y="190" width="190" height="75" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="390" y="220" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Terrain-Aware Optimizer</text>
+            <text x="390" y="240" fill="#94a3b8" font-size="10" text-anchor="middle">Constrained A* with Slope Penalty</text>
+            <text x="390" y="255" fill="#00f2fe" font-size="9" text-anchor="middle">Bridge Tonnage & Ferry Logic</text>
+
+            <rect x="295" y="280" width="190" height="75" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="390" y="310" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Delay Estimation Engine</text>
+            <text x="390" y="330" fill="#94a3b8" font-size="10" text-anchor="middle">Historical Clearance Time ML</text>
+            <text x="390" y="345" fill="#f59e0b" font-size="9" text-anchor="middle">Dynamic ETA Recalibration</text>
+
+            <rect x="295" y="370" width="190" height="70" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="390" y="400" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Offline Sync Engine</text>
+            <text x="390" y="420" fill="#94a3b8" font-size="10" text-anchor="middle">IndexedDB Conflict Resolver</text>
+          </g>
+
+          <!-- ARROWS 2 -> 3 -->
+          <line x1="500" y1="250" x2="545" y2="250" stroke="#00f2fe" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- LAYER 3: STORAGE & API GATEWAY -->
+          <g class="diagram-node" onclick="showNodeDetail('Storage & API Layer', 'Central spatial data store with PostGIS, Redis in-memory cache for ultra-fast telemetry lookups, and secure REST/WebSocket API endpoints.', 'Tech: PostgreSQL + PostGIS, Redis, Node.js Gateway')">
+            <rect x="550" y="40" width="200" height="420" rx="14" fill="url(#grad-amber)" stroke="#f59e0b" stroke-width="1.5" />
+            <text x="650" y="75" fill="#f59e0b" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Outfit', sans-serif">3. BACKEND & APIS</text>
+
+            <rect x="565" y="100" width="170" height="90" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="650" y="130" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">PostGIS Spatial DB</text>
+            <text x="650" y="150" fill="#94a3b8" font-size="10" text-anchor="middle">Highway Geometry Layers</text>
+            <text x="650" y="165" fill="#94a3b8" font-size="10" text-anchor="middle">Disruption Incident Archive</text>
+
+            <rect x="565" y="210" width="170" height="90" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="650" y="240" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Redis Telemetry Cache</text>
+            <text x="650" y="260" fill="#94a3b8" font-size="10" text-anchor="middle">Live GPS Stream (<50ms)</text>
+            <text x="650" y="275" fill="#94a3b8" font-size="10" text-anchor="middle">Cold-Chain Temp Heartbeats</text>
+
+            <rect x="565" y="320" width="170" height="90" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="650" y="350" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">API Gateway & Auth</text>
+            <text x="650" y="370" fill="#94a3b8" font-size="10" text-anchor="middle">Role-Based Access Control</text>
+            <text x="650" y="385" fill="#94a3b8" font-size="10" text-anchor="middle">JWT + AES-256 Encryption</text>
+          </g>
+
+          <!-- ARROWS 3 -> 4 -->
+          <line x1="750" y1="250" x2="795" y2="250" stroke="#00f2fe" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- LAYER 4: MULTI-CHANNEL CLIENTS -->
+          <g class="diagram-node" onclick="showNodeDetail('Multi-Stakeholder Client Apps', 'Deliver real-time visibility to State Disaster Management Authorities (SDMA), BRO, NDRF, convoy drivers, and civil supplies officials.', 'Channels: Web PWA, SMS Broadcast, WhatsApp Bot, VHF Relay')">
+            <rect x="800" y="40" width="180" height="420" rx="14" fill="url(#grad-purple)" stroke="#8b5cf6" stroke-width="1.5" />
+            <text x="890" y="75" fill="#8b5cf6" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Outfit', sans-serif">4. CLIENTS & ALERTS</text>
+
+            <rect x="815" y="100" width="150" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="890" y="128" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">Command Dashboard</text>
+            <text x="890" y="148" fill="#94a3b8" font-size="9" text-anchor="middle">State Level Operations</text>
+
+            <rect x="815" y="180" width="150" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="890" y="208" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">Offline Mobile PWA</text>
+            <text x="890" y="228" fill="#94a3b8" font-size="9" text-anchor="middle">Field Police & BRO Crews</text>
+
+            <rect x="815" y="260" width="150" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="890" y="288" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">Automated SMS/Voice</text>
+            <text x="890" y="308" fill="#94a3b8" font-size="9" text-anchor="middle">Multilingual Driver Alerts</text>
+
+            <rect x="815" y="340" width="150" height="65" rx="8" fill="#0b1424" stroke="rgba(255,255,255,0.1)"/>
+            <text x="890" y="368" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">VHF Radio Gateway</text>
+            <text x="890" y="388" fill="#94a3b8" font-size="9" text-anchor="middle">Emergency Broadcast</text>
+          </g>
+        </svg>
+
+        <div class="node-detail-panel" id="node-detail-panel">
+          <span class="detail-tag" id="detail-tech">Architecture Component</span>
+          <h3 id="detail-title" style="font-family:'Outfit'; font-size:1.15rem; color:var(--text-primary); margin-bottom:0.4rem;">
+            Click any block above to inspect
+          </h3>
+          <div id="detail-desc" style="font-size:0.88rem; color:var(--text-secondary); line-height:1.5;">
+            Explore the architecture tiers by clicking on the interactive nodes.
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: Operational Flow -->
+      <section class="diagram-view" id="tab-operational-flow">
+        <h2 style="font-family:'Outfit'; font-size:1.4rem; margin-bottom:0.5rem; color:var(--text-primary);">
+          End-to-End Operational Disruption & Rerouting Workflow
+        </h2>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+          How the platform senses, assesses, resolves, and tracks logistics disruption events across NER corridors.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="feature-box" style="display:flex; flex-direction:row; align-items:center; gap:1.5rem;">
+            <div style="font-size:2rem;">🌧️</div>
+            <div>
+              <strong style="color:var(--neon-cyan); font-size:1.05rem;">Step 1: Disruption Sensed & Forecasted</strong>
+              <p style="font-size:0.85rem; color:#94a3b8; margin-top:0.25rem;">
+                Heavy rainfall threshold (>85mm/day) breached in West Kameng or Pagala Pahar. Satellite radar and IoT rain gauges trigger early hazard alert.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-box" style="display:flex; flex-direction:row; align-items:center; gap:1.5rem;">
+            <div style="font-size:2rem;">🧠</div>
+            <div>
+              <strong style="color:var(--neon-emerald); font-size:1.05rem;">Step 2: AI Hazard Classification & Impact Zone Calculation</strong>
+              <p style="font-size:0.85rem; color:#94a3b8; margin-top:0.25rem;">
+                XGBoost evaluates slope gradient, soil moisture, and historical inventory, determining a <strong>88% Landslide Vulnerability</strong> on NH-29.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-box" style="display:flex; flex-direction:row; align-items:center; gap:1.5rem;">
+            <div style="font-size:2rem;">🧭</div>
+            <div>
+              <strong style="color:var(--neon-amber); font-size:1.05rem;">Step 3: Constrained Dynamic Multimodal Rerouting</strong>
+              <p style="font-size:0.85rem; color:#94a3b8; margin-top:0.25rem;">
+                Terrain-aware optimizer generates alternate bypass via Bokajan-Wokha corridor (NH-61), verifying bridge weight limit (>30T) for cryogenic medical tankers.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-box" style="display:flex; flex-direction:row; align-items:center; gap:1.5rem;">
+            <div style="font-size:2rem;">📡</div>
+            <div>
+              <strong style="color:#a78bfa; font-size:1.05rem;">Step 4: Automated Dispatch & Driver Notification</strong>
+              <p style="font-size:0.85rem; color:#94a3b8; margin-top:0.25rem;">
+                Driver in-cab navigation recalculates ETA. Multilingual voice alert sent in Assamese/Nagamese. BRO Task Force and Assam Rifles checkpost notified.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-box" style="display:flex; flex-direction:row; align-items:center; gap:1.5rem;">
+            <div style="font-size:2rem;">✅</div>
+            <div>
+              <strong style="color:var(--neon-emerald); font-size:1.05rem;">Step 5: Delivery Fulfilled & Ground Verification</strong>
+              <p style="font-size:0.85rem; color:#94a3b8; margin-top:0.25rem;">
+                Supply reaches destination civil hospital without cold-chain breach. BRO uploads clearance photo via offline PWA upon road restoration.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: ML Pipeline -->
+      <section class="diagram-view" id="tab-ml-pipeline">
+        <h2 style="font-family:'Outfit'; font-size:1.4rem; margin-bottom:0.5rem; color:var(--text-primary);">
+          AI / ML Disruption Prediction & Graph Routing Pipeline
+        </h2>
+        <div class="grid-3col" style="margin-top:1.5rem;">
+          <div class="feature-box">
+            <h4 style="color:var(--neon-cyan);">1. Feature Engineering</h4>
+            <ul style="font-size:0.82rem; color:#94a3b8; margin-left:1rem; line-height:1.6;">
+              <li>3-Day Cumulative Rainfall (mm)</li>
+              <li>Antecedent Soil Moisture Saturation</li>
+              <li>SRTM Slope Gradient (Degrees)</li>
+              <li>Catchment Flow Accumulation</li>
+              <li>Historical GSI Landslide Hotspots</li>
+            </ul>
+          </div>
+
+          <div class="feature-box">
+            <h4 style="color:var(--neon-emerald);">2. Disruption Scoring Model</h4>
+            <ul style="font-size:0.82rem; color:#94a3b8; margin-left:1rem; line-height:1.6;">
+              <li>XGBoost Hazard Classifier</li>
+              <li>Graph Convolutional Network (GCN)</li>
+              <li>Time-Series LSTM for Flood Levels</li>
+              <li>Dynamic Risk Score: 0 - 100%</li>
+              <li>Precision: 92.1% | Recall: 89.8%</li>
+            </ul>
+          </div>
+
+          <div class="feature-box">
+            <h4 style="color:var(--neon-amber);">3. Constrained Optimization</h4>
+            <ul style="font-size:0.82rem; color:#94a3b8; margin-left:1rem; line-height:1.6;">
+              <li>Terrain-Weighted $A^*$ Algorithm</li>
+              <li>Bridge Capacity Constraint Filter</li>
+              <li>Cold-Chain Maximum Time Horizon</li>
+              <li>Multimodal Ferry Integration</li>
+              <li>Real-time ETA Recalculation</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: Offline Sync Flow -->
+      <section class="diagram-view" id="tab-offline-sync">
+        <h2 style="font-family:'Outfit'; font-size:1.4rem; margin-bottom:0.5rem; color:var(--text-primary);">
+          Offline-First Zero-Connectivity Synchronization Protocol
+        </h2>
+        <div class="grid-2col" style="margin-top:1.5rem;">
+          <div class="feature-box">
+            <h4 style="color:var(--neon-cyan);">Remote Mountain Shadow Zone</h4>
+            <p>1. BRO official or driver captures geo-tagged photo & incident status in remote gorge.<br>
+            2. PWA Service Worker intercepts request.<br>
+            3. Data serialized into <strong>IndexedDB local cache</strong>.<br>
+            4. User receives instant on-device receipt.</p>
+          </div>
+
+          <div class="feature-box">
+            <h4 style="color:var(--neon-emerald);">Connectivity Resumption</h4>
+            <p>1. Vehicle enters cell range or checkpost satellite WiFi.<br>
+            2. Window <code>online</code> event triggers Sync Queue.<br>
+            3. Idempotent batch upload to Central Cloud with timestamp resolution.<br>
+            4. Central GIS layers update in real time across the nation.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/diagrams.js"></script>
+</body>
+</html>
