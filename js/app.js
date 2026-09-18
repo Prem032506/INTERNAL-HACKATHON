@@ -166,6 +166,29 @@ class GlobalAppCoordinator {
       });
     }
 
+    // Dynamic Live Weather update on Hub selection change
+    const originSelect = document.getElementById('route-origin');
+    const destSelect = document.getElementById('route-dest');
+    if (originSelect && destSelect) {
+      const onHubChange = () => {
+        const o = originSelect.value;
+        const d = destSelect.value;
+        this.updateRouteWeatherCard(o, d);
+      };
+      originSelect.addEventListener('change', onHubChange);
+      destSelect.addEventListener('change', onHubChange);
+    }
+
+    // Live Satellite Meteorological Radar Refresh Button
+    const refreshWeatherBtn = document.getElementById('btn-refresh-weather');
+    if (refreshWeatherBtn) {
+      refreshWeatherBtn.addEventListener('click', () => {
+        const o = document.getElementById('route-origin')?.value || 'Guwahati';
+        const d = document.getElementById('route-dest')?.value || 'Kohima';
+        this.updateRouteWeatherCard(o, d, true);
+      });
+    }
+
     // Photo File Input Listener
     const photoInput = document.getElementById('sim-file-input');
     if (photoInput) {
@@ -226,6 +249,7 @@ class GlobalAppCoordinator {
     if (cargoSelect) cargoSelect.value = cargo;
 
     if (modal) modal.classList.add('active');
+    this.updateRouteWeatherCard(origin, dest);
     this.handleRouteOptimization();
   }
 
@@ -308,6 +332,89 @@ class GlobalAppCoordinator {
     });
   }
 
+  // Real-Time Meteorological Telemetry Sync
+  async updateRouteWeatherCard(originHub, destHub, forceRefresh = false) {
+    const weatherCard = document.getElementById('route-weather-card');
+    if (!weatherCard || !window.aiEngine || typeof window.aiEngine.getCorridorWeatherTelemetry !== 'function') return;
+
+    const refreshBtn = document.getElementById('btn-refresh-weather');
+    if (refreshBtn) refreshBtn.classList.add('syncing');
+
+    const origNameEl = document.getElementById('weather-origin-name');
+    const destNameEl = document.getElementById('weather-dest-name');
+    if (origNameEl) origNameEl.textContent = `${originHub} Hub`;
+    if (destNameEl) destNameEl.textContent = `${destHub} Terminal`;
+
+    try {
+      const telemetry = await window.aiEngine.getCorridorWeatherTelemetry(originHub, destHub);
+      this.lastCorridorWeather = telemetry;
+
+      // Update Origin Box
+      if (telemetry.origin) {
+        const o = telemetry.origin;
+        const tempEl = document.getElementById('weather-origin-temp');
+        const iconEl = document.getElementById('weather-origin-icon');
+        const condEl = document.getElementById('weather-origin-cond');
+        const humEl = document.getElementById('weather-origin-hum');
+        const windEl = document.getElementById('weather-origin-wind');
+        const rainEl = document.getElementById('weather-origin-rain');
+
+        if (tempEl) tempEl.textContent = `${o.temp}°C`;
+        if (iconEl) iconEl.textContent = o.icon || '☀️';
+        if (condEl) condEl.textContent = o.condition || 'Clear';
+        if (humEl) humEl.textContent = `${o.humidity}%`;
+        if (windEl) windEl.textContent = `${o.windSpeed} km/h`;
+        if (rainEl) rainEl.textContent = `${o.precipitation} mm/h`;
+      }
+
+      // Update Destination Box
+      if (telemetry.dest) {
+        const d = telemetry.dest;
+        const tempEl = document.getElementById('weather-dest-temp');
+        const iconEl = document.getElementById('weather-dest-icon');
+        const condEl = document.getElementById('weather-dest-cond');
+        const humEl = document.getElementById('weather-dest-hum');
+        const windEl = document.getElementById('weather-dest-wind');
+        const rainEl = document.getElementById('weather-dest-rain');
+
+        if (tempEl) tempEl.textContent = `${d.temp}°C`;
+        if (iconEl) iconEl.textContent = d.icon || '🌤️';
+        if (condEl) condEl.textContent = d.condition || 'Clear';
+        if (humEl) humEl.textContent = `${d.humidity}%`;
+        if (windEl) windEl.textContent = `${d.windSpeed} km/h`;
+        if (rainEl) rainEl.textContent = `${d.precipitation} mm/h`;
+      }
+
+      // Update Corridor Atmospheric Assessment
+      if (telemetry.corridorSummary) {
+        const s = telemetry.corridorSummary;
+        const badgeEl = document.getElementById('weather-corridor-badge');
+        const adviceEl = document.getElementById('weather-corridor-advice');
+        const delayEl = document.getElementById('weather-corridor-delay');
+
+        if (badgeEl) {
+          badgeEl.textContent = s.status;
+          badgeEl.className = `corridor-status-badge ${s.statusClass || ''}`;
+          badgeEl.style.color = s.statusColor || 'var(--neon-emerald)';
+        }
+        if (adviceEl) adviceEl.textContent = s.advice;
+        if (delayEl) {
+          delayEl.textContent = `+${s.dynamicDelayHours} hrs`;
+          delayEl.style.color = s.statusColor || 'var(--neon-emerald)';
+        }
+      }
+
+      const timestampEl = document.getElementById('weather-timestamp-display');
+      if (timestampEl) {
+        timestampEl.textContent = `Updated: ${telemetry.corridorSummary?.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      }
+    } catch (err) {
+      console.warn('Weather telemetry update error:', err);
+    } finally {
+      if (refreshBtn) refreshBtn.classList.remove('syncing');
+    }
+  }
+
   // Dual-Mode Route Optimization (Seamless Offline Client-Side + Optional Backend)
   async handleRouteOptimization() {
     const origin = document.getElementById('route-origin')?.value || 'Guwahati';
@@ -318,12 +425,17 @@ class GlobalAppCoordinator {
     const container = document.getElementById('route-results-container');
     if (!container) return;
 
-    // Show quick computing state
+    // Show computing state
     container.innerHTML = `
       <div style="text-align:center;padding:1.25rem;color:var(--neon-cyan);font-family:var(--font-heading);font-weight:700;">
-        ⚡ Calculating terrain-weighted resilient corridors...
+        ⚡ Calculating terrain-weighted corridors with real-time satellite radar...
       </div>
     `;
+
+    // Ensure live weather telemetry is synced
+    if (!this.lastCorridorWeather || this.lastCorridorWeather.origin?.hub !== origin || this.lastCorridorWeather.dest?.hub !== dest) {
+      await this.updateRouteWeatherCard(origin, dest);
+    }
 
     // Attempt optional local backend ping (non-blocking, only if on HTTP localhost)
     if (window.location.protocol !== 'https:') {
@@ -340,11 +452,11 @@ class GlobalAppCoordinator {
       } catch (ignored) {}
     }
 
-    // Always compute robust client-side AI route representation
+    // Compute terrain-aware AI route representation with real-time satellite radar
     let result = null;
     try {
       if (window.aiEngine && typeof window.aiEngine.optimizeRoute === 'function') {
-        result = window.aiEngine.optimizeRoute(origin, dest, cargo, vehicle, strategy);
+        result = window.aiEngine.optimizeRoute(origin, dest, cargo, vehicle, strategy, this.lastCorridorWeather);
       }
     } catch (err) {
       console.warn('Client-side AI calculation error:', err);
@@ -377,6 +489,12 @@ class GlobalAppCoordinator {
       };
     }
 
+    const liveWeatherBadge = result.liveWeather ? `
+      <span class="status-badge" style="background:rgba(16,185,129,0.12);color:var(--neon-emerald);border:1px solid rgba(16,185,129,0.3);font-size:0.75rem;">
+        🛰️ Live Radar: ${result.liveWeather.originTemp}°C ➔ ${result.liveWeather.destTemp}°C (${result.liveWeather.status})
+      </span>
+    ` : '';
+
     container.innerHTML = `
       <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.75rem;">
         <span class="status-badge" style="background:rgba(0,242,254,0.12);color:var(--neon-cyan);border:1px solid rgba(0,242,254,0.25);font-size:0.75rem;">
@@ -385,6 +503,7 @@ class GlobalAppCoordinator {
         <span class="status-badge badge-normal" style="font-size:0.75rem;">
           ${result.vehicleLabel || '🚛 4x4 Fleet'}
         </span>
+        ${liveWeatherBadge}
       </div>
 
       <div class="route-card disrupted">
@@ -406,8 +525,8 @@ class GlobalAppCoordinator {
             <span class="stat-val" style="color:#ef4444;">${result.primary.totalTimeHours} hrs</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Delay</span>
-            <span class="stat-val">+${result.primary.weatherDelayHours} hrs</span>
+            <span class="stat-label">Weather Delay</span>
+            <span class="stat-val" style="color:#f87171;">+${result.primary.weatherDelayHours} hrs</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Hazard Risk</span>

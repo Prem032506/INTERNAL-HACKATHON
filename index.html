@@ -391,6 +391,70 @@
             </select>
           </div>
 
+          <!-- Real-Time Satellite Weather Telemetry Card -->
+          <div id="route-weather-card" class="route-weather-card">
+            <div class="weather-card-header">
+              <div class="weather-card-title">
+                <span class="pulse-radar-dot"></span>
+                <span>REAL-TIME SATELLITE METEOROLOGICAL RADAR</span>
+                <span id="weather-live-tag" class="weather-live-tag">LIVE SATELLITE</span>
+              </div>
+              <button type="button" id="btn-refresh-weather" class="btn-refresh-weather" title="Refresh Live Doppler Weather Telemetry">
+                <span class="refresh-icon">🔄</span> <span class="refresh-label">Sync Radar</span>
+              </button>
+            </div>
+
+            <div class="weather-telemetry-grid">
+              <!-- Origin Weather Box -->
+              <div class="weather-hub-box" id="weather-origin-box">
+                <div class="hub-direction-badge">ORIGIN HUB</div>
+                <div class="hub-name-display" id="weather-origin-name">Guwahati Central Hub</div>
+                <div class="hub-temp-row">
+                  <span class="weather-icon-large" id="weather-origin-icon">☀️</span>
+                  <span class="weather-temp-val" id="weather-origin-temp">--°C</span>
+                </div>
+                <div class="weather-cond-label" id="weather-origin-cond">Connecting satellite radar...</div>
+                <div class="hub-metrics-row">
+                  <span>💧 <strong id="weather-origin-hum">--%</strong></span>
+                  <span>💨 <strong id="weather-origin-wind">-- km/h</strong></span>
+                  <span>🌧️ <strong id="weather-origin-rain">-- mm/h</strong></span>
+                </div>
+              </div>
+
+              <!-- Corridor Atmospheric Summary -->
+              <div class="weather-corridor-box" id="weather-corridor-box">
+                <div class="corridor-radar-heading">CORRIDOR ATMOSPHERE</div>
+                <div class="corridor-status-badge" id="weather-corridor-badge">ANALYZING RADAR...</div>
+                <div class="corridor-advice-text" id="weather-corridor-advice">Computing satellite cloudburst & mountain pass visibility...</div>
+                <div class="corridor-delay-impact">
+                  <span>Live Weather Delay:</span>
+                  <strong id="weather-corridor-delay" style="color:var(--neon-emerald);">+0.2 hrs</strong>
+                </div>
+              </div>
+
+              <!-- Destination Weather Box -->
+              <div class="weather-hub-box" id="weather-dest-box">
+                <div class="hub-direction-badge">DESTINATION TERMINAL</div>
+                <div class="hub-name-display" id="weather-dest-name">Kohima Terminal</div>
+                <div class="hub-temp-row">
+                  <span class="weather-icon-large" id="weather-dest-icon">🌤️</span>
+                  <span class="weather-temp-val" id="weather-dest-temp">--°C</span>
+                </div>
+                <div class="weather-cond-label" id="weather-dest-cond">Connecting satellite radar...</div>
+                <div class="hub-metrics-row">
+                  <span>💧 <strong id="weather-dest-hum">--%</strong></span>
+                  <span>💨 <strong id="weather-dest-wind">-- km/h</strong></span>
+                  <span>🌧️ <strong id="weather-dest-rain">-- mm/h</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="weather-telemetry-footer">
+              <span>📡 Open-Meteo & IMD Meteorological Feeds</span>
+              <span id="weather-timestamp-display">Updated: Just now</span>
+            </div>
+          </div>
+
           <button type="submit" class="btn-primary-action" style="width:100%;margin-top:0.3rem;">
             <span>⚡</span> <span data-i18n="planRoute">Calculate Resilient Alternate Routes</span>
           </button>

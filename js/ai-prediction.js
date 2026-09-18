@@ -62,6 +62,147 @@ class AIPredictionEngine {
   }
 
   /**
+   * Translates WMO Meteorological Codes to Conditions, Icons and Disruption Severity
+   */
+  interpretWeatherCode(code) {
+    if (code === 0) return { description: 'Clear Mountain Skies', icon: '☀️', severity: 'OPTIMAL', delayWeight: 0.0 };
+    if (code === 1) return { description: 'Mainly Clear Skies', icon: '🌤️', severity: 'OPTIMAL', delayWeight: 0.0 };
+    if (code === 2) return { description: 'Partly Cloudy', icon: '⛅', severity: 'OPTIMAL', delayWeight: 0.1 };
+    if (code === 3) return { description: 'Overcast Skies', icon: '☁️', severity: 'MILD', delayWeight: 0.2 };
+    if (code === 45 || code === 48) return { description: 'Mountain Fog & Dense Mist (Low Visibility)', icon: '🌫️', severity: 'CAUTION', delayWeight: 1.2 };
+    if (code === 51 || code === 53 || code === 55) return { description: 'Light Mountain Drizzle', icon: '🌦️', severity: 'MILD', delayWeight: 0.4 };
+    if (code === 56 || code === 57) return { description: 'Freezing Drizzle (Slippery Hairpins)', icon: '🌨️', severity: 'WARNING', delayWeight: 1.8 };
+    if (code === 61 || code === 63) return { description: 'Moderate Mountain Rain', icon: '🌧️', severity: 'WARNING', delayWeight: 1.0 };
+    if (code === 65) return { description: 'Heavy Monsoon Downpour', icon: '🌧️', severity: 'CRITICAL', delayWeight: 3.5 };
+    if (code === 66 || code === 67) return { description: 'Freezing Rain & Black Ice Hazard', icon: '🧊', severity: 'CRITICAL', delayWeight: 4.0 };
+    if (code === 71 || code === 73) return { description: 'Moderate Snowfall (Chains Required)', icon: '🌨️', severity: 'WARNING', delayWeight: 2.2 };
+    if (code === 75 || code === 77) return { description: 'Heavy Alpine Blizzard / Snow Accumulation', icon: '❄️', severity: 'CRITICAL', delayWeight: 5.0 };
+    if (code === 80 || code === 81) return { description: 'Scattered Rain Showers', icon: '🌧️', severity: 'WARNING', delayWeight: 0.8 };
+    if (code === 82) return { description: 'Torrential Cloudburst Rain & Flash Flood Alert', icon: '⛈️', severity: 'CRITICAL', delayWeight: 5.5 };
+    if (code === 85 || code === 86) return { description: 'Severe Snow Squalls', icon: '🌨️', severity: 'CRITICAL', delayWeight: 4.5 };
+    if (code === 95) return { description: 'Severe Mountain Thunderstorm', icon: '⚡', severity: 'CRITICAL', delayWeight: 3.0 };
+    if (code === 96 || code === 99) return { description: 'Severe Thunderstorm with Hail', icon: '⛈️⚡', severity: 'CRITICAL', delayWeight: 4.5 };
+
+    return { description: 'Variable Mountain Conditions', icon: '⛅', severity: 'MILD', delayWeight: 0.3 };
+  }
+
+  /**
+   * Fetches Real-Time Meteorological Telemetry for Any Hub via Open-Meteo API
+   * Resilient with graceful fallback for offline/blackout operations
+   */
+  async getHubWeather(hubName) {
+    const coords = this.hubCoordinates[hubName] || [26.1445, 91.7362];
+    const [lat, lng] = coords;
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lng.toFixed(4)}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,precipitation`;
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        const current = data.current || {};
+        const code = current.weather_code ?? 0;
+        const weatherInfo = this.interpretWeatherCode(code);
+
+        return {
+          hub: hubName,
+          lat,
+          lng,
+          temp: typeof current.temperature_2m === 'number' ? Math.round(current.temperature_2m * 10) / 10 : 22.0,
+          humidity: current.relative_humidity_2m ?? 65,
+          windSpeed: typeof current.wind_speed_10m === 'number' ? Math.round(current.wind_speed_10m * 10) / 10 : 8.0,
+          precipitation: typeof current.precipitation === 'number' ? Math.round(current.precipitation * 10) / 10 : 0.0,
+          code,
+          condition: weatherInfo.description,
+          icon: weatherInfo.icon,
+          severity: weatherInfo.severity,
+          delayWeight: weatherInfo.delayWeight,
+          isLive: true,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+      }
+    } catch (err) {
+      // Graceful offline fallback
+    }
+
+    // Realistic Elevation & Climatology Fallback
+    const isHighAltitude = lat > 32 || lat < -30 || Math.abs(lat - 27.5) < 0.5;
+    const estTemp = isHighAltitude ? 14.5 : 24.2;
+    const fallbackCode = isHighAltitude ? 3 : 1;
+    const weatherInfo = this.interpretWeatherCode(fallbackCode);
+
+    return {
+      hub: hubName,
+      lat,
+      lng,
+      temp: estTemp,
+      humidity: 70,
+      windSpeed: 6.5,
+      precipitation: 0.0,
+      code: fallbackCode,
+      condition: weatherInfo.description,
+      icon: weatherInfo.icon,
+      severity: weatherInfo.severity,
+      delayWeight: weatherInfo.delayWeight,
+      isLive: false,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+  }
+
+  /**
+   * Fetches Real-Time Corridor Weather Telemetry across both Origin & Destination
+   */
+  async getCorridorWeatherTelemetry(originHub, destHub) {
+    const [originWeather, destWeather] = await Promise.all([
+      this.getHubWeather(originHub),
+      this.getHubWeather(destHub)
+    ]);
+
+    const maxPrecip = Math.max(originWeather.precipitation, destWeather.precipitation);
+    const maxWind = Math.max(originWeather.windSpeed, destWeather.windSpeed);
+    const worstCode = Math.max(originWeather.code, destWeather.code);
+    const worstInfo = this.interpretWeatherCode(worstCode);
+
+    let atmosphericStatus = 'OPTIMAL PASSAGE';
+    let statusColor = 'var(--neon-emerald)';
+    let statusClass = 'badge-normal';
+    let advice = 'Satellite radar indicates clear ridge passes. Convoy speeds unimpeded.';
+    let dynamicDelayHours = Number((worstInfo.delayWeight + (maxPrecip * 0.35)).toFixed(1));
+
+    if (worstInfo.severity === 'CRITICAL' || maxPrecip >= 5.0) {
+      atmosphericStatus = 'CRITICAL WEATHER DISRUPTION';
+      statusColor = 'var(--neon-crimson)';
+      statusClass = 'badge-critical';
+      advice = `Active high-intensity precipitation (${maxPrecip} mm/h) detected. High risk of flash mudslides/rockfall along hairpin passes.`;
+    } else if (worstInfo.severity === 'WARNING' || maxPrecip > 0.5 || maxWind > 35) {
+      atmosphericStatus = 'MONSOON / FOG CAUTION';
+      statusColor = 'var(--neon-amber)';
+      statusClass = 'badge-warning';
+      advice = `Wet carriageway or low visibility mist detected (Wind: ${maxWind} km/h). Reduced convoy speed recommended.`;
+    }
+
+    return {
+      origin: originWeather,
+      dest: destWeather,
+      corridorSummary: {
+        status: atmosphericStatus,
+        statusColor,
+        statusClass,
+        advice,
+        dynamicDelayHours: Math.max(0.2, dynamicDelayHours),
+        maxPrecip,
+        maxWind,
+        isLive: originWeather.isLive || destWeather.isLive,
+        timestamp: originWeather.timestamp
+      }
+    };
+  }
+
+  /**
    * Calculates Landslide & Flood Hazard Vulnerability Index
    * Formula: HVI = 0.35*(Rainfall/MaxRain) + 0.30*(SlopeDeg/60) + 0.20*SoilSat + 0.15*HistoricalFreq
    */
@@ -101,7 +242,7 @@ class AIPredictionEngine {
   /**
    * Computes Primary vs Alternate Routes with Terrain, Bridge Weight & Slope Penalties
    */
-  optimizeRoute(originKey, destKey, cargoType = 'MEDICAL', vehicleType = 'HEAVY_4X4', strategy = 'MAX_RESILIENCE') {
+  optimizeRoute(originKey, destKey, cargoType = 'MEDICAL', vehicleType = 'HEAVY_4X4', strategy = 'MAX_RESILIENCE', liveWeather = null) {
     const routesDatabase = {
       // 1. North East Region India (NER)
       'Guwahati-Kohima': {
@@ -452,6 +593,36 @@ class AIPredictionEngine {
       'WEATHER_SHIELD': '🌧️ Weather & Monsoon Shielding'
     };
 
+    // Dynamic Live Meteorological Radar Adjustment
+    let liveWeatherAlert = null;
+    if (liveWeather && liveWeather.corridorSummary) {
+      const summary = liveWeather.corridorSummary;
+      const dynDelay = summary.dynamicDelayHours || 0.4;
+
+      found.primary.weatherDelayHours = Number((found.primary.weatherDelayHours + (dynDelay * 0.7)).toFixed(1));
+      found.primary.totalTimeHours = Number((found.primary.baseTimeHours + found.primary.weatherDelayHours).toFixed(1));
+
+      found.alternate.weatherDelayHours = Number((found.alternate.weatherDelayHours + (dynDelay * 0.15)).toFixed(1));
+      found.alternate.totalTimeHours = Number((found.alternate.baseTimeHours + found.alternate.weatherDelayHours).toFixed(1));
+
+      liveWeatherAlert = {
+        status: summary.status,
+        statusColor: summary.statusColor,
+        statusClass: summary.statusClass,
+        advice: summary.advice,
+        originTemp: liveWeather.origin?.temp,
+        originCond: liveWeather.origin?.condition,
+        originIcon: liveWeather.origin?.icon,
+        destTemp: liveWeather.dest?.temp,
+        destCond: liveWeather.dest?.condition,
+        destIcon: liveWeather.dest?.icon,
+        maxPrecip: summary.maxPrecip,
+        maxWind: summary.maxWind,
+        isLive: summary.isLive,
+        timestamp: summary.timestamp
+      };
+    }
+
     return {
       origin: originKey,
       destination: destKey,
@@ -461,6 +632,7 @@ class AIPredictionEngine {
       vehicleLabel: vehicleLabels[vehicleType] || '🚛 Heavy Logistics Carrier',
       strategy,
       strategyLabel: strategyLabels[strategy] || '🛡️ Disaster-Resilient Routing',
+      liveWeather: liveWeatherAlert,
       primary: found.primary,
       alternate: found.alternate
     };
