@@ -146,6 +146,26 @@ class GlobalAppCoordinator {
       });
     }
 
+    // Region Filter Chips in Route Optimizer
+    document.querySelectorAll('.chip-filter[data-region-filter]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.chip-filter[data-region-filter]').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const filter = chip.getAttribute('data-region-filter');
+        this.filterRouteSelectOptions(filter, document.getElementById('route-hub-search')?.value || '');
+      });
+    });
+
+    // Quick Hub Text Search Filter
+    const hubSearchInput = document.getElementById('route-hub-search');
+    if (hubSearchInput) {
+      hubSearchInput.addEventListener('input', (e) => {
+        const activeChip = document.querySelector('.chip-filter.active[data-region-filter]');
+        const regionFilter = activeChip ? activeChip.getAttribute('data-region-filter') : 'ALL';
+        this.filterRouteSelectOptions(regionFilter, e.target.value.trim().toLowerCase());
+      });
+    }
+
     // Photo File Input Listener
     const photoInput = document.getElementById('sim-file-input');
     if (photoInput) {
@@ -255,11 +275,46 @@ class GlobalAppCoordinator {
     modal.classList.add('active');
   }
 
+  filterRouteSelectOptions(regionFilter, query = '') {
+    const originSelect = document.getElementById('route-origin');
+    const destSelect = document.getElementById('route-dest');
+    [originSelect, destSelect].forEach(sel => {
+      if (!sel) return;
+      let firstVisible = null;
+      Array.from(sel.querySelectorAll('optgroup')).forEach(group => {
+        const groupRegion = group.getAttribute('data-region');
+        const matchesRegion = regionFilter === 'ALL' || groupRegion === regionFilter;
+        let groupHasVisible = false;
+
+        Array.from(group.querySelectorAll('option')).forEach(opt => {
+          const text = (opt.textContent + ' ' + opt.value).toLowerCase();
+          const matchesSearch = !query || text.includes(query);
+          if (matchesRegion && matchesSearch) {
+            opt.style.display = '';
+            groupHasVisible = true;
+            if (!firstVisible) firstVisible = opt;
+          } else {
+            opt.style.display = 'none';
+          }
+        });
+
+        group.style.display = groupHasVisible ? '' : 'none';
+      });
+
+      // If current selection was hidden, default to first visible option
+      if (sel.selectedOptions[0]?.style.display === 'none' && firstVisible) {
+        sel.value = firstVisible.value;
+      }
+    });
+  }
+
   // Dual-Mode Route Optimization (Seamless Offline Client-Side + Optional Backend)
   async handleRouteOptimization() {
     const origin = document.getElementById('route-origin')?.value || 'Guwahati';
     const dest = document.getElementById('route-dest')?.value || 'Kohima';
     const cargo = document.getElementById('route-cargo')?.value || 'MEDICAL';
+    const vehicle = document.getElementById('route-vehicle')?.value || 'HEAVY_4X4';
+    const strategy = document.getElementById('route-strategy')?.value || 'MAX_RESILIENCE';
     const container = document.getElementById('route-results-container');
     if (!container) return;
 
@@ -278,7 +333,7 @@ class GlobalAppCoordinator {
         fetch('http://127.0.0.1:5000/optimize-route', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ origin, destination: dest, cargo }),
+          body: JSON.stringify({ origin, destination: dest, cargo, vehicle, strategy }),
           signal: controller.signal
         }).catch(() => {});
         clearTimeout(timeoutId);
@@ -289,7 +344,7 @@ class GlobalAppCoordinator {
     let result = null;
     try {
       if (window.aiEngine && typeof window.aiEngine.optimizeRoute === 'function') {
-        result = window.aiEngine.optimizeRoute(origin, dest, cargo);
+        result = window.aiEngine.optimizeRoute(origin, dest, cargo, vehicle, strategy);
       }
     } catch (err) {
       console.warn('Client-side AI calculation error:', err);
@@ -297,12 +352,17 @@ class GlobalAppCoordinator {
 
     if (!result || !result.primary || !result.alternate) {
       result = {
+        origin,
+        destination: dest,
+        vehicleLabel: '🚛 4x4 Heavy Logistics Truck',
+        strategyLabel: '🛡️ Disaster Resilience Priority',
         primary: {
           name: `Direct Arterial Corridor (${origin} - ${dest})`,
           distanceKm: 340,
           totalTimeHours: 11.5,
           weatherDelayHours: 4.5,
           hazardRisk: 'CRITICAL (Active Landslide Hazard)',
+          bridgeLimitTons: 25,
           status: 'DISRUPTED'
         },
         alternate: {
@@ -310,6 +370,7 @@ class GlobalAppCoordinator {
           distanceKm: 375,
           totalTimeHours: 8.2,
           hazardRisk: 'LOW (All-Weather Cleared Ridge)',
+          bridgeLimitTons: 40,
           status: 'Recommended Bypass'
         },
         cargoAdvisory: 'Priority humanitarian supply corridor active with verified all-weather passability.'
@@ -317,6 +378,15 @@ class GlobalAppCoordinator {
     }
 
     container.innerHTML = `
+      <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+        <span class="status-badge" style="background:rgba(0,242,254,0.12);color:var(--neon-cyan);border:1px solid rgba(0,242,254,0.25);font-size:0.75rem;">
+          ${result.strategyLabel || '🛡️ AI Resilient Routing'}
+        </span>
+        <span class="status-badge badge-normal" style="font-size:0.75rem;">
+          ${result.vehicleLabel || '🚛 4x4 Fleet'}
+        </span>
+      </div>
+
       <div class="route-card disrupted">
         <div class="route-header">
           <span class="route-name" style="color:#ef4444;">
@@ -366,11 +436,11 @@ class GlobalAppCoordinator {
           </div>
           <div class="stat-item">
             <span class="stat-label">Time Saved</span>
-            <span class="stat-val" style="color:#00f2fe;">-${Math.max(0.5, (result.primary.totalTimeHours - result.alternate.totalTimeHours)).toFixed(1)} hrs</span>
+            <span class="stat-val" style="color:#00f2fe;">-${Math.max(0.4, (result.primary.totalTimeHours - result.alternate.totalTimeHours)).toFixed(1)} hrs</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Hazard Risk</span>
-            <span class="stat-val" style="color:#10b981;">${result.alternate.hazardRisk}</span>
+            <span class="stat-label">Bridge Capacity</span>
+            <span class="stat-val" style="color:var(--neon-emerald);">${result.alternate.bridgeLimitTons || 35} Tons</span>
           </div>
         </div>
         <p style="font-size:0.75rem;color:#94a3b8;margin-top:6px;line-height:1.4;">

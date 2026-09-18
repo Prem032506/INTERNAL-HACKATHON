@@ -10,17 +10,54 @@ class AIPredictionEngine {
     this.activeSimulatedDisruptions = [];
 
     this.hubCoordinates = {
+      // North East India (NER)
       'Guwahati': [26.1445, 91.7362],
       'Siliguri': [26.7271, 88.3953],
+      'Shillong': [25.5788, 91.8933],
+      'Imphal': [24.8170, 93.9368],
+      'Aizawl': [23.7271, 92.7176],
       'Kohima': [25.6751, 94.1086],
-      'Itanagar': [27.0844, 93.6053],
+      'Dimapur': [25.9068, 93.7273],
+      'Agartala': [23.8315, 91.2868],
       'Gangtok': [27.3389, 88.6065],
+      'Itanagar': [27.0844, 93.6053],
+      'Tawang': [27.5860, 91.8594],
+      'Tezpur': [26.6528, 92.7926],
+      'Dibrugarh': [27.4728, 94.9120],
+      'Silchar': [24.8333, 92.7789],
+      'Cherrapunji': [25.2702, 91.7323],
+      'Ukhrul': [25.1167, 94.3667],
+      'Lunglei': [22.8833, 92.7333],
+
+      // Northern Himalayan Arc
       'Srinagar': [34.0837, 74.7973],
       'Leh': [34.1526, 77.5771],
+      'Kargil': [34.5539, 76.1349],
+      'Manali': [32.2396, 77.1887],
+      'Shimla': [31.1048, 77.1734],
+      'Dehradun': [30.3165, 78.0322],
+      'Joshimath': [30.5564, 79.5670],
+      'Rishikesh': [30.0869, 78.2676],
+      'Keylong': [32.5710, 77.0320],
+      'Badrinath': [30.7433, 79.4938],
+      'Dharamshala': [32.2190, 76.3234],
+
+      // European Alps
       'Zurich': [47.3769, 8.5417],
       'Milan': [45.4642, 9.1900],
+      'Geneva': [46.2044, 6.1432],
+      'Innsbruck': [47.2692, 11.4041],
+      'Bellinzona': [46.1953, 9.0238],
+      'Bern': [46.9480, 7.4474],
+      'Turin': [45.0703, 7.6869],
+
+      // South American Andes
       'Santiago': [-33.4489, -70.6693],
-      'Mendoza': [-32.8895, -68.8458]
+      'Mendoza': [-32.8895, -68.8458],
+      'Valparaíso': [-33.0472, -71.6127],
+      'Los Andes': [-32.8337, -70.5983],
+      'Uspallata': [-32.5936, -69.3475],
+      'La Paz': [-16.4897, -68.1193]
     };
   }
 
@@ -64,7 +101,7 @@ class AIPredictionEngine {
   /**
    * Computes Primary vs Alternate Routes with Terrain, Bridge Weight & Slope Penalties
    */
-  optimizeRoute(originKey, destKey, cargoType = 'MEDICAL') {
+  optimizeRoute(originKey, destKey, cargoType = 'MEDICAL', vehicleType = 'HEAVY_4X4', strategy = 'MAX_RESILIENCE') {
     const routesDatabase = {
       // 1. North East Region India (NER)
       'Guwahati-Kohima': {
@@ -300,19 +337,60 @@ class AIPredictionEngine {
       const origCoord = this.hubCoordinates[originKey] || [26.1445, 91.7362];
       const destCoord = this.hubCoordinates[destKey] || [25.6751, 94.1086];
 
+      // Realistic Haversine distance
+      const R = 6371;
+      const dLat = (destCoord[0] - origCoord[0]) * Math.PI / 180;
+      const dLon = (destCoord[1] - origCoord[1]) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(origCoord[0] * Math.PI / 180) * Math.cos(destCoord[0] * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const directKm = Math.round(R * c);
+
+      const primaryKm = Math.max(85, Math.round(directKm * 1.38));
+      const alternateKm = Math.max(98, Math.round(primaryKm * 1.14));
+
+      // Speed calibrated for mountain vehicle class
+      let speedKmH = 40;
+      if (vehicleType === 'LIGHT_4WD') speedKmH = 52;
+      else if (vehicleType === 'HAZMAT') speedKmH = 34;
+      else if (vehicleType === 'REEFER') speedKmH = 42;
+      else if (vehicleType === 'ELECTRIC') speedKmH = 38;
+
+      const baseTime = Number((primaryKm / speedKmH).toFixed(1));
+      const altBaseTime = Number((alternateKm / (speedKmH * 1.06)).toFixed(1));
+
+      // Delay calibrated by strategy
+      let weatherDelay = 4.2;
+      let altWeatherDelay = 0.6;
+      let altRisk = 'LOW (16% Monitored Ridge)';
+      let bridgeRating = 35;
+
+      if (strategy === 'WEATHER_SHIELD') {
+        weatherDelay = 2.0;
+        altWeatherDelay = 0.3;
+        altRisk = 'Very Low (9% Cleared Corridor)';
+      } else if (strategy === 'FASTEST') {
+        weatherDelay = 3.5;
+        altWeatherDelay = 0.8;
+      } else if (strategy === 'BRIDGE_CAPACITY') {
+        bridgeRating = 45;
+        altRisk = 'Low (Heavy Axle Verified)';
+      }
+
       const midLat = (origCoord[0] + destCoord[0]) / 2;
       const midLng = (origCoord[1] + destCoord[1]) / 2;
 
       found = {
         primary: {
-          name: `Direct Corridor (${originKey} - ${destKey})`,
-          distanceKm: 290,
-          baseTimeHours: 5.5,
-          weatherDelayHours: 3.5,
-          totalTimeHours: 9.0,
-          hazardRisk: 'HIGH (Monitored Chokepoint)',
-          bridgeLimitTons: 28,
-          status: 'Weather Caution Active',
+          name: `Standard Direct Corridor (${originKey} - ${destKey})`,
+          distanceKm: primaryKm,
+          baseTimeHours: baseTime,
+          weatherDelayHours: weatherDelay,
+          totalTimeHours: Number((baseTime + weatherDelay).toFixed(1)),
+          hazardRisk: 'CRITICAL (High Landslide/Snow Vulnerability)',
+          bridgeLimitTons: vehicleType === 'HEAVY_4X4' ? 30 : 25,
+          status: 'DISRUPTED (Monitored Chokepoints)',
           coordinates: [
             origCoord,
             [origCoord[0] + (midLat - origCoord[0]) * 0.5, origCoord[1] + (midLng - origCoord[1]) * 0.5],
@@ -322,14 +400,14 @@ class AIPredictionEngine {
           ]
         },
         alternate: {
-          name: `AI Resilient Mountain Bypass (${originKey} - ${destKey})`,
-          distanceKm: 330,
-          baseTimeHours: 6.2,
-          weatherDelayHours: 0.4,
-          totalTimeHours: 6.6,
-          hazardRisk: 'LOW (All-Weather Ridge)',
-          bridgeLimitTons: 35,
-          status: 'Recommended Safe Bypass',
+          name: `AI Resilient Bypass Corridor (${originKey} - ${destKey})`,
+          distanceKm: alternateKm,
+          baseTimeHours: altBaseTime,
+          weatherDelayHours: altWeatherDelay,
+          totalTimeHours: Number((altBaseTime + altWeatherDelay).toFixed(1)),
+          hazardRisk: altRisk,
+          bridgeLimitTons: bridgeRating,
+          status: 'Recommended All-Weather Bypass',
           coordinates: [
             origCoord,
             [origCoord[0] + 0.15, origCoord[1] + 0.2],
@@ -345,19 +423,44 @@ class AIPredictionEngine {
     let cargoAdvisory = 'Standard Relief Logistics Protocol';
     if (cargoType === 'MEDICAL') {
       cargoAdvisory = 'CRITICAL COLD-CHAIN: Strict WHO 2–8°C limit. Max allowable delay: 4 hours. Priority green convoy escort authorized.';
+    } else if (cargoType === 'BLOOD_PLASMA') {
+      cargoAdvisory = 'EMERGENCY CRYO-LIFE: Ultra-low temp transport (-20°C). Zero checkpoint stoppage authorized. Direct green corridor.';
     } else if (cargoType === 'FUEL') {
-      cargoAdvisory = 'HAZMAT POL FUEL: Sharp hairpin passes restricted during night hours (20:00 - 05:00 Local).';
+      cargoAdvisory = 'HAZMAT POL FUEL: Sharp hairpin passes restricted during night hours (20:00 - 05:00 Local). Fire-retardant escort required.';
     } else if (cargoType === 'FOOD_SECURITY') {
-      cargoAdvisory = 'WFP GRAIN CONVOY: Tarpaulin moisture shielding required across high precipitation passes.';
+      cargoAdvisory = 'WFP / FCI BULK GRAIN: Moisture & tarpaulin shielding mandatory through humid river valley stretches.';
     } else if (cargoType === 'EMERGENCY') {
       cargoAdvisory = 'UN / NDRF DISASTER CONVOY: Immediate priority passability across all state border checkpoints.';
+    } else if (cargoType === 'WATER') {
+      cargoAdvisory = 'EMERGENCY DRINKING WATER: Potable bulk hydration units with fast-discharge manifolds for affected districts.';
+    } else if (cargoType === 'HEAVY_PLANT') {
+      cargoAdvisory = 'BRO / RESCUE EXCAVATION: Multi-axle heavy transport with forward pilot escort and bridge load verification.';
     }
+
+    const vehicleLabels = {
+      'HEAVY_4X4': '🚛 4x4 Heavy Logistics Truck',
+      'REEFER': '❄️ Cryo-Reefer Insulated Van (2-8°C)',
+      'HAZMAT': '⛽ Hazmat Petroleum Tanker',
+      'LIGHT_4WD': '🚐 Light Mountain Quick-Response 4WD',
+      'ELECTRIC': '⚡ Heavy Hybrid/Electric Hauler'
+    };
+
+    const strategyLabels = {
+      'MAX_RESILIENCE': '🛡️ Max Hazard Avoidance',
+      'FASTEST': '⚡ Fastest Safe Transit',
+      'BRIDGE_CAPACITY': '🌉 Heavy Bridge Capacity (>35T)',
+      'WEATHER_SHIELD': '🌧️ Weather & Monsoon Shielding'
+    };
 
     return {
       origin: originKey,
       destination: destKey,
       cargoType,
       cargoAdvisory,
+      vehicleType,
+      vehicleLabel: vehicleLabels[vehicleType] || '🚛 Heavy Logistics Carrier',
+      strategy,
+      strategyLabel: strategyLabels[strategy] || '🛡️ Disaster-Resilient Routing',
       primary: found.primary,
       alternate: found.alternate
     };

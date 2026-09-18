@@ -287,3 +287,70 @@
   font-size: 0.75rem;
   color: var(--text-secondary);
 }
+
+/* Route Optimizer Region Chips & Search Bar */
+.region-filter-chips {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+}
+
+.chip-filter {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip-filter:hover {
+  background: rgba(0, 242, 254, 0.1);
+  border-color: var(--neon-cyan);
+  color: #fff;
+}
+
+.chip-filter.active {
+  background: rgba(0, 242, 254, 0.2);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+}
+
+.route-quick-search-box {
+  position: relative;
+  margin-bottom: 0.85rem;
+}
+
+.route-quick-search-box input {
+  width: 100%;
+  padding-left: 2.2rem;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.route-quick-search-box .search-icon {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+
+optgroup {
+  background: #091322;
+  color: var(--neon-cyan);
+  font-weight: 700;
+  padding: 4px 0;
+}
+
+option {
+  background: #0d1a2d;
+  color: #e2e8f0;
+  font-weight: 400;
+  padding: 4px 8px;
+}

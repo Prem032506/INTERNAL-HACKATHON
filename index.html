@@ -245,7 +245,7 @@
 
   <!-- Route Optimizer Modal -->
   <div class="modal-backdrop" id="route-optimizer-modal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width:740px;">
       <div class="modal-header">
         <div class="modal-title">
           <span>🧭</span> AI Disruption-Resilient Route Optimizer
@@ -254,41 +254,144 @@
       </div>
       <div class="modal-body">
         <form id="route-planner-form">
+          <!-- Quick Region Filter Buttons -->
+          <div class="region-filter-chips">
+            <button type="button" class="chip-filter active" data-region-filter="ALL">🌐 All Corridors</button>
+            <button type="button" class="chip-filter" data-region-filter="NER">🏔️ North East India (NER)</button>
+            <button type="button" class="chip-filter" data-region-filter="HIM">❄️ Himalayan Arc</button>
+            <button type="button" class="chip-filter" data-region-filter="ALPS">🇪🇺 European Alps</button>
+            <button type="button" class="chip-filter" data-region-filter="ANDES">🌋 Andes Corridors</button>
+          </div>
+
+          <!-- Quick Hub Text Search Bar -->
+          <div class="route-quick-search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="route-hub-search" class="form-input" placeholder="Quick filter hubs or terminals (e.g. Leh, Shillong, Manali, Aizawl, Tawang, Geneva)...">
+          </div>
+
+          <!-- Origin and Destination Row -->
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" data-i18n="origin">Origin Logistics Hub</label>
               <select class="form-select" id="route-origin">
-                <option value="Guwahati">Guwahati Central Gateway Hub</option>
-                <option value="Siliguri">Siliguri Strategic Logistics Depot</option>
-                <option value="Srinagar">Srinagar Base (Himalayan Arc)</option>
-                <option value="Zurich">Zurich Intermodal Hub (Alps)</option>
-                <option value="Santiago">Santiago Logistics Base (Andes)</option>
+                <optgroup label="🏔️ North East India (NER)" data-region="NER">
+                  <option value="Guwahati" selected>Guwahati Central Gateway Hub (Assam)</option>
+                  <option value="Siliguri">Siliguri Strategic Logistics Depot (WB)</option>
+                  <option value="Shillong">Shillong Mountain Depot (Meghalaya)</option>
+                  <option value="Imphal">Imphal Central Freight Terminal (Manipur)</option>
+                  <option value="Aizawl">Aizawl Transit Depot (Mizoram)</option>
+                  <option value="Dimapur">Dimapur Railhead Depot (Nagaland)</option>
+                  <option value="Agartala">Agartala Intermodal Base (Tripura)</option>
+                  <option value="Tezpur">Tezpur River Gateway Base (Assam)</option>
+                  <option value="Dibrugarh">Dibrugarh Upper Assam Depot (Assam)</option>
+                  <option value="Silchar">Silchar Barak Valley Base (Assam)</option>
+                </optgroup>
+                <optgroup label="❄️ Northern Himalayan Arc" data-region="HIM">
+                  <option value="Srinagar">Srinagar Central Base (J&K)</option>
+                  <option value="Leh">Leh High-Altitude Base (Ladakh)</option>
+                  <option value="Kargil">Kargil Mountain Transit Station (Ladakh)</option>
+                  <option value="Manali">Manali Gateway Base (Himachal)</option>
+                  <option value="Shimla">Shimla Strategic Depot (Himachal)</option>
+                  <option value="Dehradun">Dehradun Foothills Base (Uttarakhand)</option>
+                  <option value="Joshimath">Joshimath Relief Center (Uttarakhand)</option>
+                  <option value="Rishikesh">Rishikesh Arterial Depot (Uttarakhand)</option>
+                  <option value="Dharamshala">Dharamshala Mountain Depot (Himachal)</option>
+                </optgroup>
+                <optgroup label="🇪🇺 European Alps" data-region="ALPS">
+                  <option value="Zurich">Zurich Intermodal Hub (Switzerland)</option>
+                  <option value="Milan">Milan Freight Terminal (Italy)</option>
+                  <option value="Geneva">Geneva Cross-Border Center (Switzerland)</option>
+                  <option value="Innsbruck">Innsbruck Alpine Logistics Hub (Austria)</option>
+                  <option value="Bellinzona">Bellinzona South Terminal (Switzerland)</option>
+                  <option value="Bern">Bern Strategic Depot (Switzerland)</option>
+                  <option value="Turin">Turin Industrial Freight Hub (Italy)</option>
+                </optgroup>
+                <optgroup label="🌋 South American Andes" data-region="ANDES">
+                  <option value="Santiago">Santiago Logistics Base (Chile)</option>
+                  <option value="Mendoza">Mendoza Trans-Andean Depot (Argentina)</option>
+                  <option value="Valparaíso">Valparaíso Pacific Port Gateway (Chile)</option>
+                  <option value="Los Andes">Los Andes Foothills Depot (Chile)</option>
+                  <option value="Uspallata">Uspallata Mountain Base (Argentina)</option>
+                  <option value="La Paz">La Paz High-Altitude Terminal (Bolivia)</option>
+                </optgroup>
               </select>
             </div>
             <div class="form-group">
               <label class="form-label" data-i18n="destination">Destination District / Terminal</label>
               <select class="form-select" id="route-dest">
-                <option value="Kohima">Kohima Terminal</option>
-                <option value="Itanagar">Itanagar Civil Center</option>
-                <option value="Gangtok">Gangtok Transit Depot</option>
-                <option value="Leh">Leh High-Altitude Base</option>
-                <option value="Milan">Milan Freight Terminal</option>
-                <option value="Mendoza">Mendoza Trans-Andean Depot</option>
+                <optgroup label="🏔️ North East India (NER)" data-region="NER">
+                  <option value="Kohima" selected>Kohima Terminal (Nagaland)</option>
+                  <option value="Itanagar">Itanagar Civil Center (Arunachal)</option>
+                  <option value="Gangtok">Gangtok Transit Depot (Sikkim)</option>
+                  <option value="Tawang">Tawang High-Pass Outpost (Arunachal)</option>
+                  <option value="Cherrapunji">Cherrapunji Monsoon Station (Meghalaya)</option>
+                  <option value="Ukhrul">Ukhrul Mountain Outpost (Manipur)</option>
+                  <option value="Lunglei">Lunglei Southern Depot (Mizoram)</option>
+                  <option value="Dimapur">Dimapur Transit Center (Nagaland)</option>
+                  <option value="Silchar">Silchar Terminal (Assam)</option>
+                </optgroup>
+                <optgroup label="❄️ Northern Himalayan Arc" data-region="HIM">
+                  <option value="Leh">Leh High-Altitude Base (Ladakh)</option>
+                  <option value="Kargil">Kargil Border Terminal (Ladakh)</option>
+                  <option value="Keylong">Keylong Trans-Himalayan Depot (Himachal)</option>
+                  <option value="Badrinath">Badrinath Relief Outpost (Uttarakhand)</option>
+                  <option value="Joshimath">Joshimath High-Altitude Camp (Uttarakhand)</option>
+                  <option value="Srinagar">Srinagar Freight Center (J&K)</option>
+                </optgroup>
+                <optgroup label="🇪🇺 European Alps" data-region="ALPS">
+                  <option value="Milan">Milan Freight Terminal (Italy)</option>
+                  <option value="Bellinzona">Bellinzona Alpine Terminal (Switzerland)</option>
+                  <option value="Innsbruck">Innsbruck Transit Terminal (Austria)</option>
+                  <option value="Zurich">Zurich North Platform (Switzerland)</option>
+                </optgroup>
+                <optgroup label="🌋 South American Andes" data-region="ANDES">
+                  <option value="Mendoza">Mendoza Trans-Andean Depot (Argentina)</option>
+                  <option value="Uspallata">Uspallata Border Terminal (Argentina)</option>
+                  <option value="Santiago">Santiago Central Depot (Chile)</option>
+                  <option value="La Paz">La Paz Altiplano Terminal (Bolivia)</option>
+                </optgroup>
               </select>
             </div>
           </div>
 
+          <!-- Cargo and Vehicle Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" data-i18n="commodityType">Essential Cargo Category</label>
+              <select class="form-select" id="route-cargo">
+                <option value="MEDICAL" selected>💉 Medical Vaccines, Insulin & Liquid O2 (Cold Chain)</option>
+                <option value="BLOOD_PLASMA">🩸 Blood Plasma, Antivenom & Surgical Kits (Emergency)</option>
+                <option value="FOOD_SECURITY">🌾 Humanitarian Food Grains & Rations (WFP / FCI)</option>
+                <option value="FUEL">⛽ POL Petroleum, Diesel & Aviation Fuel (Hazmat)</option>
+                <option value="EMERGENCY">🚨 Disaster Rescue Equipment, Boats & Comms (NDRF / Red Cross)</option>
+                <option value="WATER">💧 Emergency Drinking Water Purification Units</option>
+                <option value="HEAVY_PLANT">🚜 Heavy Road Clearing Machinery & BRO Spares</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fleet Transit Vehicle Class</label>
+              <select class="form-select" id="route-vehicle">
+                <option value="HEAVY_4X4" selected>🚛 Heavy All-Terrain 4x4 Carrier (25-Ton Convoy Class)</option>
+                <option value="REEFER">❄️ Cryo-Reefer Insulated Van (Active 2-8°C Sensor)</option>
+                <option value="HAZMAT">⛽ Hazmat Fuel Tanker (Retarder & Hazard Escort)</option>
+                <option value="LIGHT_4WD">🚐 Light Mountain Quick-Response 4WD (NDRF Quick Recon)</option>
+                <option value="ELECTRIC">⚡ Heavy Hybrid / Electric Eco Mountain Hauler</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Strategy Row -->
           <div class="form-group">
-            <label class="form-label" data-i18n="commodityType">Essential Cargo Category</label>
-            <select class="form-select" id="route-cargo">
-              <option value="MEDICAL">Medical Vaccines, Insulin & Liquid O2 (High Priority / Cold Chain)</option>
-              <option value="FOOD_SECURITY">Humanitarian Food Grains & Rations (WFP / FCI)</option>
-              <option value="FUEL">POL Petroleum, Diesel & Aviation Fuel</option>
-              <option value="EMERGENCY">Disaster Relief Equipment, Boats & Comms (UN / Red Cross / NDRF)</option>
+            <label class="form-label">AI Optimization Strategy</label>
+            <select class="form-select" id="route-strategy">
+              <option value="MAX_RESILIENCE" selected>🛡️ Maximum Disaster Resilience (Avoid All Active Landslide / Avalanche Zones)</option>
+              <option value="FASTEST">⚡ Shortest Transit Duration (Emergency Priority Clearance)</option>
+              <option value="BRIDGE_CAPACITY">🌉 Heavy Axle Capacity (Verify Bridges Rating >35 Tons)</option>
+              <option value="WEATHER_SHIELD">🌧️ Weather & Monsoon Shielding (Bypass Active Cloudburst Zones)</option>
             </select>
           </div>
 
-          <button type="submit" class="btn-primary-action" style="width:100%;margin-top:0.5rem;">
+          <button type="submit" class="btn-primary-action" style="width:100%;margin-top:0.3rem;">
             <span>⚡</span> <span data-i18n="planRoute">Calculate Resilient Alternate Routes</span>
           </button>
         </form>

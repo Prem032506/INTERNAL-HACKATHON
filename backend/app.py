@@ -283,17 +283,54 @@ def optimize_route():
 
     # Coordinate database for common hubs
     hub_coords = {
+        # North East Region India
         "Guwahati": (26.1445, 91.7362),
         "Siliguri": (26.7271, 88.3953),
+        "Shillong": (25.5788, 91.8933),
+        "Tezpur": (26.6528, 92.7926),
+        "Dibrugarh": (27.4728, 94.9120),
+        "Dimapur": (25.9090, 93.7268),
+        "Imphal": (24.8170, 93.9368),
+        "Agartala": (23.8315, 91.2868),
+        "Aizawl": (23.7307, 92.7173),
         "Kohima": (25.6751, 94.1086),
         "Itanagar": (27.0844, 93.6053),
         "Gangtok": (27.3389, 88.6065),
+        "Tawang": (27.5861, 91.8594),
+        "Silchar": (24.8333, 92.7789),
+        "Cherrapunji": (25.2702, 91.7323),
+        "Ukhrul": (25.1167, 94.3667),
+        "Lunglei": (22.8833, 92.7333),
+
+        # Northern Himalayan Arc
         "Srinagar": (34.0837, 74.7973),
         "Leh": (34.1526, 77.5771),
+        "Kargil": (34.5539, 76.1349),
+        "Manali": (32.2396, 77.1887),
+        "Shimla": (31.1048, 77.1734),
+        "Dehradun": (30.3165, 78.0322),
+        "Joshimath": (30.5564, 79.5670),
+        "Rishikesh": (30.0869, 78.2676),
+        "Keylong": (32.5710, 77.0320),
+        "Badrinath": (30.7433, 79.4938),
+        "Dharamshala": (32.2190, 76.3234),
+
+        # European Alps
         "Zurich": (47.3769, 8.5417),
         "Milan": (45.4642, 9.1900),
+        "Geneva": (46.2044, 6.1432),
+        "Innsbruck": (47.2692, 11.4041),
+        "Bellinzona": (46.1953, 9.0238),
+        "Bern": (46.9480, 7.4474),
+        "Turin": (45.0703, 7.6869),
+
+        # South American Andes
         "Santiago": (-33.4489, -70.6693),
-        "Mendoza": (-32.8895, -68.8458)
+        "Mendoza": (-32.8895, -68.8458),
+        "Valparaíso": (-33.0472, -71.6127),
+        "Los Andes": (-32.8337, -70.5983),
+        "Uspallata": (-32.5936, -69.3475),
+        "La Paz": (-16.4897, -68.1193)
     }
 
     orig_pt = hub_coords.get(origin, (26.1445, 91.7362))
