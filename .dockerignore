@@ -1,0 +1,10 @@
+.git
+.github
+*.db
+*.sqlite3
+*.xlsx
+*.csv
+__pycache__
+*.pyc
+backend/*.db
+backend/*.xlsx

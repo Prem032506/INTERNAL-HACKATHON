@@ -89,13 +89,9 @@
       ],
       "hubs": [
         { "name": "Leh Defense Logistics Hub", "lat": 34.1526, "lng": 77.5771 },
-        { "name": "Srinagar Central Depot (J&K)", "lat": 34.0837, "lng": 74.7973 },
-        { "name": "Jammu Transit Base (J&K)", "lat": 32.7266, "lng": 74.8570 },
-        { "name": "Shimla Regional Logistics (HP)", "lat": 31.1048, "lng": 77.1734 },
-        { "name": "Manali High-Altitude Transit (HP)", "lat": 32.2396, "lng": 77.1887 },
-        { "name": "Dehradun Supply Gateway (UK)", "lat": 30.3165, "lng": 78.0322 },
-        { "name": "Rishikesh Lifeline Terminal (UK)", "lat": 30.0869, "lng": 78.2676 },
-        { "name": "Joshimath Emergency Camp (UK)", "lat": 30.5500, "lng": 79.5600 }
+        { "name": "Srinagar Central Depot", "lat": 34.0837, "lng": 74.7973 },
+        { "name": "Manali Transit Base", "lat": 32.2396, "lng": 77.1887 },
+        { "name": "Joshimath Emergency Camp", "lat": 30.5500, "lng": 79.5600 }
       ]
     },
     {
@@ -154,40 +150,8 @@
         }
       ],
       "hubs": [
-        { "name": "Santiago Distribution Hub (Chile)", "lat": -33.4489, "lng": -70.6693 },
-        { "name": "Los Andes Transit Depot (Chile)", "lat": -32.8300, "lng": -70.1000 },
-        { "name": "Mendoza Freight Base (Argentina)", "lat": -32.8895, "lng": -68.8458 },
-        { "name": "Uspallata Mountain Base (Argentina)", "lat": -32.8250, "lng": -69.3500 }
-      ]
-    },
-    {
-      "id": "ODISHA_GUNUPUR",
-      "name": "Odisha & Gunupur Sub-Division Lifeline Network",
-      "country": "India (Odisha)",
-      "centerLat": 19.0714,
-      "centerLng": 83.81488,
-      "zoom": 13,
-      "states": [
-        { "id": "GN_TOWN", "name": "Gunupur Town Center", "capital": "Gandhi Chowk", "lat": 19.0714, "lng": 83.81488, "vulnerabilityScore": 45, "riskStatus": "Operational (Urban Central Core)" },
-        { "id": "GN_SDH", "name": "Hospital & Healthcare Sector", "capital": "SDH Hospital Zone", "lat": 19.0717, "lng": 83.80931, "vulnerabilityScore": 72, "riskStatus": "High Priority (Emergency 24x7 Referral)" },
-        { "id": "GN_GIET", "name": "GIET Campus & University Zone", "capital": "Gobriguda SH-4", "lat": 19.0473, "lng": 83.8311, "vulnerabilityScore": 50, "riskStatus": "Moderate (Educational Hub)" },
-        { "id": "GN_RIVER", "name": "Vamsadhara River Corridor", "capital": "Bansadhara Bridge SH-4", "lat": 19.0664, "lng": 83.8258, "vulnerabilityScore": 84, "riskStatus": "Critical (Monsoon River Swell / Floods)" }
-      ],
-      "corridors": [
-        {
-          "id": "OD-01",
-          "name": "State Highway 4 (SH-4 Gunupur - Rayagada / Paralakhemundi)",
-          "type": "Arterial Highway & River Crossing",
-          "riskLevel": "Moderate",
-          "coordinates": [[19.0825, 83.8052], [19.0714, 83.81488], [19.0664, 83.8258], [19.0473, 83.8311]]
-        }
-      ],
-      "hubs": [
-        { "name": "Gandhi Chowk Town Center", "lat": 19.0714, "lng": 83.81488 },
-        { "name": "Gunupur Central Bus Station", "lat": 19.06926, "lng": 83.81228 },
-        { "name": "Govt. Sub-Divisional Hospital (SDH)", "lat": 19.0717, "lng": 83.80931 },
-        { "name": "GIET University Campus Hub", "lat": 19.0473, "lng": 83.8311 },
-        { "name": "Gunupur Railway Station", "lat": 19.0697, "lng": 83.81044 }
+        { "name": "Santiago Distribution Hub", "lat": -33.4489, "lng": -70.6693 },
+        { "name": "Mendoza Freight Base", "lat": -32.8895, "lng": -68.8458 }
       ]
     }
   ]

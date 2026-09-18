@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global-Setu | AI-Based Smart Logistics & Disaster Accessibility Intelligence Platform</title>
   <meta name="description" content="Worldwide mission-critical AI logistics visibility, route accessibility intelligence, and disaster-resilient supply chain platform for mountain and vulnerable geographies.">
+  <meta name="theme-color" content="#00f2fe">
+  <link rel="manifest" href="manifest.json">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -40,7 +42,6 @@
             <option value="HIMALAYAN_ARC" style="background:#0b1424; color:#fff;">🏔️ Northern Himalayan Arc (Ladakh, J&K, HP, UK)</option>
             <option value="EURO_ALPS" style="background:#0b1424; color:#fff;">🇪🇺 European Alps Corridor (CH, IT, FR, AT)</option>
             <option value="ANDES_CORRIDOR" style="background:#0b1424; color:#fff;">🏔️ South American Andes (Chile, Argentina)</option>
-            <option value="ODISHA_GUNUPUR" style="background:#0b1424; color:#fff;">📍 Odisha & Gunupur Sector (SH-4 Lifeline)</option>
           </select>
         </div>
 
@@ -48,9 +49,6 @@
           <a href="index.html" class="nav-link-btn active">
             <span>🗺️</span> Command Center
           </a>
-          <button class="nav-link-btn" id="btn-open-vehicle-lookup" style="background:transparent;border:1px solid var(--neon-cyan);color:var(--neon-cyan);cursor:pointer;">
-            <span>🔍</span> Vehicle Registry Lookup
-          </button>
           <a href="presentation.html" class="nav-link-btn">
             <span>📊</span> Pitch PPT Deck
           </a>
@@ -348,6 +346,10 @@
                 Auto-tags GPS Latitude, Longitude, Altitude & Local Timestamp. Works 100% Offline in remote mountain passes worldwide.
               </p>
             </div>
+            <div id="photo-preview-container" style="display:none;margin-top:8px;position:relative;">
+              <img id="photo-preview-img" src="" alt="Evidence Preview" style="width:100%;max-height:130px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--neon-cyan);">
+              <button type="button" onclick="document.getElementById('photo-preview-container').style.display='none'; document.getElementById('sim-file-input').value=''; window.app.currentUploadedPhoto=null;" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,0.85);color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:12px;font-weight:bold;">&times;</button>
+            </div>
           </div>
 
           <div class="modal-footer" style="padding:0;margin-top:0.5rem;border:none;">
@@ -420,43 +422,23 @@
     </div>
   </div>
 
-  <!-- Vehicle Registry & Owner Lookup Modal -->
-  <div class="modal-backdrop" id="vehicle-lookup-modal">
-    <div class="modal-dialog" style="max-width:620px;">
+  <!-- Offline Buffered Reports Queue Modal -->
+  <div class="modal-backdrop" id="offline-queue-modal">
+    <div class="modal-dialog" style="max-width:560px;">
       <div class="modal-header">
         <div class="modal-title">
-          <span>🔍</span> Vehicle Registry & Owner Information Lookup
+          <span>📡</span> Offline Buffered Field Reports Queue
         </div>
         <button class="modal-close">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.75rem;">
-          Query official databases across <strong>Ladakh, Uttarakhand, Himachal Pradesh, Jammu & Kashmir, Chile, Argentina, and Odisha</strong>.
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">
+          Geo-tagged incident reports recorded during zero-cellular mountain blackouts. Buffered safely in browser IndexedDB.
         </p>
-
-        <form id="vehicle-lookup-form" style="display:flex;gap:0.5rem;margin-bottom:1rem;">
-          <input type="text" id="vehicle-lookup-input" class="form-input" placeholder="e.g. LA-01-AB-1021, UK-01-AB-1021, HP-01-A-1021, JK-01-AB-1021, AB 102 AA, AB-CD-21" style="flex:1;" required>
-          <button type="submit" class="btn-primary-action" style="white-space:nowrap;padding:0.5rem 1rem;">
-            <span>🔎</span> Search Master DB
-          </button>
-        </form>
-
-        <div style="margin-bottom:0.75rem;">
-          <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;">Quick Query Samples:</span>
-          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.35rem;">
-            <button type="button" class="quick-plate-btn" data-plate="LA-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">LA-01-AB-1021 (Ladakh)</button>
-            <button type="button" class="quick-plate-btn" data-plate="UK-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">UK-01-AB-1021 (UK)</button>
-            <button type="button" class="quick-plate-btn" data-plate="HP-01-A-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">HP-01-A-1021 (HP)</button>
-            <button type="button" class="quick-plate-btn" data-plate="JK-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">JK-01-AB-1021 (JK)</button>
-            <button type="button" class="quick-plate-btn" data-plate="AB 102 AA" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">AB 102 AA (Argentina)</button>
-            <button type="button" class="quick-plate-btn" data-plate="AB-CD-21" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">AB-CD-21 (Chile)</button>
-            <button type="button" class="quick-plate-btn" data-plate="OD 18 AB 1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">OD 18 AB 1021 (Odisha)</button>
-          </div>
-        </div>
-
-        <div id="vehicle-lookup-result" style="display:none;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1rem;">
-          <!-- Result injected dynamically -->
-        </div>
+        <div id="offline-reports-list" style="max-height:280px;overflow-y:auto;"></div>
+        <button class="btn-primary-action" style="width:100%;margin-top:1rem;" onclick="window.fieldReports.syncPendingReports().then(() => window.app.showOfflineQueueModal())">
+          <span>🔄</span> Force Immediate Cloud Synchronization
+        </button>
       </div>
     </div>
   </div>
@@ -476,5 +458,18 @@
   <script src="js/field-report.js"></script>
   <script src="js/map-engine.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('[SW] ServiceWorker registered with scope:', reg.scope);
+        }).catch((err) => {
+          console.log('[SW] ServiceWorker registration skipped:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>

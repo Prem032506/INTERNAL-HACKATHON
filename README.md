@@ -40,41 +40,50 @@ An open, globally deployable, disaster-resilient AI platform designed to overcom
 
 ## 🚀 How to Run & Deploy Globally for Everyone
 
-### Method 1: Instant Local / LAN Run (Accessible to anyone on your network)
+### Method 1: Instant Standalone Local Run (100% Offline-First)
 ```powershell
 python -m http.server 8080 --bind 0.0.0.0
 ```
 - Open on your computer: [http://localhost:8080](http://localhost:8080)
-- Open from other devices on your WiFi/LAN: `http://<your-ip-address>:8080`
+- Open from mobile / other devices on your WiFi/LAN: `http://<your-ip-address>:8080`
+- Runs 100% offline with zero dependencies, IndexedDB caching, full multi-region GIS routing, and simulation tools.
 
-### Method 2: Docker / Docker Compose (1-Command Global Deployment)
+### Method 2: Full-Stack Mode (Python Flask Backend + Database)
+```powershell
+# 1. Install backend requirements
+pip install -r backend/requirements.txt
+
+# 2. Run Flask API backend (Port 5000)
+python backend/app.py
+
+# 3. Serve Frontend (Port 8080 in a separate terminal)
+python -m http.server 8080
+```
+
+### Method 3: Docker / Docker Compose (1-Command Deployment)
 ```bash
 docker compose up -d
 ```
-Runs a production Nginx instance serving Global-Setu on port 8080.
+Runs a production Nginx container serving Global-Setu on port 8080.
 
-### Method 3: 1-Click Vercel Global Edge Deployment
-Install Vercel CLI or connect your GitHub repository:
+### Method 4: 1-Click Vercel / Netlify Edge Deployment
 ```bash
 npx vercel --prod
-```
-
-### Method 4: 1-Click Netlify Deployment
-```bash
+# OR
 npx netlify deploy --prod
 ```
 
 ### Method 5: Automated GitHub Pages Global Hosting
-Push this codebase to GitHub (`main` branch). The included `.github/workflows/deploy.yml` will automatically build and host the live platform at `https://<your-username>.github.io/<repo-name>/`.
+Push this codebase to GitHub (`main` branch). The workflow in `.github/workflows/deploy.yml` automatically hosts the live platform.
 
 ---
 
 ## 📦 Complete Platform Deliverables Suite
 
-- **Command Center & Live GIS Dashboard:** [index.html](file:///c:/Users/premr_d6qalrm/Desktop/SIH/index.html) (`http://localhost:8080/index.html`)
-- **Pitch PPT Presentation Deck (12 Slides):** [presentation.html](file:///c:/Users/premr_d6qalrm/Desktop/SIH/presentation.html) (`http://localhost:8080/presentation.html`)
-- **System Block Diagrams & Flowcharts:** [architecture.html](file:///c:/Users/premr_d6qalrm/Desktop/SIH/architecture.html) (`http://localhost:8080/architecture.html`)
-- **Official Technical Solution Document:** [document.html](file:///c:/Users/premr_d6qalrm/Desktop/SIH/document.html) & [PROPOSED_SOLUTION_DOCUMENT.md](file:///c:/Users/premr_d6qalrm/Desktop/SIH/PROPOSED_SOLUTION_DOCUMENT.md)
+- **Command Center & Live GIS Dashboard:** [index.html](index.html) (`http://localhost:8080/index.html`)
+- **Pitch PPT Presentation Deck (12 Slides):** [presentation.html](presentation.html) (`http://localhost:8080/presentation.html`)
+- **System Block Diagrams & Flowcharts:** [architecture.html](architecture.html) (`http://localhost:8080/architecture.html`)
+- **Official Technical Solution Document:** [document.html](document.html) & [PROPOSED_SOLUTION_DOCUMENT.md](PROPOSED_SOLUTION_DOCUMENT.md)
 
 ---
 

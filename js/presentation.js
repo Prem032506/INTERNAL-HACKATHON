@@ -55,9 +55,9 @@ class PresentationDeckController {
     });
 
     this.currentSlideIndex = index;
-    if (this.slideNumberEl) {
-      this.slideNumberEl.textContent = `Slide ${index + 1} / ${this.slides.length}`;
-    }
+    document.querySelectorAll('.slide-number-pill').forEach(el => {
+      el.textContent = `Slide ${index + 1} / ${this.slides.length}`;
+    });
 
     // Update presenter notes
     const activeSlide = this.slides[index];
