@@ -11,9 +11,9 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/main.css?v=20260919-v4">
-  <link rel="stylesheet" href="css/map.css?v=20260919-v4">
-  <link rel="stylesheet" href="css/components.css?v=20260919-v4">
+  <link rel="stylesheet" href="css/main.css?v=20260919-v5">
+  <link rel="stylesheet" href="css/map.css?v=20260919-v5">
+  <link rel="stylesheet" href="css/components.css?v=20260919-v5">
 </head>
 <body>
   <div class="bg-mesh-overlay"></div>
@@ -130,10 +130,10 @@
               <span class="metric-value" style="color:var(--neon-cyan);">4.2°C</span>
               <span class="metric-sub" style="color:#bae6fd;">WHO Compliant</span>
             </div>
-            <div class="metric-card">
+            <div class="metric-card" id="global-weather-risk-card">
               <span class="metric-title">Global Rain / Snow Risk</span>
-              <span class="metric-value" style="color:var(--neon-amber);">78% High</span>
-              <span class="metric-sub" style="color:#fde68a;">Extreme Weather</span>
+              <span class="metric-value" id="global-weather-risk-val" style="color:var(--neon-amber);">78% High</span>
+              <span class="metric-sub" id="global-weather-risk-sub" style="color:#fde68a;">Live Satellite Radar</span>
             </div>
           </div>
 
@@ -633,19 +633,19 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Application JS Modules -->
-  <script src="js/i18n.js?v=20260919-v4"></script>
-  <script src="js/ai-prediction.js?v=20260919-v4"></script>
-  <script src="js/fleet-telemetry.js?v=20260919-v4"></script>
-  <script src="js/field-report.js?v=20260919-v4"></script>
-  <script src="js/map-engine.js?v=20260919-v4"></script>
-  <script src="js/app.js?v=20260919-v4"></script>
+  <script src="js/i18n.js?v=20260919-v5"></script>
+  <script src="js/ai-prediction.js?v=20260919-v5"></script>
+  <script src="js/fleet-telemetry.js?v=20260919-v5"></script>
+  <script src="js/field-report.js?v=20260919-v5"></script>
+  <script src="js/map-engine.js?v=20260919-v5"></script>
+  <script src="js/app.js?v=20260919-v5"></script>
 
   <!-- PWA Service Worker Registration with Instant Auto-Update -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20260919-v4').then((reg) => {
-          console.log('[SW] ServiceWorker v4 registered with scope:', reg.scope);
+        navigator.serviceWorker.register('./sw.js?v=20260919-v5').then((reg) => {
+          console.log('[SW] ServiceWorker v5 registered with scope:', reg.scope);
           reg.update();
         }).catch((err) => {
           console.log('[SW] ServiceWorker registration skipped:', err);

@@ -1,10 +1,10 @@
 /**
- * Global-Setu Service Worker v4 (Real-World Road Network & Cache Invalidation)
- * Network-First strategy to ensure users always receive 100% accurate road updates immediately,
- * with 100% Offline-First fallback for remote cellular shadow zones.
+ * Global-Setu Service Worker v5 (Live Weather Radar Sync & Road Accuracy)
+ * Network-First strategy to ensure users always receive live meteorological telemetry
+ * and 100% accurate road updates immediately, with 100% Offline fallback.
  */
 
-const CACHE_NAME = 'global-setu-v4-road-accuracy';
+const CACHE_NAME = 'global-setu-v5-live-weather';
 const STATIC_ASSETS = [
   './',
   './index.html',

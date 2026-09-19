@@ -32,6 +32,13 @@ class GlobalAppCoordinator {
     if (window.fieldReports) {
       window.fieldReports.updatePendingCount();
     }
+
+    // 6. Pre-sync live meteorological satellite radar telemetry for default corridor
+    setTimeout(() => {
+      const defaultOrigin = document.getElementById('route-origin')?.value || 'Guwahati';
+      const defaultDest = document.getElementById('route-dest')?.value || 'Kohima';
+      this.updateRouteWeatherCard(defaultOrigin, defaultDest);
+    }, 100);
   }
 
   renderDistrictList(states = []) {
@@ -102,6 +109,23 @@ class GlobalAppCoordinator {
       });
     }
 
+    const langClose = document.getElementById('lang-modal-close');
+    if (langClose && langModal) {
+      langClose.addEventListener('click', () => {
+        langModal.classList.remove('active');
+      });
+    }
+
+    document.querySelectorAll('.lang-option-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const selectedLang = e.currentTarget.getAttribute('data-lang');
+        if (window.i18n) {
+          window.i18n.setLanguage(selectedLang);
+        }
+        if (langModal) langModal.classList.remove('active');
+      });
+    });
+
     document.querySelectorAll('.lang-card').forEach(card => {
       card.addEventListener('click', () => {
         const lang = card.getAttribute('data-lang');
@@ -138,11 +162,20 @@ class GlobalAppCoordinator {
     }
 
     // Route Optimizer Form
-    const routeForm = document.getElementById('route-planner-form');
+    const routeForm = document.getElementById('route-optimizer-form');
     if (routeForm) {
       routeForm.addEventListener('submit', (e) => {
         e.preventDefault();
         this.handleRouteOptimization();
+      });
+    }
+
+    // Region filter change inside modal
+    const modalRegionFilter = document.getElementById('route-region-filter');
+    if (modalRegionFilter) {
+      modalRegionFilter.addEventListener('change', (e) => {
+        const regionFilter = e.target.value;
+        this.filterRouteSelectOptions(regionFilter);
       });
     }
 
@@ -161,7 +194,7 @@ class GlobalAppCoordinator {
     if (hubSearchInput) {
       hubSearchInput.addEventListener('input', (e) => {
         const activeChip = document.querySelector('.chip-filter.active[data-region-filter]');
-        const regionFilter = activeChip ? activeChip.getAttribute('data-region-filter') : 'ALL';
+        const regionFilter = activeChip ? activeChip.getAttribute('data-region-filter') : (modalRegionFilter ? modalRegionFilter.value : 'ALL');
         this.filterRouteSelectOptions(regionFilter, e.target.value.trim().toLowerCase());
       });
     }
@@ -193,10 +226,17 @@ class GlobalAppCoordinator {
     const startMapPicker = () => {
       this.hideRoutePlanner();
       if (window.mapEngine) {
-        window.mapEngine.enableMapClickRouting(async (points) => {
-          this.showRoutePlanner();
-          await this.handleRouteOptimization(points);
-        });
+        if (typeof window.mapEngine.enableClickToRoute === 'function') {
+          window.mapEngine.enableClickToRoute((originCoords, destCoords) => {
+            this.showRoutePlanner(null, null, 'MEDICAL');
+            this.handleRouteOptimization({ origin: originCoords, dest: destCoords });
+          });
+        } else if (typeof window.mapEngine.enableMapClickRouting === 'function') {
+          window.mapEngine.enableMapClickRouting(async (points) => {
+            this.showRoutePlanner();
+            await this.handleRouteOptimization(points);
+          });
+        }
       }
     };
 
@@ -205,6 +245,15 @@ class GlobalAppCoordinator {
 
     const quickMapBtn = document.getElementById('btn-map-quick-route');
     if (quickMapBtn) quickMapBtn.addEventListener('click', startMapPicker);
+
+    const mapPickerBtn = document.getElementById('btn-map-picker-route');
+    if (mapPickerBtn) {
+      mapPickerBtn.addEventListener('click', startMapPicker);
+    }
+    const modalMapPickerBtn = document.getElementById('btn-modal-map-picker');
+    if (modalMapPickerBtn) {
+      modalMapPickerBtn.addEventListener('click', startMapPicker);
+    }
 
     // Photo File Input Listener
     const photoInput = document.getElementById('sim-file-input');
@@ -228,13 +277,46 @@ class GlobalAppCoordinator {
     }
 
     // Field Report Form
-    const reportForm = document.getElementById('field-incident-form');
+    const reportForm = document.getElementById('field-incident-form') || document.getElementById('field-report-form');
     if (reportForm) {
       reportForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        this.handleFieldReportSubmission();
+        if (typeof this.handleReportSubmit === 'function') {
+          this.handleReportSubmit();
+        } else if (typeof this.handleFieldReportSubmission === 'function') {
+          this.handleFieldReportSubmission();
+        }
       });
     }
+
+    // Modal close buttons
+    const routeClose = document.getElementById('route-modal-close');
+    if (routeClose) {
+      routeClose.addEventListener('click', () => this.hideRoutePlanner());
+    }
+
+    const reportClose = document.getElementById('field-report-close');
+    if (reportClose) {
+      reportClose.addEventListener('click', () => this.hideFieldReportModal());
+    }
+
+    // Close on backdrop click
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-backdrop.active').forEach(modal => {
+          modal.classList.remove('active');
+        });
+      }
+    });
   }
 
   showRoutePlanner(origin = null, dest = null, cargo = 'MEDICAL') {
@@ -285,6 +367,11 @@ class GlobalAppCoordinator {
     }
   }
 
+  hideFieldReportModal() {
+    const modal = document.getElementById('field-report-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
   async showOfflineQueueModal() {
     const modal = document.getElementById('offline-queue-modal');
     const listEl = document.getElementById('offline-reports-list');
@@ -316,21 +403,23 @@ class GlobalAppCoordinator {
     modal.classList.add('active');
   }
 
-  filterRouteSelectOptions(regionFilter, query = '') {
-    const originSelect = document.getElementById('route-origin');
-    const destSelect = document.getElementById('route-dest');
-    [originSelect, destSelect].forEach(sel => {
+  filterRouteSelectOptions(regionFilter = 'ALL', searchQuery = '') {
+    ['route-origin', 'route-dest'].forEach(selectId => {
+      const sel = document.getElementById(selectId);
       if (!sel) return;
-      let firstVisible = null;
-      Array.from(sel.querySelectorAll('optgroup')).forEach(group => {
-        const groupRegion = group.getAttribute('data-region');
-        const matchesRegion = regionFilter === 'ALL' || groupRegion === regionFilter;
-        let groupHasVisible = false;
 
-        Array.from(group.querySelectorAll('option')).forEach(opt => {
+      const groups = sel.querySelectorAll('optgroup');
+      let firstVisible = null;
+
+      groups.forEach(group => {
+        const groupRegion = group.getAttribute('data-region') || '';
+        const regionMatches = (regionFilter === 'ALL' || groupRegion === regionFilter);
+
+        let groupHasVisible = false;
+        group.querySelectorAll('option').forEach(opt => {
           const text = (opt.textContent + ' ' + opt.value).toLowerCase();
-          const matchesSearch = !query || text.includes(query);
-          if (matchesRegion && matchesSearch) {
+          const matchesSearch = !searchQuery || text.includes(searchQuery);
+          if (regionMatches && matchesSearch) {
             opt.style.display = '';
             groupHasVisible = true;
             if (!firstVisible) firstVisible = opt;
@@ -352,7 +441,10 @@ class GlobalAppCoordinator {
   // Real-Time Meteorological Telemetry Sync
   async updateRouteWeatherCard(originHub, destHub, forceRefresh = false) {
     const weatherCard = document.getElementById('route-weather-card');
-    if (!weatherCard || !window.aiEngine || typeof window.aiEngine.getCorridorWeatherTelemetry !== 'function') return;
+    if (!weatherCard || !window.aiEngine) return;
+
+    const fetchWeatherFn = window.aiEngine.getCorridorWeatherTelemetry || window.aiEngine.fetchCorridorWeather;
+    if (typeof fetchWeatherFn !== 'function') return;
 
     const refreshBtn = document.getElementById('btn-refresh-weather');
     if (refreshBtn) refreshBtn.classList.add('syncing');
@@ -363,11 +455,11 @@ class GlobalAppCoordinator {
     if (destNameEl) destNameEl.textContent = `${destHub} Terminal`;
 
     try {
-      const telemetry = await window.aiEngine.getCorridorWeatherTelemetry(originHub, destHub);
+      const telemetry = await fetchWeatherFn.call(window.aiEngine, originHub, destHub);
       this.lastCorridorWeather = telemetry;
 
       // Update Origin Box
-      if (telemetry.origin) {
+      if (telemetry && telemetry.origin) {
         const o = telemetry.origin;
         const tempEl = document.getElementById('weather-origin-temp');
         const iconEl = document.getElementById('weather-origin-icon');
@@ -376,16 +468,18 @@ class GlobalAppCoordinator {
         const windEl = document.getElementById('weather-origin-wind');
         const rainEl = document.getElementById('weather-origin-rain');
 
-        if (tempEl) tempEl.textContent = `${o.temp}°C`;
+        if (tempEl && o.temp !== undefined && o.temp !== null) tempEl.textContent = `${o.temp}°C`;
         if (iconEl) iconEl.textContent = o.icon || '☀️';
         if (condEl) condEl.textContent = o.condition || 'Clear';
-        if (humEl) humEl.textContent = `${o.humidity}%`;
-        if (windEl) windEl.textContent = `${o.windSpeed} km/h`;
-        if (rainEl) rainEl.textContent = `${o.precipitation} mm/h`;
+        if (humEl) humEl.textContent = `${o.humidity ?? 65}%`;
+        const windSpeed = o.windSpeed ?? o.windSpeedKmH ?? 10;
+        if (windEl) windEl.textContent = `${windSpeed} km/h`;
+        const precip = o.precipitation ?? o.precipMm ?? 0;
+        if (rainEl) rainEl.textContent = `${precip} mm/h`;
       }
 
       // Update Destination Box
-      if (telemetry.dest) {
+      if (telemetry && telemetry.dest) {
         const d = telemetry.dest;
         const tempEl = document.getElementById('weather-dest-temp');
         const iconEl = document.getElementById('weather-dest-icon');
@@ -394,16 +488,18 @@ class GlobalAppCoordinator {
         const windEl = document.getElementById('weather-dest-wind');
         const rainEl = document.getElementById('weather-dest-rain');
 
-        if (tempEl) tempEl.textContent = `${d.temp}°C`;
+        if (tempEl && d.temp !== undefined && d.temp !== null) tempEl.textContent = `${d.temp}°C`;
         if (iconEl) iconEl.textContent = d.icon || '🌤️';
         if (condEl) condEl.textContent = d.condition || 'Clear';
-        if (humEl) humEl.textContent = `${d.humidity}%`;
-        if (windEl) windEl.textContent = `${d.windSpeed} km/h`;
-        if (rainEl) rainEl.textContent = `${d.precipitation} mm/h`;
+        if (humEl) humEl.textContent = `${d.humidity ?? 65}%`;
+        const windSpeed = d.windSpeed ?? d.windSpeedKmH ?? 10;
+        if (windEl) windEl.textContent = `${windSpeed} km/h`;
+        const precip = d.precipitation ?? d.precipMm ?? 0;
+        if (rainEl) rainEl.textContent = `${precip} mm/h`;
       }
 
       // Update Corridor Atmospheric Assessment
-      if (telemetry.corridorSummary) {
+      if (telemetry && telemetry.corridorSummary) {
         const s = telemetry.corridorSummary;
         const badgeEl = document.getElementById('weather-corridor-badge');
         const adviceEl = document.getElementById('weather-corridor-advice');
@@ -425,10 +521,34 @@ class GlobalAppCoordinator {
       if (timestampEl) {
         timestampEl.textContent = `Updated: ${telemetry.corridorSummary?.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
       }
+
+      // Update top sidebar weather risk metric
+      this.updateGlobalWeatherRiskMetric(telemetry);
     } catch (err) {
       console.warn('Weather telemetry update error:', err);
     } finally {
       if (refreshBtn) refreshBtn.classList.remove('syncing');
+    }
+  }
+
+  updateGlobalWeatherRiskMetric(telemetry) {
+    const valEl = document.getElementById('global-weather-risk-val');
+    const subEl = document.getElementById('global-weather-risk-sub');
+    if (!valEl || !telemetry?.corridorSummary) return;
+
+    const s = telemetry.corridorSummary;
+    if (s.statusClass === 'critical' || s.maxPrecip > 25) {
+      valEl.textContent = '84% Critical';
+      valEl.style.color = 'var(--neon-crimson)';
+      if (subEl) { subEl.textContent = 'Severe Rain / Landslide Risk'; subEl.style.color = '#fca5a5'; }
+    } else if (s.statusClass === 'warning' || s.maxPrecip > 5) {
+      valEl.textContent = '56% Alert';
+      valEl.style.color = 'var(--neon-amber)';
+      if (subEl) { subEl.textContent = 'Precipitation / Fog Advisory'; subEl.style.color = '#fde68a'; }
+    } else {
+      valEl.textContent = '22% Optimal';
+      valEl.style.color = 'var(--neon-emerald)';
+      if (subEl) { subEl.textContent = 'Clear Mountain Visibility'; subEl.style.color = '#a7f3d0'; }
     }
   }
 

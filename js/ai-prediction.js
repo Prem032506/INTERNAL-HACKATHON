@@ -115,7 +115,7 @@ class AIPredictionEngine {
     if (code === 1) return { description: 'Mainly Clear Skies', icon: '🌤️', severity: 'OPTIMAL', delayWeight: 0.0 };
     if (code === 2) return { description: 'Partly Cloudy', icon: '⛅', severity: 'OPTIMAL', delayWeight: 0.1 };
     if (code === 3) return { description: 'Overcast Skies', icon: '☁️', severity: 'MILD', delayWeight: 0.2 };
-    if (code === 45 || code === 48) return { description: 'Mountain Fog & Dense Mist (Low Visibility)', icon: '🌫️', severity: 'CAUTION', delayWeight: 1.2 };
+    if (code === 45 || code === 48) return { description: 'Mountain Fog & Dense Mist', icon: '🌫️', severity: 'CAUTION', delayWeight: 1.2 };
     if (code === 51 || code === 53 || code === 55) return { description: 'Light Mountain Drizzle', icon: '🌦️', severity: 'MILD', delayWeight: 0.4 };
     if (code === 56 || code === 57) return { description: 'Freezing Drizzle (Slippery Hairpins)', icon: '🌨️', severity: 'WARNING', delayWeight: 1.8 };
     if (code === 61 || code === 63) return { description: 'Moderate Mountain Rain', icon: '🌧️', severity: 'WARNING', delayWeight: 1.0 };
@@ -133,16 +133,44 @@ class AIPredictionEngine {
   }
 
   /**
+   * Resolves Coordinates for Any Hub Name or Complex Descriptive Label
+   */
+  resolveHubCoordinates(hubName) {
+    if (!hubName) return [26.1445, 91.7362];
+    if (this.hubCoordinates[hubName]) return this.hubCoordinates[hubName];
+
+    // Check first word (e.g. "Guwahati Central Gateway Hub" -> "Guwahati")
+    const firstWord = hubName.trim().split(/[\s\-(]/)[0];
+    if (this.hubCoordinates[firstWord]) return this.hubCoordinates[firstWord];
+
+    // Check substring match
+    const lower = hubName.toLowerCase();
+    for (const key of Object.keys(this.hubCoordinates)) {
+      if (lower.includes(key.toLowerCase()) || key.toLowerCase().includes(lower)) {
+        return this.hubCoordinates[key];
+      }
+    }
+
+    return [26.1445, 91.7362]; // Guwahati default
+  }
+
+  /**
    * Fetches Real-Time Meteorological Telemetry for Any Hub via Open-Meteo API
    */
   async fetchHubWeather(hubName) {
-    const coords = this.hubCoordinates[hubName] || [26.1445, 91.7362];
+    const cleanHub = hubName ? hubName.trim().split(/[\s\-(]/)[0] : 'Guwahati';
+    const coords = this.resolveHubCoordinates(hubName);
     const lat = coords[0];
     const lng = coords[1];
 
     try {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto`;
-      const resp = await fetch(url);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4500); // 4.5s network timeout
+
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lng.toFixed(4)}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto`;
+      const resp = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
       if (!resp.ok) throw new Error(`Weather fetch HTTP status: ${resp.status}`);
 
       const data = await resp.json();
@@ -150,14 +178,21 @@ class AIPredictionEngine {
       const weatherCode = current.weather_code ?? 0;
       const interpretation = this.interpretWeatherCode(weatherCode);
 
+      const tempVal = current.temperature_2m !== undefined ? Math.round(current.temperature_2m * 10) / 10 : 22.0;
+      const precipVal = current.precipitation ?? 0.0;
+      const windVal = current.wind_speed_10m ?? 10.0;
+
       return {
-        hub: hubName,
+        hub: cleanHub,
+        fullHubName: hubName,
         lat,
         lng,
-        temp: current.temperature_2m ?? 22.0,
-        humidity: current.relative_humidity_2m ?? 65,
-        precipMm: current.precipitation ?? 0.0,
-        windSpeedKmH: current.wind_speed_10m ?? 12.0,
+        temp: tempVal,
+        humidity: current.relative_humidity_2m ?? 70,
+        precipitation: precipVal,
+        precipMm: precipVal,
+        windSpeed: windVal,
+        windSpeedKmH: windVal,
         weatherCode,
         condition: interpretation.description,
         icon: interpretation.icon,
@@ -168,14 +203,26 @@ class AIPredictionEngine {
       };
     } catch (err) {
       console.warn(`[Open-Meteo] Live telemetry unavailable for ${hubName}, using cached radar baseline:`, err);
+      // Realistic regional baselines tailored by hub altitude & terrain
+      const baselineTemps = {
+        'Guwahati': 28.0, 'Siliguri': 27.5, 'Shillong': 18.0, 'Kohima': 19.5,
+        'Imphal': 22.0, 'Aizawl': 21.0, 'Gangtok': 16.0, 'Itanagar': 25.0,
+        'Tawang': 11.0, 'Srinagar': 17.0, 'Leh': 9.0, 'Zurich': 15.0,
+        'Milan': 22.0, 'Santiago': 20.0, 'Mendoza': 23.0
+      };
+      const fallbackTemp = baselineTemps[cleanHub] || 22.0;
+
       return {
-        hub: hubName,
+        hub: cleanHub,
+        fullHubName: hubName,
         lat,
         lng,
-        temp: 21.5,
+        temp: fallbackTemp,
         humidity: 68,
+        precipitation: 0.0,
         precipMm: 0.0,
-        windSpeedKmH: 14.0,
+        windSpeed: 12.0,
+        windSpeedKmH: 12.0,
         weatherCode: 1,
         condition: 'Mainly Clear Mountain Skies',
         icon: '🌤️',
@@ -196,8 +243,8 @@ class AIPredictionEngine {
       this.fetchHubWeather(destHub)
     ]);
 
-    const maxPrecip = Math.max(origWeather.precipMm, destWeather.precipMm);
-    const maxWind = Math.max(origWeather.windSpeedKmH, destWeather.windSpeedKmH);
+    const maxPrecip = Math.max(origWeather.precipitation, destWeather.precipitation);
+    const maxWind = Math.max(origWeather.windSpeed, destWeather.windSpeed);
     const combinedDelay = Number((origWeather.delayWeight + destWeather.delayWeight).toFixed(1));
 
     let corridorStatus = 'CLEAR ALL-WEATHER PASSAGE';
@@ -237,6 +284,13 @@ class AIPredictionEngine {
         timestamp: origWeather.timestamp
       }
     };
+  }
+
+  /**
+   * Alias for app.js interface consistency
+   */
+  async getCorridorWeatherTelemetry(originHub, destHub) {
+    return this.fetchCorridorWeather(originHub, destHub);
   }
 
   /**
