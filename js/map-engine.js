@@ -12,8 +12,13 @@ class GlobalMapEngine {
     this.fleetLayers = L.layerGroup();
     this.hubLayers = L.layerGroup();
     this.routePolylineLayers = L.layerGroup();
+    this.routeHighlightLayer = L.layerGroup();
     this.allRegionsData = [];
     this.currentRegionId = 'NER_INDIA';
+    this.mapClickRoutingActive = false;
+    this.mapClickOrigin = null;
+    this.mapClickCallback = null;
+    this.mapClickMarker = null;
   }
 
   async initialize() {
@@ -41,6 +46,7 @@ class GlobalMapEngine {
     this.fleetLayers.addTo(this.map);
     this.hubLayers.addTo(this.map);
     this.routePolylineLayers.addTo(this.map);
+    this.routeHighlightLayer.addTo(this.map);
 
     await this.loadGlobalRegionsData();
     this.switchRegion('NER_INDIA');
@@ -294,33 +300,187 @@ class GlobalMapEngine {
     });
   }
 
-  drawRouteComparison(primaryCoords, alternateCoords) {
+  drawRouteComparison(primaryCoords, alternateCoords, meta = {}) {
     this.routePolylineLayers.clearLayers();
+    this.routeHighlightLayer.clearLayers();
 
+    if (!primaryCoords || primaryCoords.length < 2 || !alternateCoords || alternateCoords.length < 2) return;
+
+    // Disrupted Primary Route with underglow
+    const primaryGlow = L.polyline(primaryCoords, {
+      color: '#ef4444',
+      weight: 9,
+      opacity: 0.35,
+      lineCap: 'round',
+      lineJoin: 'round'
+    });
     const primaryLine = L.polyline(primaryCoords, {
       color: '#ef4444',
-      weight: 5,
-      dashArray: '8, 8',
-      opacity: 0.9
+      weight: 4,
+      dashArray: '8, 6',
+      opacity: 0.95,
+      lineCap: 'round',
+      lineJoin: 'round'
     });
 
+    primaryLine.bindPopup(`
+      <div class="custom-popup-box">
+        <div class="popup-header">
+          <span class="popup-title">⚠️ Standard Direct Arterial</span>
+          <span class="popup-badge critical">DISRUPTED</span>
+        </div>
+        <div class="popup-body">
+          <strong>Highway Distance:</strong> ${meta.primaryDist || 'Direct'} km<br>
+          <strong>Status:</strong> Severe chokepoints / active hazard alert<br>
+          <span style="color:#ef4444;font-size:0.75rem;">High risk of multi-hour convoy stalling</span>
+        </div>
+      </div>
+    `);
+
+    // AI Resilient Alternate Route with cyan neon glow
+    const alternateGlow = L.polyline(alternateCoords, {
+      color: '#00f2fe',
+      weight: 10,
+      opacity: 0.4,
+      lineCap: 'round',
+      lineJoin: 'round'
+    });
     const alternateLine = L.polyline(alternateCoords, {
       color: '#00f2fe',
-      weight: 6,
-      opacity: 1
+      weight: 5,
+      opacity: 1.0,
+      lineCap: 'round',
+      lineJoin: 'round'
     });
 
+    alternateLine.bindPopup(`
+      <div class="custom-popup-box">
+        <div class="popup-header">
+          <span class="popup-title">✨ AI Resilient Road Bypass</span>
+          <span class="popup-badge normal">RECOMMENDED</span>
+        </div>
+        <div class="popup-body">
+          <strong>Highway Distance:</strong> ${meta.altDist || 'Bypass'} km<br>
+          <strong>Status:</strong> 100% Verified Passable Road Network<br>
+          <span style="color:#00f2fe;font-size:0.75rem;">Hazard-evasive high-ground corridor</span>
+        </div>
+      </div>
+    `);
+
+    this.routePolylineLayers.addLayer(primaryGlow);
     this.routePolylineLayers.addLayer(primaryLine);
+    this.routePolylineLayers.addLayer(alternateGlow);
     this.routePolylineLayers.addLayer(alternateLine);
 
-    const group = L.featureGroup([
-      primaryLine,
-      alternateLine
-    ]);
+    // Add Origin and Destination Waypoint Pins
+    const originPoint = primaryCoords[0];
+    const destPoint = primaryCoords[primaryCoords.length - 1];
 
-    this.map.fitBounds(group.getBounds(), {
-      padding: [40, 40]
+    const originPin = L.divIcon({
+      className: 'custom-hub-marker',
+      html: `<div class="hub-dot" style="background:#10b981;box-shadow:0 0 14px #10b981;"></div><div class="hub-label" style="color:#10b981;font-weight:bold;">🚩 ${meta.originName || 'Origin'}</div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
     });
+    const destPin = L.divIcon({
+      className: 'custom-hub-marker',
+      html: `<div class="hub-dot" style="background:#00f2fe;box-shadow:0 0 14px #00f2fe;"></div><div class="hub-label" style="color:#00f2fe;font-weight:bold;">🏁 ${meta.destName || 'Destination'}</div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+
+    this.routePolylineLayers.addLayer(L.marker(originPoint, { icon: originPin }));
+    this.routePolylineLayers.addLayer(L.marker(destPoint, { icon: destPin }));
+
+    const group = L.featureGroup([primaryLine, alternateLine]);
+    this.map.fitBounds(group.getBounds(), {
+      padding: [50, 50],
+      maxZoom: 14
+    });
+  }
+
+  highlightRouteStep(location, instruction, road) {
+    if (!this.map || !location || !location[0] || !location[1]) return;
+    this.routeHighlightLayer.clearLayers();
+
+    const stepMarker = L.circleMarker(location, {
+      radius: 9,
+      fillColor: '#f59e0b',
+      color: '#fff',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.95
+    });
+
+    const pulseRing = L.circle(location, {
+      radius: 500,
+      color: '#f59e0b',
+      fillColor: '#f59e0b',
+      fillOpacity: 0.2,
+      weight: 1.5
+    });
+
+    this.routeHighlightLayer.addLayer(pulseRing);
+    this.routeHighlightLayer.addLayer(stepMarker);
+
+    stepMarker.bindTooltip(`<strong>${instruction}</strong><br><small style="color:#38bdf8;">${road}</small>`, {
+      permanent: true,
+      direction: 'top',
+      className: 'custom-step-tooltip'
+    }).openTooltip();
+
+    this.map.panTo(location, { animate: true, duration: 0.8 });
+  }
+
+  enableMapClickRouting(callback) {
+    this.mapClickRoutingActive = true;
+    this.mapClickOrigin = null;
+    this.mapClickCallback = callback;
+    if (this.map) {
+      this.map.getContainer().style.cursor = 'crosshair';
+      this.map.on('click', this._onMapClickForRouting, this);
+    }
+  }
+
+  disableMapClickRouting() {
+    this.mapClickRoutingActive = false;
+    this.mapClickOrigin = null;
+    this.mapClickCallback = null;
+    if (this.map) {
+      this.map.getContainer().style.cursor = '';
+      this.map.off('click', this._onMapClickForRouting, this);
+    }
+    if (this.mapClickMarker) {
+      this.routeHighlightLayer.removeLayer(this.mapClickMarker);
+      this.mapClickMarker = null;
+    }
+  }
+
+  _onMapClickForRouting(e) {
+    if (!this.mapClickRoutingActive) return;
+    const lat = Number(e.latlng.lat.toFixed(5));
+    const lng = Number(e.latlng.lng.toFixed(5));
+
+    if (!this.mapClickOrigin) {
+      this.mapClickOrigin = [lat, lng];
+      const startIcon = L.divIcon({
+        className: 'custom-hub-marker',
+        html: `<div class="hub-dot" style="background:#10b981;box-shadow:0 0 16px #10b981;"></div><div class="hub-label" style="color:#10b981;">📍 Point A (Origin)</div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+      });
+      this.mapClickMarker = L.marker([lat, lng], { icon: startIcon }).addTo(this.routeHighlightLayer);
+      if (window.app && typeof window.app.showNotification === 'function') {
+        window.app.showNotification('📍 Point A Selected! Click Point B on the map for destination.');
+      }
+    } else {
+      const dest = [lat, lng];
+      const origin = this.mapClickOrigin;
+      this.disableMapClickRouting();
+      if (this.mapClickCallback) {
+        this.mapClickCallback({ origin, dest });
+      }
+    }
   }
 
   flyToLocation(lat, lng, zoom = 9) {

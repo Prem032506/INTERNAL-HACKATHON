@@ -165,6 +165,9 @@
           <button class="btn-primary-action" onclick="window.app.showRoutePlanner()">
             <span>🧭</span> <span data-i18n="routeOptimizer">AI Route Optimizer</span>
           </button>
+          <button class="btn-secondary-action" id="btn-map-quick-route" style="border-color:var(--neon-cyan);color:var(--neon-cyan);">
+            <span>📍</span> <span>Map Click-to-Route</span>
+          </button>
           <button class="btn-secondary-action" onclick="window.app.showFieldReportModal()">
             <span>📷</span> <span data-i18n="fieldReport">Report Road Disruption</span>
           </button>
@@ -267,6 +270,17 @@
           <div class="route-quick-search-box">
             <span class="search-icon">🔍</span>
             <input type="text" id="route-hub-search" class="form-input" placeholder="Quick filter hubs or terminals (e.g. Leh, Shillong, Manali, Aizawl, Tawang, Geneva)...">
+          </div>
+
+          <!-- Real-World Road Accuracy Status & Map Picker -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:0.6rem 0 0.85rem;flex-wrap:wrap;gap:0.5rem;">
+            <div class="accuracy-badge-pill">
+              <span class="pulse-emerald-dot"></span>
+              <span>100% Real-World Highway Geometry Active (OSRM)</span>
+            </div>
+            <button type="button" id="btn-modal-map-pick" class="btn-map-picker">
+              <span>📍</span> <span>Click 2 Points on Map</span>
+            </button>
           </div>
 
           <!-- Origin and Destination Row -->

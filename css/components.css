@@ -578,3 +578,177 @@ option {
   font-size: 0.65rem;
   color: #64748b;
 }
+
+/* 100% Real Road Navigation & Turn-by-Turn Styles */
+.accuracy-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.03em;
+}
+
+.pulse-emerald-dot {
+  width: 7px;
+  height: 7px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #10b981;
+  animation: radar-pulse 1.8s infinite;
+}
+
+.btn-map-picker {
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: var(--neon-cyan);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-map-picker:hover {
+  background: rgba(0, 242, 254, 0.2);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
+}
+
+.turn-by-turn-drawer {
+  margin-top: 0.85rem;
+  background: rgba(11, 20, 36, 0.7);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.btn-toggle-steps {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.2s;
+}
+
+.btn-toggle-steps:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--neon-cyan);
+}
+
+.toggle-arrow {
+  transition: transform 0.25s ease;
+}
+
+.turn-by-turn-drawer.open .toggle-arrow {
+  transform: rotate(180deg);
+}
+
+.steps-timeline-list {
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0.5rem 0.75rem;
+}
+
+.turn-by-turn-drawer.open .steps-timeline-list {
+  display: block;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.step-item:hover {
+  background: rgba(0, 242, 254, 0.08);
+  border-left: 2px solid var(--neon-cyan);
+  padding-left: calc(0.5rem - 2px);
+}
+
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 17px;
+  top: 26px;
+  bottom: -4px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.step-icon-bubble {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 242, 254, 0.15);
+  border: 1px solid rgba(0, 242, 254, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-instruction {
+  font-size: 0.75rem;
+  color: #f1f5f9;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.step-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.step-road-badge {
+  color: var(--neon-cyan);
+  background: rgba(0, 242, 254, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+
+.custom-step-tooltip {
+  background: #0f172a !important;
+  border: 1px solid #f59e0b !important;
+  color: #fff !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.72rem !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
+}
