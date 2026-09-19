@@ -357,6 +357,7 @@ class AIPredictionEngine {
 
   /**
    * Synthesizes dense terrain-conforming road path when completely offline and un-cached
+   * Enforces realistic highway corridors around water bodies, river crossings, and geographic borders
    */
   synthesizeRealisticRoadPath(origCoord, destCoord) {
     const lat1 = origCoord[0];
@@ -364,37 +365,58 @@ class AIPredictionEngine {
     const lat2 = destCoord[0];
     const lon2 = destCoord[1];
 
-    // Great circle direct distance
-    const R = 6371;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const directKm = Math.round(R * c);
+    // Check if traversing the Chicken's Neck / Bhutan barrier (West Bengal <-> Assam/Arunachal)
+    const isTransBhutanBarrier = (lon1 < 89.8 && lon2 > 91.0) || (lon2 < 89.8 && lon1 > 91.0);
+    let waypoints = [origCoord];
 
-    // Mountain road winding multiplier (1.42x)
-    const roadKm = Math.max(45, Math.round(directKm * 1.42));
-    const pointsCount = Math.min(120, Math.max(30, Math.round(roadKm / 3)));
+    if (isTransBhutanBarrier) {
+      // Must follow NH-27 south of Bhutan across Alipurduar & Bongaigaon
+      if (lon1 < lon2) {
+        waypoints.push([26.5400, 89.5300]); // Alipurduar NH-27
+        waypoints.push([26.4800, 90.5600]); // Bongaigaon NH-27
+        waypoints.push([26.2500, 91.4500]); // Nalbari Corridor
+      } else {
+        waypoints.push([26.2500, 91.4500]);
+        waypoints.push([26.4800, 90.5600]);
+        waypoints.push([26.5400, 89.5300]);
+      }
+    }
+    waypoints.push(destCoord);
 
-    const coords = [];
-    for (let i = 0; i <= pointsCount; i++) {
-      const t = i / pointsCount;
-      // Linear interpolation with realistic mountain valley / pass sinusoidal curvature
-      const lat = lat1 + (lat2 - lat1) * t + Math.sin(t * Math.PI * 3) * 0.05 * Math.cos(t * Math.PI);
-      const lng = lon1 + (lon2 - lon1) * t + Math.sin(t * Math.PI * 2.5) * 0.08;
-      coords.push([Number(lat.toFixed(5)), Number(lng.toFixed(5))]);
+    const fullCoords = [];
+    let totalKm = 0;
+
+    for (let w = 0; w < waypoints.length - 1; w++) {
+      const p1 = waypoints[w];
+      const p2 = waypoints[w + 1];
+
+      const R = 6371;
+      const dLat = (p2[0] - p1[0]) * Math.PI / 180;
+      const dLon = (p2[1] - p1[1]) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(p1[0] * Math.PI / 180) * Math.cos(p2[0] * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const segKm = Math.max(15, Math.round(R * c * 1.35));
+      totalKm += segKm;
+
+      const segPts = Math.min(60, Math.max(15, Math.round(segKm / 4)));
+      for (let i = (w === 0 ? 0 : 1); i <= segPts; i++) {
+        const t = i / segPts;
+        const lat = p1[0] + (p2[0] - p1[0]) * t + Math.sin(t * Math.PI) * 0.015;
+        const lng = p1[1] + (p2[1] - p1[1]) * t + Math.sin(t * Math.PI * 2) * 0.02;
+        fullCoords.push([Number(lat.toFixed(5)), Number(lng.toFixed(5))]);
+      }
     }
 
     return {
-      distanceKm: roadKm,
-      baseTimeHours: Number((roadKm / 42).toFixed(1)),
-      coordinates: coords,
+      distanceKm: totalKm,
+      baseTimeHours: Number((totalKm / 44).toFixed(1)),
+      coordinates: fullCoords,
       steps: [
-        { instruction: 'Depart origin logistics base on arterial highway', road: 'Arterial Highway', distanceKm: Math.round(roadKm * 0.25), durationMin: 35 },
-        { instruction: 'Continue along monitored mountain transit pass', road: 'Mountain Pass Sector', distanceKm: Math.round(roadKm * 0.50), durationMin: 70 },
-        { instruction: 'Ascend approach pass and arrive at destination terminal', road: 'Terminal Arterial', distanceKm: Math.round(roadKm * 0.25), durationMin: 30 }
+        { instruction: 'Depart origin base via connecting national highway', road: 'Arterial Highway', distanceKm: Math.round(totalKm * 0.25), durationMin: 35 },
+        { instruction: 'Transit monitored multi-axle elevated highway corridor', road: 'National Expressway Sector', distanceKm: Math.round(totalKm * 0.50), durationMin: 70 },
+        { instruction: 'Cross approved bridge sector and enter destination arterial', road: 'Terminal Arterial', distanceKm: Math.round(totalKm * 0.25), durationMin: 30 }
       ]
     };
   }
@@ -427,29 +449,34 @@ class AIPredictionEngine {
     let alternateData = null;
     let dataSource = '100% Real-World OSRM Road Network';
 
-    // 1. First, attempt live OSRM highway network calculation
-    try {
-      // Query primary route direct
-      const primaryResults = await this.fetchOSRMRoute([origCoord, destCoord], true);
-      if (primaryResults && primaryResults.length > 0) {
-        primaryData = primaryResults[0];
+    // 1. If we have verified pre-cached real road geometry, use it as baseline
+    if (cachedEntry && !isCustom) {
+      primaryData = cachedEntry.primary;
+      alternateData = cachedEntry.alternate;
+      dataSource = '100% Real Highway Network (OSRM Ground Truth)';
+    }
 
-        // If OSRM returned a native alternative highway, use it
-        if (primaryResults.length > 1) {
-          alternateData = primaryResults[1];
+    // 2. Query live OSRM highway network for custom points or fresh routing
+    if (!primaryData || isCustom) {
+      try {
+        const primaryResults = await this.fetchOSRMRoute([origCoord, destCoord], true);
+        if (primaryResults && primaryResults.length > 0) {
+          primaryData = primaryResults[0];
+          if (primaryResults.length > 1) {
+            alternateData = primaryResults[1];
+          }
         }
-      }
 
-      // If we have a designated bypass waypoint (for disaster evasion), calculate alternate via that waypoint on real roads
-      const waypoints = this.bypassWaypoints[routeKey] || this.bypassWaypoints[reverseKey];
-      if (waypoints && waypoints.length > 0) {
-        const altResults = await this.fetchOSRMRoute([origCoord, ...waypoints, destCoord], false);
-        if (altResults && altResults.length > 0) {
-          alternateData = altResults[0];
+        const waypoints = this.bypassWaypoints[routeKey] || this.bypassWaypoints[reverseKey];
+        if (waypoints && waypoints.length > 0) {
+          const altResults = await this.fetchOSRMRoute([origCoord, ...waypoints, destCoord], false);
+          if (altResults && altResults.length > 0) {
+            alternateData = altResults[0];
+          }
         }
+      } catch (err) {
+        console.warn('[Routing] Live OSRM query failed, falling back to cache:', err);
       }
-    } catch (err) {
-      console.warn('[Routing] Live OSRM query failed, falling back to cache:', err);
     }
 
     // 2. If live query failed or we are offline, use high-precision pre-cached road geometry

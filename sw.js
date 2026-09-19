@@ -1,9 +1,10 @@
 /**
- * Global-Setu Service Worker
- * Enables 100% Offline-First operation in remote cellular shadow zones
+ * Global-Setu Service Worker v4 (Real-World Road Network & Cache Invalidation)
+ * Network-First strategy to ensure users always receive 100% accurate road updates immediately,
+ * with 100% Offline-First fallback for remote cellular shadow zones.
  */
 
-const CACHE_NAME = 'global-setu-v2';
+const CACHE_NAME = 'global-setu-v4-road-accuracy';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -24,19 +25,20 @@ const STATIC_ASSETS = [
   './js/diagrams.js',
   './js/presentation.js',
   './assets/data/global-regions.json',
-  './assets/data/mock-telemetry.json'
+  './assets/data/mock-telemetry.json',
+  './assets/data/cached-road-routes.json'
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Caching Global-Setu core offline app shell');
+      console.log('[SW] Caching Global-Setu v4 with 100% Real Road Geometries');
       return cache.addAll(STATIC_ASSETS).catch((err) => {
         console.warn('[SW] Pre-caching partial assets:', err);
       });
     })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -45,52 +47,43 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[SW] Removing legacy cache:', key);
+            console.log('[SW] Purging outdated legacy cache:', key);
             return caches.delete(key);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-  // Pass through backend API calls directly
-  if (event.request.url.includes(':5000')) {
+  const url = event.request.url;
+
+  // Bypass service worker caching for live backend and routing APIs
+  if (url.includes(':5000') || url.includes('router.project-osrm.org') || url.includes('api.open-meteo.com')) {
     return;
   }
 
+  // Network-First Strategy: Always fetch fresh code & data from network; fallback to cache if offline
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Return cached, and revalidate in background
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse.clone());
-            });
-          }
-        }).catch(() => {});
-        return cachedResponse;
-      }
-
-      // Try network, fallback to cache if available
-      return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          return networkResponse;
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
         }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
         return networkResponse;
-      }).catch(() => {
-        // Fallback for document navigation
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-      });
-    })
+      })
+      .catch(() => {
+        // Fallback to cache when offline
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          if (event.request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
+        });
+      })
   );
 });

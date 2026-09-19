@@ -8,14 +8,78 @@
       "centerLng": 92.9376,
       "zoom": 7,
       "states": [
-        { "id": "AS", "name": "Assam", "capital": "Dispur / Guwahati", "lat": 26.1445, "lng": 91.7362, "vulnerabilityScore": 68, "riskStatus": "Moderate" },
-        { "id": "AR", "name": "Arunachal Pradesh", "capital": "Itanagar", "lat": 27.0844, "lng": 93.6053, "vulnerabilityScore": 89, "riskStatus": "Critical (Monsoon Landslides)" },
-        { "id": "ML", "name": "Meghalaya", "capital": "Shillong", "lat": 25.5788, "lng": 91.8933, "vulnerabilityScore": 74, "riskStatus": "High (Flash Floods)" },
-        { "id": "MN", "name": "Manipur", "capital": "Imphal", "lat": 24.8170, "lng": 93.9368, "vulnerabilityScore": 82, "riskStatus": "High (Highway Dependency)" },
-        { "id": "MZ", "name": "Mizoram", "capital": "Aizawl", "lat": 23.7271, "lng": 92.7176, "vulnerabilityScore": 79, "riskStatus": "High (Slope Collapse)" },
-        { "id": "NL", "name": "Nagaland", "capital": "Kohima", "lat": 25.6751, "lng": 94.1086, "vulnerabilityScore": 85, "riskStatus": "Critical (NH-29 Sinking Zones)" },
-        { "id": "TR", "name": "Tripura", "capital": "Agartala", "lat": 23.8315, "lng": 91.2868, "vulnerabilityScore": 62, "riskStatus": "Moderate" },
-        { "id": "SK", "name": "Sikkim", "capital": "Gangtok", "lat": 27.3389, "lng": 88.6065, "vulnerabilityScore": 91, "riskStatus": "Critical (NH-10 Teesta Floods)" }
+        {
+          "id": "AS",
+          "name": "Assam",
+          "capital": "Dispur / Guwahati",
+          "lat": 26.1445,
+          "lng": 91.7362,
+          "vulnerabilityScore": 68,
+          "riskStatus": "Moderate"
+        },
+        {
+          "id": "AR",
+          "name": "Arunachal Pradesh",
+          "capital": "Itanagar",
+          "lat": 27.0844,
+          "lng": 93.6053,
+          "vulnerabilityScore": 89,
+          "riskStatus": "Critical (Monsoon Landslides)"
+        },
+        {
+          "id": "ML",
+          "name": "Meghalaya",
+          "capital": "Shillong",
+          "lat": 25.5788,
+          "lng": 91.8933,
+          "vulnerabilityScore": 74,
+          "riskStatus": "High (Flash Floods)"
+        },
+        {
+          "id": "MN",
+          "name": "Manipur",
+          "capital": "Imphal",
+          "lat": 24.817,
+          "lng": 93.9368,
+          "vulnerabilityScore": 82,
+          "riskStatus": "High (Highway Dependency)"
+        },
+        {
+          "id": "MZ",
+          "name": "Mizoram",
+          "capital": "Aizawl",
+          "lat": 23.7271,
+          "lng": 92.7176,
+          "vulnerabilityScore": 79,
+          "riskStatus": "High (Slope Collapse)"
+        },
+        {
+          "id": "NL",
+          "name": "Nagaland",
+          "capital": "Kohima",
+          "lat": 25.6751,
+          "lng": 94.1086,
+          "vulnerabilityScore": 85,
+          "riskStatus": "Critical (NH-29 Sinking Zones)"
+        },
+        {
+          "id": "TR",
+          "name": "Tripura",
+          "capital": "Agartala",
+          "lat": 23.8315,
+          "lng": 91.2868,
+          "vulnerabilityScore": 62,
+          "riskStatus": "Moderate"
+        },
+        {
+          "id": "SK",
+          "name": "Sikkim",
+          "capital": "Gangtok",
+          "lat": 27.3389,
+          "lng": 88.6065,
+          "vulnerabilityScore": 91,
+          "riskStatus": "Critical (NH-10 Teesta Floods)"
+        }
       ],
       "corridors": [
         {
@@ -23,46 +87,821 @@
           "name": "Siliguri - Guwahati Arterial Expressway (NH-27)",
           "type": "Arterial Lifeline (Chicken's Neck)",
           "riskLevel": "Low-Moderate",
-          "coordinates": [[26.7271, 88.3953], [26.5467, 89.0758], [26.3328, 90.0034], [26.1445, 91.7362]]
+          "coordinates": [
+            [
+              26.72691,
+              88.39531
+            ],
+            [
+              26.73208,
+              88.41064
+            ],
+            [
+              26.69732,
+              88.41111
+            ],
+            [
+              26.67252,
+              88.41468
+            ],
+            [
+              26.641,
+              88.42692
+            ],
+            [
+              26.62232,
+              88.46721
+            ],
+            [
+              26.58582,
+              88.50871
+            ],
+            [
+              26.57107,
+              88.54448
+            ],
+            [
+              26.55506,
+              88.5831
+            ],
+            [
+              26.54156,
+              88.62872
+            ],
+            [
+              26.53418,
+              88.68143
+            ],
+            [
+              26.55914,
+              88.72577
+            ],
+            [
+              26.54787,
+              88.80388
+            ],
+            [
+              26.56419,
+              88.8374
+            ],
+            [
+              26.56248,
+              88.87107
+            ],
+            [
+              26.56151,
+              88.92145
+            ],
+            [
+              26.57938,
+              88.99228
+            ],
+            [
+              26.58141,
+              89.02281
+            ],
+            [
+              26.55903,
+              89.0558
+            ],
+            [
+              26.54793,
+              89.08877
+            ],
+            [
+              26.54225,
+              89.12425
+            ],
+            [
+              26.52027,
+              89.17969
+            ],
+            [
+              26.50765,
+              89.26822
+            ],
+            [
+              26.4936,
+              89.36898
+            ],
+            [
+              26.49806,
+              89.46203
+            ],
+            [
+              26.48073,
+              89.53435
+            ],
+            [
+              26.48679,
+              89.61736
+            ],
+            [
+              26.47696,
+              89.74429
+            ],
+            [
+              26.44137,
+              89.88573
+            ],
+            [
+              26.44464,
+              89.9626
+            ],
+            [
+              26.51875,
+              90.03752
+            ],
+            [
+              26.5531,
+              90.08949
+            ],
+            [
+              26.5345,
+              90.1203
+            ],
+            [
+              26.56888,
+              90.19129
+            ],
+            [
+              26.56275,
+              90.26506
+            ],
+            [
+              26.54537,
+              90.36183
+            ],
+            [
+              26.52284,
+              90.48586
+            ],
+            [
+              26.48971,
+              90.61621
+            ],
+            [
+              26.47988,
+              90.70293
+            ],
+            [
+              26.46706,
+              90.79295
+            ],
+            [
+              26.47185,
+              90.88009
+            ],
+            [
+              26.49094,
+              90.9524
+            ],
+            [
+              26.35373,
+              90.99207
+            ],
+            [
+              26.30104,
+              91.06924
+            ],
+            [
+              26.27374,
+              91.20812
+            ],
+            [
+              26.28686,
+              91.38946
+            ],
+            [
+              26.29219,
+              91.42829
+            ],
+            [
+              26.28165,
+              91.45464
+            ],
+            [
+              26.27357,
+              91.47682
+            ],
+            [
+              26.27296,
+              91.51246
+            ],
+            [
+              26.2575,
+              91.51991
+            ],
+            [
+              26.25273,
+              91.54089
+            ],
+            [
+              26.24792,
+              91.57628
+            ],
+            [
+              26.23327,
+              91.59765
+            ],
+            [
+              26.22108,
+              91.62364
+            ],
+            [
+              26.21061,
+              91.63655
+            ],
+            [
+              26.19024,
+              91.64361
+            ],
+            [
+              26.18606,
+              91.66732
+            ],
+            [
+              26.15733,
+              91.6739
+            ],
+            [
+              26.11807,
+              91.70982
+            ],
+            [
+              26.14496,
+              91.72755
+            ],
+            [
+              26.14429,
+              91.73604
+            ]
+          ]
         },
         {
           "id": "COR-03",
           "name": "Dimapur - Kohima - Imphal Highway (NH-29)",
           "type": "Nagaland-Manipur Lifeline",
           "riskLevel": "Critical",
-          "coordinates": [[25.9068, 93.7273], [25.7800, 93.9400], [25.6751, 94.1086], [24.8170, 93.9368]]
+          "coordinates": [
+            [
+              26.14428,
+              91.73615
+            ],
+            [
+              26.11695,
+              91.74863
+            ],
+            [
+              26.11791,
+              91.83108
+            ],
+            [
+              26.11216,
+              91.83764
+            ],
+            [
+              26.10441,
+              91.85815
+            ],
+            [
+              26.10032,
+              91.86964
+            ],
+            [
+              26.10281,
+              91.88087
+            ],
+            [
+              26.10877,
+              91.88553
+            ],
+            [
+              26.1207,
+              91.90984
+            ],
+            [
+              26.11865,
+              91.98032
+            ],
+            [
+              26.1231,
+              92.02596
+            ],
+            [
+              26.11479,
+              92.07617
+            ],
+            [
+              26.1075,
+              92.16522
+            ],
+            [
+              26.12565,
+              92.25562
+            ],
+            [
+              26.09965,
+              92.3186
+            ],
+            [
+              26.15407,
+              92.35309
+            ],
+            [
+              26.1981,
+              92.40664
+            ],
+            [
+              26.21106,
+              92.46894
+            ],
+            [
+              26.23083,
+              92.5142
+            ],
+            [
+              26.26446,
+              92.58021
+            ],
+            [
+              26.29069,
+              92.64345
+            ],
+            [
+              26.30462,
+              92.71982
+            ],
+            [
+              26.23905,
+              92.74377
+            ],
+            [
+              26.16096,
+              92.76041
+            ],
+            [
+              26.13471,
+              92.82625
+            ],
+            [
+              26.10523,
+              92.94405
+            ],
+            [
+              26.10352,
+              93.0049
+            ],
+            [
+              26.09099,
+              93.13915
+            ],
+            [
+              26.03912,
+              93.21759
+            ],
+            [
+              26.00939,
+              93.26251
+            ],
+            [
+              26.00042,
+              93.31267
+            ],
+            [
+              26.00347,
+              93.36759
+            ],
+            [
+              26.00776,
+              93.39318
+            ],
+            [
+              25.96427,
+              93.46304
+            ],
+            [
+              25.95647,
+              93.51424
+            ],
+            [
+              25.95839,
+              93.56594
+            ],
+            [
+              25.94522,
+              93.5933
+            ],
+            [
+              25.93013,
+              93.62466
+            ],
+            [
+              25.9152,
+              93.64654
+            ],
+            [
+              25.90258,
+              93.67119
+            ],
+            [
+              25.9039,
+              93.68955
+            ],
+            [
+              25.90715,
+              93.71991
+            ],
+            [
+              25.89979,
+              93.75287
+            ],
+            [
+              25.83891,
+              93.77486
+            ],
+            [
+              25.80054,
+              93.79456
+            ],
+            [
+              25.78388,
+              93.80064
+            ],
+            [
+              25.76846,
+              93.82029
+            ],
+            [
+              25.75851,
+              93.85439
+            ],
+            [
+              25.76314,
+              93.89185
+            ],
+            [
+              25.77299,
+              93.91218
+            ],
+            [
+              25.7709,
+              93.93398
+            ],
+            [
+              25.75594,
+              93.95435
+            ],
+            [
+              25.73966,
+              93.98373
+            ],
+            [
+              25.73761,
+              94.00921
+            ],
+            [
+              25.72387,
+              94.03598
+            ],
+            [
+              25.69883,
+              94.04706
+            ],
+            [
+              25.68923,
+              94.05647
+            ],
+            [
+              25.68227,
+              94.07218
+            ],
+            [
+              25.67484,
+              94.08661
+            ],
+            [
+              25.66823,
+              94.09146
+            ],
+            [
+              25.66847,
+              94.10205
+            ],
+            [
+              25.6751,
+              94.10868
+            ]
+          ]
         },
         {
           "id": "COR-04",
           "name": "Siliguri - Rangpo - Gangtok Highway (NH-10)",
           "type": "Sikkim Lifeline",
           "riskLevel": "Critical",
-          "coordinates": [[26.7271, 88.3953], [27.0500, 88.5100], [27.3389, 88.6065]]
+          "coordinates": [
+            [
+              26.72691,
+              88.39531
+            ],
+            [
+              26.73494,
+              88.41393
+            ],
+            [
+              26.75782,
+              88.44192
+            ],
+            [
+              26.79835,
+              88.45058
+            ],
+            [
+              26.85305,
+              88.45917
+            ],
+            [
+              26.87831,
+              88.47051
+            ],
+            [
+              26.88788,
+              88.47313
+            ],
+            [
+              26.89384,
+              88.47331
+            ],
+            [
+              26.90043,
+              88.47241
+            ],
+            [
+              26.91155,
+              88.46951
+            ],
+            [
+              26.9251,
+              88.4536
+            ],
+            [
+              26.93692,
+              88.44238
+            ],
+            [
+              26.94909,
+              88.44025
+            ],
+            [
+              26.95904,
+              88.43421
+            ],
+            [
+              26.96537,
+              88.42856
+            ],
+            [
+              26.97539,
+              88.42467
+            ],
+            [
+              26.97077,
+              88.41979
+            ],
+            [
+              26.97264,
+              88.41656
+            ],
+            [
+              26.98035,
+              88.41848
+            ],
+            [
+              26.98959,
+              88.41932
+            ],
+            [
+              26.99679,
+              88.42601
+            ],
+            [
+              27.00268,
+              88.43882
+            ],
+            [
+              27.0115,
+              88.43934
+            ],
+            [
+              27.02059,
+              88.43536
+            ],
+            [
+              27.029,
+              88.4269
+            ],
+            [
+              27.03901,
+              88.42675
+            ],
+            [
+              27.05239,
+              88.42587
+            ],
+            [
+              27.075,
+              88.43211
+            ],
+            [
+              27.09412,
+              88.46448
+            ],
+            [
+              27.11111,
+              88.468
+            ],
+            [
+              27.12308,
+              88.48652
+            ],
+            [
+              27.12676,
+              88.50329
+            ],
+            [
+              27.13787,
+              88.51503
+            ],
+            [
+              27.15022,
+              88.53443
+            ],
+            [
+              27.16729,
+              88.52848
+            ],
+            [
+              27.18061,
+              88.51373
+            ],
+            [
+              27.18776,
+              88.49955
+            ],
+            [
+              27.19578,
+              88.49189
+            ],
+            [
+              27.20648,
+              88.48923
+            ],
+            [
+              27.22128,
+              88.49092
+            ],
+            [
+              27.23345,
+              88.50157
+            ],
+            [
+              27.2482,
+              88.52868
+            ],
+            [
+              27.26145,
+              88.55388
+            ],
+            [
+              27.26911,
+              88.57904
+            ],
+            [
+              27.27161,
+              88.57576
+            ],
+            [
+              27.27943,
+              88.58809
+            ],
+            [
+              27.29356,
+              88.59057
+            ],
+            [
+              27.30483,
+              88.58849
+            ],
+            [
+              27.31748,
+              88.59588
+            ],
+            [
+              27.31214,
+              88.59891
+            ],
+            [
+              27.33312,
+              88.60805
+            ],
+            [
+              27.33895,
+              88.60615
+            ],
+            [
+              27.33898,
+              88.60642
+            ]
+          ]
         }
       ],
       "hubs": [
-        { "name": "Guwahati Central Hub", "lat": 26.1445, "lng": 91.7362 },
-        { "name": "Itanagar Depot", "lat": 27.0844, "lng": 93.6053 },
-        { "name": "Shillong Center", "lat": 25.5788, "lng": 91.8933 },
-        { "name": "Imphal Depot", "lat": 24.8170, "lng": 93.9368 },
-        { "name": "Aizawl Godown", "lat": 23.7271, "lng": 92.7176 },
-        { "name": "Kohima Base", "lat": 25.6751, "lng": 94.1086 },
-        { "name": "Agartala Terminal", "lat": 23.8315, "lng": 91.2868 },
-        { "name": "Gangtok Transit", "lat": 27.3389, "lng": 88.6065 }
+        {
+          "name": "Guwahati Central Hub",
+          "lat": 26.1445,
+          "lng": 91.7362
+        },
+        {
+          "name": "Itanagar Depot",
+          "lat": 27.0844,
+          "lng": 93.6053
+        },
+        {
+          "name": "Shillong Center",
+          "lat": 25.5788,
+          "lng": 91.8933
+        },
+        {
+          "name": "Imphal Depot",
+          "lat": 24.817,
+          "lng": 93.9368
+        },
+        {
+          "name": "Aizawl Godown",
+          "lat": 23.7271,
+          "lng": 92.7176
+        },
+        {
+          "name": "Kohima Base",
+          "lat": 25.6751,
+          "lng": 94.1086
+        },
+        {
+          "name": "Agartala Terminal",
+          "lat": 23.8315,
+          "lng": 91.2868
+        },
+        {
+          "name": "Gangtok Transit",
+          "lat": 27.3389,
+          "lng": 88.6065
+        }
       ]
     },
     {
       "id": "HIMALAYAN_ARC",
       "name": "Northern Himalayan Arc (Ladakh, J&K, Uttarakhand, Himachal)",
       "country": "India / Nepal",
-      "centerLat": 32.2000,
-      "centerLng": 77.2000,
+      "centerLat": 32.2,
+      "centerLng": 77.2,
       "zoom": 7,
       "states": [
-        { "id": "LDK", "name": "Ladakh", "capital": "Leh", "lat": 34.1526, "lng": 77.5771, "vulnerabilityScore": 92, "riskStatus": "Critical (Zoji La & Khardung La Snow Closures)" },
-        { "id": "JK", "name": "Jammu & Kashmir", "capital": "Srinagar", "lat": 34.0837, "lng": 74.7973, "vulnerabilityScore": 84, "riskStatus": "High (NH-44 Ramban Landslides)" },
-        { "id": "HP", "name": "Himachal Pradesh", "capital": "Shimla", "lat": 31.1048, "lng": 77.1734, "vulnerabilityScore": 86, "riskStatus": "Critical (Kullu-Manali Monsoon Flash Floods)" },
-        { "id": "UK", "name": "Uttarakhand", "capital": "Dehradun", "lat": 30.3165, "lng": 78.0322, "vulnerabilityScore": 88, "riskStatus": "Critical (Joshimath Sinking / Char Dham)" }
+        {
+          "id": "LDK",
+          "name": "Ladakh",
+          "capital": "Leh",
+          "lat": 34.1526,
+          "lng": 77.5771,
+          "vulnerabilityScore": 92,
+          "riskStatus": "Critical (Zoji La & Khardung La Snow Closures)"
+        },
+        {
+          "id": "JK",
+          "name": "Jammu & Kashmir",
+          "capital": "Srinagar",
+          "lat": 34.0837,
+          "lng": 74.7973,
+          "vulnerabilityScore": 84,
+          "riskStatus": "High (NH-44 Ramban Landslides)"
+        },
+        {
+          "id": "HP",
+          "name": "Himachal Pradesh",
+          "capital": "Shimla",
+          "lat": 31.1048,
+          "lng": 77.1734,
+          "vulnerabilityScore": 86,
+          "riskStatus": "Critical (Kullu-Manali Monsoon Flash Floods)"
+        },
+        {
+          "id": "UK",
+          "name": "Uttarakhand",
+          "capital": "Dehradun",
+          "lat": 30.3165,
+          "lng": 78.0322,
+          "vulnerabilityScore": 88,
+          "riskStatus": "Critical (Joshimath Sinking / Char Dham)"
+        }
       ],
       "corridors": [
         {
@@ -70,42 +909,373 @@
           "name": "Srinagar - Zoji La - Kargil - Leh Lifeline (NH-1)",
           "type": "High Altitude Defense & Essential Lifeline",
           "riskLevel": "Critical",
-          "coordinates": [[34.0837, 74.7973], [34.2800, 75.1500], [34.5500, 76.1300], [34.1526, 77.5771]]
+          "coordinates": [
+            [
+              34.08369,
+              74.79728
+            ],
+            [
+              34.13015,
+              74.79844
+            ],
+            [
+              34.19618,
+              74.80679
+            ],
+            [
+              34.23649,
+              74.7826
+            ],
+            [
+              34.28785,
+              74.83942
+            ],
+            [
+              34.24985,
+              74.92075
+            ],
+            [
+              34.22395,
+              75.00599
+            ],
+            [
+              34.23872,
+              75.0606
+            ],
+            [
+              34.26875,
+              75.15378
+            ],
+            [
+              34.29432,
+              75.3219
+            ],
+            [
+              34.26711,
+              75.38798
+            ],
+            [
+              34.26154,
+              75.42118
+            ],
+            [
+              34.26749,
+              75.42955
+            ],
+            [
+              34.28086,
+              75.4711
+            ],
+            [
+              34.30856,
+              75.53224
+            ],
+            [
+              34.33011,
+              75.56902
+            ],
+            [
+              34.41021,
+              75.61881
+            ],
+            [
+              34.43043,
+              75.7473
+            ],
+            [
+              34.4302,
+              75.81712
+            ],
+            [
+              34.41736,
+              75.8829
+            ],
+            [
+              34.4847,
+              75.93571
+            ],
+            [
+              34.54548,
+              75.98545
+            ],
+            [
+              34.59668,
+              76.01797
+            ],
+            [
+              34.60304,
+              76.09577
+            ],
+            [
+              34.55698,
+              76.12798
+            ],
+            [
+              34.5415,
+              76.15913
+            ],
+            [
+              34.52477,
+              76.18264
+            ],
+            [
+              34.47599,
+              76.23135
+            ],
+            [
+              34.44316,
+              76.28193
+            ],
+            [
+              34.39115,
+              76.31809
+            ],
+            [
+              34.37297,
+              76.38458
+            ],
+            [
+              34.38626,
+              76.43021
+            ],
+            [
+              34.38884,
+              76.44836
+            ],
+            [
+              34.37909,
+              76.47566
+            ],
+            [
+              34.38238,
+              76.51899
+            ],
+            [
+              34.34425,
+              76.55807
+            ],
+            [
+              34.30731,
+              76.62485
+            ],
+            [
+              34.30493,
+              76.68285
+            ],
+            [
+              34.29099,
+              76.70018
+            ],
+            [
+              34.29414,
+              76.71102
+            ],
+            [
+              34.28596,
+              76.75281
+            ],
+            [
+              34.2838,
+              76.76555
+            ],
+            [
+              34.28308,
+              76.78651
+            ],
+            [
+              34.30354,
+              76.83289
+            ],
+            [
+              34.31507,
+              76.91372
+            ],
+            [
+              34.30797,
+              76.94979
+            ],
+            [
+              34.29845,
+              76.99806
+            ],
+            [
+              34.27359,
+              77.03363
+            ],
+            [
+              34.25552,
+              77.07942
+            ],
+            [
+              34.24589,
+              77.11196
+            ],
+            [
+              34.24086,
+              77.15003
+            ],
+            [
+              34.24183,
+              77.17593
+            ],
+            [
+              34.24905,
+              77.20203
+            ],
+            [
+              34.26451,
+              77.21242
+            ],
+            [
+              34.22583,
+              77.26542
+            ],
+            [
+              34.22497,
+              77.27363
+            ],
+            [
+              34.181,
+              77.33939
+            ],
+            [
+              34.1817,
+              77.35806
+            ],
+            [
+              34.15725,
+              77.42943
+            ],
+            [
+              34.13912,
+              77.49404
+            ],
+            [
+              34.15274,
+              77.57848
+            ],
+            [
+              34.15257,
+              77.57712
+            ]
+          ]
         },
         {
           "id": "HIM-02",
           "name": "Manali - Atal Tunnel - Keylong - Sarchu Highway",
           "type": "All-Weather Strategic Pass",
           "riskLevel": "High",
-          "coordinates": [[32.2396, 77.1887], [32.3600, 77.1400], [32.5700, 77.0300], [32.9000, 77.5800]]
+          "coordinates": [
+            [
+              32.2396,
+              77.1887
+            ],
+            [
+              32.36,
+              77.14
+            ],
+            [
+              32.57,
+              77.03
+            ],
+            [
+              32.9,
+              77.58
+            ]
+          ]
         },
         {
           "id": "HIM-03",
           "name": "Rishikesh - Devprayag - Joshimath - Badrinath (NH-7)",
           "type": "Char Dham Disaster Vulnerable Corridor",
           "riskLevel": "Critical",
-          "coordinates": [[30.0869, 78.2676], [30.1450, 78.5980], [30.5500, 79.5600], [30.7433, 79.4938]]
+          "coordinates": [
+            [
+              30.0869,
+              78.2676
+            ],
+            [
+              30.145,
+              78.598
+            ],
+            [
+              30.55,
+              79.56
+            ],
+            [
+              30.7433,
+              79.4938
+            ]
+          ]
         }
       ],
       "hubs": [
-        { "name": "Leh Defense Logistics Hub", "lat": 34.1526, "lng": 77.5771 },
-        { "name": "Srinagar Central Depot", "lat": 34.0837, "lng": 74.7973 },
-        { "name": "Manali Transit Base", "lat": 32.2396, "lng": 77.1887 },
-        { "name": "Joshimath Emergency Camp", "lat": 30.5500, "lng": 79.5600 }
+        {
+          "name": "Leh Defense Logistics Hub",
+          "lat": 34.1526,
+          "lng": 77.5771
+        },
+        {
+          "name": "Srinagar Central Depot",
+          "lat": 34.0837,
+          "lng": 74.7973
+        },
+        {
+          "name": "Manali Transit Base",
+          "lat": 32.2396,
+          "lng": 77.1887
+        },
+        {
+          "name": "Joshimath Emergency Camp",
+          "lat": 30.55,
+          "lng": 79.56
+        }
       ]
     },
     {
       "id": "EURO_ALPS",
       "name": "European Alps Transit Network",
       "country": "Switzerland / Italy / France / Austria",
-      "centerLat": 46.5000,
-      "centerLng": 8.5000,
+      "centerLat": 46.5,
+      "centerLng": 8.5,
       "zoom": 7,
       "states": [
-        { "id": "CH", "name": "Swiss Alps Transit", "capital": "Bern / Zurich", "lat": 46.8182, "lng": 8.2275, "vulnerabilityScore": 65, "riskStatus": "Gotthard Pass Heavy Snow" },
-        { "id": "IT_N", "name": "Northern Italy Alpine Region", "capital": "Milan / Turin", "lat": 45.4642, "lng": 9.1900, "vulnerabilityScore": 58, "riskStatus": "Brenner Pass Freight Queue" },
-        { "id": "FR_A", "name": "French Alps Corridor", "capital": "Grenoble / Chamonix", "lat": 45.1885, "lng": 5.7245, "vulnerabilityScore": 62, "riskStatus": "Mont Blanc Tunnel Maintenance" },
-        { "id": "AT_T", "name": "Tyrol Corridor (Austria)", "capital": "Innsbruck", "lat": 47.2692, "lng": 11.4041, "vulnerabilityScore": 60, "riskStatus": "Rockfall Caution" }
+        {
+          "id": "CH",
+          "name": "Swiss Alps Transit",
+          "capital": "Bern / Zurich",
+          "lat": 46.8182,
+          "lng": 8.2275,
+          "vulnerabilityScore": 65,
+          "riskStatus": "Gotthard Pass Heavy Snow"
+        },
+        {
+          "id": "IT_N",
+          "name": "Northern Italy Alpine Region",
+          "capital": "Milan / Turin",
+          "lat": 45.4642,
+          "lng": 9.19,
+          "vulnerabilityScore": 58,
+          "riskStatus": "Brenner Pass Freight Queue"
+        },
+        {
+          "id": "FR_A",
+          "name": "French Alps Corridor",
+          "capital": "Grenoble / Chamonix",
+          "lat": 45.1885,
+          "lng": 5.7245,
+          "vulnerabilityScore": 62,
+          "riskStatus": "Mont Blanc Tunnel Maintenance"
+        },
+        {
+          "id": "AT_T",
+          "name": "Tyrol Corridor (Austria)",
+          "capital": "Innsbruck",
+          "lat": 47.2692,
+          "lng": 11.4041,
+          "vulnerabilityScore": 60,
+          "riskStatus": "Rockfall Caution"
+        }
       ],
       "corridors": [
         {
@@ -113,32 +1283,322 @@
           "name": "Gotthard Motorway Corridor (A2 Switzerland)",
           "type": "Trans-European North-South Axis",
           "riskLevel": "High",
-          "coordinates": [[47.0500, 8.3000], [46.6000, 8.6000], [46.2000, 9.0000]]
+          "coordinates": [
+            [
+              47.3769,
+              8.5417
+            ],
+            [
+              47.37009,
+              8.53049
+            ],
+            [
+              47.34892,
+              8.52265
+            ],
+            [
+              47.34253,
+              8.45847
+            ],
+            [
+              47.28169,
+              8.42626
+            ],
+            [
+              47.23221,
+              8.45843
+            ],
+            [
+              47.19951,
+              8.45972
+            ],
+            [
+              47.1547,
+              8.43322
+            ],
+            [
+              47.10766,
+              8.45135
+            ],
+            [
+              47.08501,
+              8.47579
+            ],
+            [
+              47.06811,
+              8.5068
+            ],
+            [
+              47.05066,
+              8.53284
+            ],
+            [
+              47.04513,
+              8.55856
+            ],
+            [
+              47.0473,
+              8.59396
+            ],
+            [
+              47.02274,
+              8.62868
+            ],
+            [
+              46.99907,
+              8.62241
+            ],
+            [
+              46.9776,
+              8.61159
+            ],
+            [
+              46.95631,
+              8.61735
+            ],
+            [
+              46.94183,
+              8.61873
+            ],
+            [
+              46.92475,
+              8.61497
+            ],
+            [
+              46.90447,
+              8.62995
+            ],
+            [
+              46.88899,
+              8.61855
+            ],
+            [
+              46.84581,
+              8.63322
+            ],
+            [
+              46.81441,
+              8.65362
+            ],
+            [
+              46.77506,
+              8.66553
+            ],
+            [
+              46.75452,
+              8.64721
+            ],
+            [
+              46.72604,
+              8.62228
+            ],
+            [
+              46.69281,
+              8.59577
+            ],
+            [
+              46.66453,
+              8.5922
+            ],
+            [
+              46.52678,
+              8.60734
+            ],
+            [
+              46.51507,
+              8.68888
+            ],
+            [
+              46.48841,
+              8.76512
+            ],
+            [
+              46.47003,
+              8.812
+            ],
+            [
+              46.41897,
+              8.85826
+            ],
+            [
+              46.37492,
+              8.9121
+            ],
+            [
+              46.33333,
+              8.97496
+            ],
+            [
+              46.26675,
+              9.00655
+            ],
+            [
+              46.22797,
+              9.03384
+            ],
+            [
+              46.20644,
+              9.02125
+            ],
+            [
+              46.16793,
+              8.99052
+            ],
+            [
+              46.15055,
+              8.97726
+            ],
+            [
+              46.14639,
+              8.95608
+            ],
+            [
+              46.14394,
+              8.9308
+            ],
+            [
+              46.10944,
+              8.93064
+            ],
+            [
+              46.06253,
+              8.92769
+            ],
+            [
+              46.03359,
+              8.92819
+            ],
+            [
+              45.99026,
+              8.92656
+            ],
+            [
+              45.96311,
+              8.92811
+            ],
+            [
+              45.95089,
+              8.96588
+            ],
+            [
+              45.91404,
+              8.98485
+            ],
+            [
+              45.8816,
+              8.98074
+            ],
+            [
+              45.84778,
+              8.98829
+            ],
+            [
+              45.83953,
+              9.02227
+            ],
+            [
+              45.84014,
+              9.04368
+            ],
+            [
+              45.81365,
+              9.05969
+            ],
+            [
+              45.69099,
+              9.0174
+            ],
+            [
+              45.54814,
+              9.05986
+            ],
+            [
+              45.50111,
+              9.13032
+            ],
+            [
+              45.47405,
+              9.15148
+            ],
+            [
+              45.46756,
+              9.16854
+            ],
+            [
+              45.4574,
+              9.18095
+            ],
+            [
+              45.46356,
+              9.18998
+            ]
+          ]
         },
         {
           "id": "ALP-02",
           "name": "Brenner Pass Highway (A13/A22 Austria-Italy)",
           "type": "Heavy Freight Lifeline",
           "riskLevel": "Low-Moderate",
-          "coordinates": [[47.2692, 11.4041], [47.0000, 11.5000], [46.5000, 11.3500]]
+          "coordinates": [
+            [
+              47.2692,
+              11.4041
+            ],
+            [
+              47.0,
+              11.5
+            ],
+            [
+              46.5,
+              11.35
+            ]
+          ]
         }
       ],
       "hubs": [
-        { "name": "Zurich Central Logistics", "lat": 47.3769, "lng": 8.5417 },
-        { "name": "Milan Intermodal Terminal", "lat": 45.4642, "lng": 9.1900 },
-        { "name": "Innsbruck Alpine Depot", "lat": 47.2692, "lng": 11.4041 }
+        {
+          "name": "Zurich Central Logistics",
+          "lat": 47.3769,
+          "lng": 8.5417
+        },
+        {
+          "name": "Milan Intermodal Terminal",
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        {
+          "name": "Innsbruck Alpine Depot",
+          "lat": 47.2692,
+          "lng": 11.4041
+        }
       ]
     },
     {
       "id": "ANDES_CORRIDOR",
       "name": "South American Andes Mountain Passes",
       "country": "Chile / Argentina / Peru",
-      "centerLat": -32.8000,
-      "centerLng": -70.0000,
+      "centerLat": -32.8,
+      "centerLng": -70.0,
       "zoom": 7,
       "states": [
-        { "id": "CL", "name": "Central Chile Corridors", "capital": "Santiago", "lat": -33.4489, "lng": -70.6693, "vulnerabilityScore": 76, "riskStatus": "Paso Los Libertadores Blizzard" },
-        { "id": "AR_M", "name": "Mendoza Andean Gateway", "capital": "Mendoza", "lat": -32.8895, "lng": -68.8458, "vulnerabilityScore": 72, "riskStatus": "Winter Snow Closure Risk" }
+        {
+          "id": "CL",
+          "name": "Central Chile Corridors",
+          "capital": "Santiago",
+          "lat": -33.4489,
+          "lng": -70.6693,
+          "vulnerabilityScore": 76,
+          "riskStatus": "Paso Los Libertadores Blizzard"
+        },
+        {
+          "id": "AR_M",
+          "name": "Mendoza Andean Gateway",
+          "capital": "Mendoza",
+          "lat": -32.8895,
+          "lng": -68.8458,
+          "vulnerabilityScore": 72,
+          "riskStatus": "Winter Snow Closure Risk"
+        }
       ],
       "corridors": [
         {
@@ -146,12 +1606,269 @@
           "name": "Paso Internacional Los Libertadores (Route 60/7)",
           "type": "Trans-Andean Strategic Lifeline",
           "riskLevel": "Critical",
-          "coordinates": [[-33.4489, -70.6693], [-32.8200, -70.0700], [-32.8895, -68.8458]]
+          "coordinates": [
+            [
+              -33.44889,
+              -70.66924
+            ],
+            [
+              -33.431,
+              -70.66132
+            ],
+            [
+              -33.39134,
+              -70.6888
+            ],
+            [
+              -33.36499,
+              -70.68953
+            ],
+            [
+              -33.32492,
+              -70.70452
+            ],
+            [
+              -33.29306,
+              -70.70177
+            ],
+            [
+              -33.23732,
+              -70.69624
+            ],
+            [
+              -33.18529,
+              -70.64604
+            ],
+            [
+              -33.15976,
+              -70.64754
+            ],
+            [
+              -33.04306,
+              -70.69465
+            ],
+            [
+              -32.99448,
+              -70.68503
+            ],
+            [
+              -32.91425,
+              -70.67581
+            ],
+            [
+              -32.87542,
+              -70.6496
+            ],
+            [
+              -32.84284,
+              -70.59126
+            ],
+            [
+              -32.84954,
+              -70.51451
+            ],
+            [
+              -32.85409,
+              -70.46309
+            ],
+            [
+              -32.86895,
+              -70.40365
+            ],
+            [
+              -32.89401,
+              -70.37475
+            ],
+            [
+              -32.91916,
+              -70.3371
+            ],
+            [
+              -32.90503,
+              -70.27998
+            ],
+            [
+              -32.89493,
+              -70.23222
+            ],
+            [
+              -32.88057,
+              -70.21076
+            ],
+            [
+              -32.86598,
+              -70.18442
+            ],
+            [
+              -32.86652,
+              -70.1491
+            ],
+            [
+              -32.85937,
+              -70.14374
+            ],
+            [
+              -32.85598,
+              -70.14183
+            ],
+            [
+              -32.84842,
+              -70.14164
+            ],
+            [
+              -32.84591,
+              -70.1349
+            ],
+            [
+              -32.84537,
+              -70.13131
+            ],
+            [
+              -32.84641,
+              -70.11888
+            ],
+            [
+              -32.83907,
+              -70.09079
+            ],
+            [
+              -32.81141,
+              -70.05908
+            ],
+            [
+              -32.81746,
+              -70.01381
+            ],
+            [
+              -32.8218,
+              -69.93282
+            ],
+            [
+              -32.82483,
+              -69.89426
+            ],
+            [
+              -32.85028,
+              -69.81522
+            ],
+            [
+              -32.85405,
+              -69.76141
+            ],
+            [
+              -32.82079,
+              -69.69379
+            ],
+            [
+              -32.79566,
+              -69.65554
+            ],
+            [
+              -32.78405,
+              -69.62494
+            ],
+            [
+              -32.74496,
+              -69.57862
+            ],
+            [
+              -32.72304,
+              -69.54681
+            ],
+            [
+              -32.67469,
+              -69.52088
+            ],
+            [
+              -32.61965,
+              -69.42509
+            ],
+            [
+              -32.59531,
+              -69.34928
+            ],
+            [
+              -32.67602,
+              -69.36666
+            ],
+            [
+              -32.71849,
+              -69.33372
+            ],
+            [
+              -32.78094,
+              -69.31952
+            ],
+            [
+              -32.82558,
+              -69.29532
+            ],
+            [
+              -32.85527,
+              -69.26546
+            ],
+            [
+              -32.90185,
+              -69.26195
+            ],
+            [
+              -32.91584,
+              -69.23973
+            ],
+            [
+              -32.94092,
+              -69.21079
+            ],
+            [
+              -32.98012,
+              -69.17757
+            ],
+            [
+              -33.0313,
+              -69.18047
+            ],
+            [
+              -33.07892,
+              -69.12067
+            ],
+            [
+              -33.07372,
+              -68.96805
+            ],
+            [
+              -33.04633,
+              -68.92436
+            ],
+            [
+              -33.03666,
+              -68.86736
+            ],
+            [
+              -32.95785,
+              -68.83659
+            ],
+            [
+              -32.89701,
+              -68.82075
+            ],
+            [
+              -32.88967,
+              -68.84586
+            ]
+          ]
         }
       ],
       "hubs": [
-        { "name": "Santiago Distribution Hub", "lat": -33.4489, "lng": -70.6693 },
-        { "name": "Mendoza Freight Base", "lat": -32.8895, "lng": -68.8458 }
+        {
+          "name": "Santiago Distribution Hub",
+          "lat": -33.4489,
+          "lng": -70.6693
+        },
+        {
+          "name": "Mendoza Freight Base",
+          "lat": -32.8895,
+          "lng": -68.8458
+        }
       ]
     }
   ]
