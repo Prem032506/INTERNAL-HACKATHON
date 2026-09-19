@@ -11,9 +11,9 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/main.css?v=20260919-v5">
-  <link rel="stylesheet" href="css/map.css?v=20260919-v5">
-  <link rel="stylesheet" href="css/components.css?v=20260919-v5">
+  <link rel="stylesheet" href="css/main.css?v=20260919-v6">
+  <link rel="stylesheet" href="css/map.css?v=20260919-v6">
+  <link rel="stylesheet" href="css/components.css?v=20260919-v6">
 </head>
 <body>
   <div class="bg-mesh-overlay"></div>
@@ -83,18 +83,34 @@
       <div class="ticker-tag">
         <span>⚠️</span> <span data-i18n="disruptionAlert">CRITICAL ALERTS</span>:
       </div>
-      <div class="ticker-content">
-        <div class="ticker-item">
-          <strong>[NH-29 Nagaland, India]</strong> Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
-        </div>
-        <div class="ticker-item">
-          <strong>[NH-1 Ladakh/Kashmir]</strong> Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
-        </div>
-        <div class="ticker-item">
-          <strong>[A2 Gotthard, Switzerland]</strong> Heavy Alpine snowfall warning. Heavy freight metering active.
-        </div>
-        <div class="ticker-item">
-          <strong>[Paso Los Libertadores, Andes]</strong> Blizzard warning on international border pass. Standby clearance units deployed.
+      <div class="ticker-viewport">
+        <div class="ticker-content">
+          <!-- Item Set 1 -->
+          <div class="ticker-item">
+            <strong>[NH-29 Nagaland, India]</strong> Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
+          </div>
+          <div class="ticker-item">
+            <strong>[NH-1 Ladakh/Kashmir]</strong> Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
+          </div>
+          <div class="ticker-item">
+            <strong>[A2 Gotthard, Switzerland]</strong> Heavy Alpine snowfall warning. Heavy freight metering active.
+          </div>
+          <div class="ticker-item">
+            <strong>[Paso Los Libertadores, Andes]</strong> Blizzard warning on international border pass. Standby clearance units deployed.
+          </div>
+          <!-- Item Set 2 (Seamless Infinite Marquee) -->
+          <div class="ticker-item">
+            <strong>[NH-29 Nagaland, India]</strong> Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
+          </div>
+          <div class="ticker-item">
+            <strong>[NH-1 Ladakh/Kashmir]</strong> Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
+          </div>
+          <div class="ticker-item">
+            <strong>[A2 Gotthard, Switzerland]</strong> Heavy Alpine snowfall warning. Heavy freight metering active.
+          </div>
+          <div class="ticker-item">
+            <strong>[Paso Los Libertadores, Andes]</strong> Blizzard warning on international border pass. Standby clearance units deployed.
+          </div>
         </div>
       </div>
     </div>
@@ -633,19 +649,19 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Application JS Modules -->
-  <script src="js/i18n.js?v=20260919-v5"></script>
-  <script src="js/ai-prediction.js?v=20260919-v5"></script>
-  <script src="js/fleet-telemetry.js?v=20260919-v5"></script>
-  <script src="js/field-report.js?v=20260919-v5"></script>
-  <script src="js/map-engine.js?v=20260919-v5"></script>
-  <script src="js/app.js?v=20260919-v5"></script>
+  <script src="js/i18n.js?v=20260919-v6"></script>
+  <script src="js/ai-prediction.js?v=20260919-v6"></script>
+  <script src="js/fleet-telemetry.js?v=20260919-v6"></script>
+  <script src="js/field-report.js?v=20260919-v6"></script>
+  <script src="js/map-engine.js?v=20260919-v6"></script>
+  <script src="js/app.js?v=20260919-v6"></script>
 
   <!-- PWA Service Worker Registration with Instant Auto-Update -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20260919-v5').then((reg) => {
-          console.log('[SW] ServiceWorker v5 registered with scope:', reg.scope);
+        navigator.serviceWorker.register('./sw.js?v=20260919-v6').then((reg) => {
+          console.log('[SW] ServiceWorker v6 registered with scope:', reg.scope);
           reg.update();
         }).catch((err) => {
           console.log('[SW] ServiceWorker registration skipped:', err);

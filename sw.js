@@ -1,10 +1,10 @@
 /**
- * Global-Setu Service Worker v5 (Live Weather Radar Sync & Road Accuracy)
+ * Global-Setu Service Worker v6 (Live Disruption Ticker Fix & Weather Radar Sync)
  * Network-First strategy to ensure users always receive live meteorological telemetry
  * and 100% accurate road updates immediately, with 100% Offline fallback.
  */
 
-const CACHE_NAME = 'global-setu-v5-live-weather';
+const CACHE_NAME = 'global-setu-v6-ticker-fix';
 const STATIC_ASSETS = [
   './',
   './index.html',
