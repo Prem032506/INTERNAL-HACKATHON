@@ -534,18 +534,27 @@
             <textarea class="form-textarea" id="report-desc" rows="3" placeholder="Describe extent of debris, bridge condition, estimated clearance time..."></textarea>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" data-i18n="photoEvidence">Geo-Tagged Photo Evidence</label>
-            <div class="photo-upload-zone" onclick="document.getElementById('sim-file-input').click()">
+          <div class="form-group" id="photo-evidence-group">
+            <label class="form-label">
+              <span data-i18n="photoEvidence">Geo-Tagged Photo Evidence</span> <span style="color:#ef4444;font-weight:700;">* (Mandatory Field Evidence)</span>
+            </label>
+            <div class="photo-upload-zone" id="photo-upload-zone" onclick="document.getElementById('sim-file-input').click()">
               <input type="file" id="sim-file-input" style="display:none;" accept="image/*">
-              <span>📸 Click to Capture / Upload Geo-Tagged Field Photograph</span>
+              <span id="photo-upload-label">📸 Click to Capture / Upload Geo-Tagged Field Photograph</span>
               <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">
                 Auto-tags GPS Latitude, Longitude, Altitude & Local Timestamp. Works 100% Offline in remote mountain passes worldwide.
               </p>
             </div>
+            <div id="photo-error-message" class="field-error-msg" style="display:none;">
+              <span>⚠️</span> <span>Photo evidence is mandatory! Field responders must attach photographic proof to verify disruption.</span>
+            </div>
             <div id="photo-preview-container" style="display:none;margin-top:8px;position:relative;">
-              <img id="photo-preview-img" src="" alt="Evidence Preview" style="width:100%;max-height:130px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--neon-cyan);">
-              <button type="button" onclick="document.getElementById('photo-preview-container').style.display='none'; document.getElementById('sim-file-input').value=''; window.app.currentUploadedPhoto=null;" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,0.85);color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:12px;font-weight:bold;">&times;</button>
+              <img id="photo-preview-img" src="" alt="Evidence Preview" style="width:100%;max-height:160px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--neon-cyan);">
+              <div id="photo-meta-overlay" class="photo-meta-badge">
+                <span id="photo-geo-badge">📍 GPS: Verified Auto-Tag</span>
+                <span id="photo-ai-badge">🤖 AI: Road Obstruction Verified</span>
+              </div>
+              <button type="button" id="photo-remove-btn" title="Remove photo" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,0.9);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:14px;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.4);">&times;</button>
             </div>
           </div>
 

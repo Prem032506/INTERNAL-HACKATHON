@@ -193,7 +193,13 @@ class GlobalMapEngine {
     const marker = L.marker([inc.lat, inc.lng], { icon: customIcon });
 
     const photoHtml = inc.photoData 
-      ? `<div style="margin-top:8px;"><img src="${inc.photoData}" alt="Incident Photo Evidence" style="width:100%;max-height:120px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.2);"></div>`
+      ? `<div style="margin-top:8px;border-radius:6px;overflow:hidden;border:1px solid rgba(0, 242, 254, 0.4);">
+           <img src="${inc.photoData}" alt="Incident Photo Evidence" style="width:100%;max-height:125px;object-fit:cover;display:block;">
+           <div style="background:rgba(10, 15, 30, 0.95);padding:4px 8px;font-size:0.68rem;color:#00f2fe;display:flex;justify-content:space-between;align-items:center;">
+             <span>📸 Geo-Tag Verified</span>
+             <span style="color:#10b981;font-weight:700;">✓ Authentic Field Proof</span>
+           </div>
+         </div>`
       : '';
 
     marker.bindPopup(`

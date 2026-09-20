@@ -19,3 +19,7 @@ desktop.ini
 # Archives
 *.zip
 *.tar.gz
+*Global-Setu-Source-Code.zip_unzipped*/
+SIH_PROJECT/
+*.code-workspace
+

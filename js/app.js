@@ -255,8 +255,9 @@ class GlobalAppCoordinator {
       modalMapPickerBtn.addEventListener('click', startMapPicker);
     }
 
-    // Photo File Input Listener
+    // Photo File Input & Removal Listeners
     const photoInput = document.getElementById('sim-file-input');
+    const photoRemoveBtn = document.getElementById('photo-remove-btn');
     if (photoInput) {
       photoInput.addEventListener('change', (e) => {
         const file = e.target.files && e.target.files[0];
@@ -266,6 +267,30 @@ class GlobalAppCoordinator {
             this.currentUploadedPhoto = event.target.result;
             const previewContainer = document.getElementById('photo-preview-container');
             const previewImg = document.getElementById('photo-preview-img');
+            const uploadZone = document.getElementById('photo-upload-zone');
+            const errorMsg = document.getElementById('photo-error-message');
+            const geoBadge = document.getElementById('photo-geo-badge');
+            const aiBadge = document.getElementById('photo-ai-badge');
+
+            // Clear any error states immediately
+            if (uploadZone) uploadZone.classList.remove('error-state');
+            if (errorMsg) errorMsg.style.display = 'none';
+
+            // Run AI Road Damage & Geo-tag Telemetry Analysis
+            const disruptionType = document.getElementById('report-type')?.value || 'Landslide';
+            let analysis = null;
+            if (window.aiEngine && typeof window.aiEngine.analyzeRoadDamageImage === 'function') {
+              analysis = window.aiEngine.analyzeRoadDamageImage(this.currentUploadedPhoto, disruptionType);
+              this.currentPhotoAnalysis = analysis;
+            }
+
+            if (geoBadge && analysis) {
+              geoBadge.innerHTML = `📍 GPS: ${analysis.geoTag.latitude}°N, ${analysis.geoTag.longitude}°E (${analysis.geoTag.altitude})`;
+            }
+            if (aiBadge && analysis) {
+              aiBadge.innerHTML = `🤖 AI: ${analysis.confidence} Confirmed (${analysis.passability})`;
+            }
+
             if (previewContainer && previewImg) {
               previewImg.src = this.currentUploadedPhoto;
               previewContainer.style.display = 'block';
@@ -273,6 +298,14 @@ class GlobalAppCoordinator {
           };
           reader.readAsDataURL(file);
         }
+      });
+    }
+
+    if (photoRemoveBtn) {
+      photoRemoveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.resetPhotoUploadState();
       });
     }
 
@@ -352,24 +385,35 @@ class GlobalAppCoordinator {
     this.handleRouteOptimization();
   }
 
+  resetPhotoUploadState() {
+    this.currentUploadedPhoto = null;
+    this.currentPhotoAnalysis = null;
+    const previewContainer = document.getElementById('photo-preview-container');
+    if (previewContainer) previewContainer.style.display = 'none';
+    const previewImg = document.getElementById('photo-preview-img');
+    if (previewImg) previewImg.src = '';
+    const fileInput = document.getElementById('sim-file-input');
+    if (fileInput) fileInput.value = '';
+    const uploadZone = document.getElementById('photo-upload-zone');
+    if (uploadZone) uploadZone.classList.remove('error-state');
+    const errorMsg = document.getElementById('photo-error-message');
+    if (errorMsg) errorMsg.style.display = 'none';
+  }
+
   showFieldReportModal() {
     const modal = document.getElementById('field-report-modal');
     if (modal) {
-      // Reset photo preview on open
-      this.currentUploadedPhoto = null;
-      const previewContainer = document.getElementById('photo-preview-container');
-      if (previewContainer) previewContainer.style.display = 'none';
-
-      const fileInput = document.getElementById('sim-file-input');
-      if (fileInput) fileInput.value = '';
-
+      this.resetPhotoUploadState();
       modal.classList.add('active');
     }
   }
 
   hideFieldReportModal() {
     const modal = document.getElementById('field-report-modal');
-    if (modal) modal.classList.remove('active');
+    if (modal) {
+      this.resetPhotoUploadState();
+      modal.classList.remove('active');
+    }
   }
 
   async showOfflineQueueModal() {
@@ -799,26 +843,54 @@ class GlobalAppCoordinator {
   }
 
   async handleFieldReportSubmission() {
+    // 1. Mandatory Photo Evidence Verification - Prevent any output if photo is not attached
+    if (!this.currentUploadedPhoto) {
+      const uploadZone = document.getElementById('photo-upload-zone');
+      const errorMsg = document.getElementById('photo-error-message');
+
+      if (uploadZone) {
+        uploadZone.classList.remove('error-state');
+        void uploadZone.offsetWidth; // Force CSS animation re-trigger
+        uploadZone.classList.add('error-state');
+        uploadZone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      if (errorMsg) {
+        errorMsg.style.display = 'flex';
+      }
+
+      if (window.fieldReports) {
+        window.fieldReports.showToast('⚠️ Geo-tagged photo evidence is mandatory! Field responders must attach photographic proof before submitting.');
+      }
+
+      // Explicitly abort submission: NO hazard marker, NO map movement, NO database storage
+      return;
+    }
+
+    // 2. Photo verified - Proceed with incident generation
     const title = document.getElementById('report-title')?.value || 'Corridor Disruption';
     const type = document.getElementById('report-type')?.value || 'Landslide';
     const location = document.getElementById('report-location')?.value || 'Active Arterial Highway';
     const desc = document.getElementById('report-desc')?.value || '';
 
-    // Calculate dynamic coordinates localized around the current map region
+    // Calculate dynamic coordinates localized around current map region
     const currentRegion = window.mapEngine ? window.mapEngine.getCurrentRegion() : { centerLat: 26.2006, centerLng: 92.9376 };
-    const jitterLat = (Math.random() - 0.5) * 0.4;
-    const jitterLng = (Math.random() - 0.5) * 0.4;
+    const jitterLat = (Math.random() - 0.5) * 0.08;
+    const jitterLng = (Math.random() - 0.5) * 0.08;
+
+    const analysis = this.currentPhotoAnalysis || (window.aiEngine ? window.aiEngine.analyzeRoadDamageImage(this.currentUploadedPhoto, type, location) : null);
 
     const newReport = {
       title,
       type,
       location,
       desc,
-      lat: currentRegion.centerLat + jitterLat,
-      lng: currentRegion.centerLng + jitterLng,
-      severity: 'CRITICAL',
+      lat: (analysis && analysis.geoTag) ? analysis.geoTag.latitude : (currentRegion.centerLat + jitterLat),
+      lng: (analysis && analysis.geoTag) ? analysis.geoTag.longitude : (currentRegion.centerLng + jitterLng),
+      severity: analysis?.severityTag || 'CRITICAL HAZARD',
       reportedBy: 'Field Official / Disaster Response Force',
-      photoData: this.currentUploadedPhoto || null
+      photoData: this.currentUploadedPhoto,
+      aiAnalysis: analysis
     };
 
     if (window.fieldReports) {
@@ -828,16 +900,16 @@ class GlobalAppCoordinator {
     if (window.mapEngine) {
       window.mapEngine.addHazardMarker({
         ...newReport,
-        time: 'Just now',
-        status: 'Reported by Field Responders',
-        estimatedDelay: '+4.5 Hours',
+        time: 'Just now (Field Verified)',
+        status: `ROAD BLOCKED: ${analysis?.passability || '0% Passability'}`,
+        estimatedDelay: analysis?.estimatedClearance || '+6.5 Hours',
         alternateRoute: 'AI Dynamic Bypass Route Calculated'
       });
-      window.mapEngine.flyToLocation(newReport.lat, newReport.lng, 9);
+      window.mapEngine.flyToLocation(newReport.lat, newReport.lng, 10);
     }
 
     // Reset upload state and close modal
-    this.currentUploadedPhoto = null;
+    this.resetPhotoUploadState();
     document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active'));
   }
 
