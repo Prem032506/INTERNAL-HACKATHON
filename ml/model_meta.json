@@ -1,0 +1,41 @@
+{
+  "model_name": "NER Road Accessibility Random Forest Classifier",
+  "algorithm": "RandomForestClassifier(n_estimators=120, max_depth=12)",
+  "dataset_source": "Local NER Roads & Disaster History Dataset",
+  "dataset_samples": 1800,
+  "accuracy_pct": 83.61,
+  "classes": [
+    "LOW",
+    "MODERATE",
+    "HIGH",
+    "CRITICAL"
+  ],
+  "features": [
+    "rainfall_mm",
+    "temp_c",
+    "humidity_pct",
+    "road_condition_num",
+    "terrain_num",
+    "elevation_m",
+    "historical_incidents",
+    "flood_history",
+    "landslide_history",
+    "traffic_density_num",
+    "infrastructure_rating"
+  ],
+  "feature_importances": {
+    "road_condition_num": 0.1873,
+    "rainfall_mm": 0.1616,
+    "elevation_m": 0.1359,
+    "historical_incidents": 0.1161,
+    "landslide_history": 0.0894,
+    "terrain_num": 0.0716,
+    "infrastructure_rating": 0.0705,
+    "temp_c": 0.061,
+    "humidity_pct": 0.0484,
+    "flood_history": 0.0442,
+    "traffic_density_num": 0.014
+  },
+  "last_trained": "2026-09-23 14:52:41",
+  "status": "TRAINED & READY"
+}

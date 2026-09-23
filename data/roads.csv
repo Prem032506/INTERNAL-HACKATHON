@@ -1,0 +1,25 @@
+road_id,name,source,source_id,destination,destination_id,distance_km,rainfall_mm,temp_c,humidity_pct,road_condition,terrain,elevation_m,historical_incidents,flood_history,landslide_history,traffic_density,infrastructure_rating,lat1,lon1,lat2,lon2,road_status,risk_level,speed_limit_kmh
+RD_01,NH-27 Guwahati-Tezpur Expressway,Guwahati,LOC_GHY,Tezpur,LOC_TEZ,175,65,27.5,72,Good,Plain,52,2,0,0,Medium,8.5,26.1445,91.7362,26.6528,92.7926,ACCESSIBLE,LOW,75
+RD_02,NH-40 Guwahati-Shillong Scenic Highway,Guwahati,LOC_GHY,Shillong,LOC_SHL,98,110,19.2,85,Good,Hilly,1200,5,0,1,High,8.0,26.1445,91.7362,25.5788,91.8933,ACCESSIBLE,LOW,50
+RD_03,NH-15 Tezpur-Itanagar Trans-Highway,Tezpur,LOC_TEZ,Itanagar,LOC_ITA,155,145,23.1,88,Fair,Hilly,280,8,1,1,Low,6.5,26.6528,92.7926,27.0844,93.6053,RESTRICTED,MODERATE,45
+RD_04,NH-715 Tezpur-Jorhat Brahmaputra Route,Tezpur,LOC_TEZ,Jorhat,LOC_JOR,160,85,26.0,80,Fair,Plain,85,4,1,0,Medium,7.0,26.6528,92.7926,26.7509,94.2037,ACCESSIBLE,LOW,65
+RD_05,NH-29 Dimapur-Kohima Hill Pass,Dimapur,LOC_DMP,Kohima,LOC_KOH,74,185,18.0,92,Poor,Mountainous,1350,14,0,1,High,5.2,25.9060,93.7270,25.6751,94.1086,HIGH_RISK,HIGH,35
+RD_06,NH-02 Kohima-Imphal Frontier Link,Kohima,LOC_KOH,Imphal,LOC_IMP,138,195,19.5,91,Poor,Mountainous,1120,16,0,1,Medium,5.0,25.6751,94.1086,24.8170,93.9368,HIGH_RISK,HIGH,35
+RD_07,NH-06 Shillong-Silchar Mountain Road,Shillong,LOC_SHL,Silchar,LOC_SIL,215,240,21.0,95,Severe,Mountainous,980,22,1,1,High,3.8,25.5788,91.8933,24.8333,92.7789,BLOCKED,CRITICAL,30
+RD_08,NH-306 Silchar-Aizawl Link Highway,Silchar,LOC_SIL,Aizawl,LOC_AIZ,178,160,22.4,87,Fair,Mountainous,950,11,0,1,Medium,6.0,24.8333,92.7789,23.7271,92.7176,RESTRICTED,MODERATE,40
+RD_09,NH-08 Silchar-Agartala Lifeline,Silchar,LOC_SIL,Agartala,LOC_AGA,285,120,25.0,83,Good,Hilly,120,6,0,0,Medium,7.5,24.8333,92.7789,23.8315,91.2868,ACCESSIBLE,LOW,60
+RD_10,NH-10 Siliguri-Gangtok Teesta Corridor,Siliguri (Gateway Hub),LOC_SLG,Gangtok,LOC_GKT,114,210,17.5,94,Poor,Mountainous,1420,19,1,1,High,4.5,26.7271,88.3953,27.3389,88.6065,BLOCKED,CRITICAL,30
+RD_11,NH-27 Siliguri-Guwahati East-West Corridor,Siliguri (Gateway Hub),LOC_SLG,Guwahati,LOC_GHY,470,55,28.0,70,Good,Plain,80,3,0,0,High,9.0,26.7271,88.3953,26.1445,91.7362,ACCESSIBLE,LOW,80
+RD_12,NH-29 Jorhat-Dimapur Inter-State Link,Jorhat,LOC_JOR,Dimapur,LOC_DMP,122,78,25.8,79,Good,Plain,130,3,0,0,Medium,7.8,26.7509,94.2037,25.9060,93.7270,ACCESSIBLE,LOW,65
+RD_13,NH-37 Jorhat-Dibrugarh Tea Belt Road,Jorhat,LOC_JOR,Dibrugarh,LOC_DIB,135,90,26.2,82,Good,Plain,112,4,1,0,Medium,8.0,26.7509,94.2037,27.4728,94.9120,ACCESSIBLE,LOW,70
+RD_14,NH-13 Bhalukpong-Tawang Alpine Pass,Itanagar,LOC_ITA,Tawang,LOC_TAW,290,225,11.0,90,Severe,Mountainous,2600,24,0,1,Low,4.0,27.0844,93.6053,27.5860,91.8656,BLOCKED,CRITICAL,25
+RD_15,NH-52 Dibrugarh-Pasighat Bogibeel Route,Dibrugarh,LOC_DIB,Pasighat,LOC_PAS,150,130,24.0,86,Good,Plain,130,5,1,0,Low,8.2,27.4728,94.9120,28.0667,95.3333,ACCESSIBLE,LOW,60
+RD_16,NH-102 Imphal-Churachandpur Valley Road,Imphal,LOC_IMP,Churachandpur,LOC_CHU,62,105,21.8,84,Fair,Hilly,850,5,0,0,Medium,6.8,24.8170,93.9368,24.3333,93.6833,ACCESSIBLE,LOW,45
+RD_17,NH-54 Aizawl-Lunglei South Ridge,Aizawl,LOC_AIZ,Lunglei,LOC_LUN,170,175,20.0,89,Poor,Mountainous,1080,12,0,1,Low,5.5,23.7271,92.7176,22.8800,92.7300,RESTRICTED,MODERATE,35
+RD_18,NH-08 Agartala-Udaipur Southern Highway,Agartala,LOC_AGA,Udaipur,LOC_UDA,52,70,27.0,76,Good,Plain,20,1,0,0,High,8.8,23.8315,91.2868,23.5333,91.4833,ACCESSIBLE,LOW,70
+RD_19,NH-310 Gangtok-Mangan North Ridge,Gangtok,LOC_GKT,Mangan,LOC_MNG,68,230,14.5,96,Severe,Mountainous,1550,21,1,1,Low,4.1,27.3389,88.6065,27.5000,88.5333,BLOCKED,CRITICAL,25
+RD_20,NH-37A Guwahati-Dimapur Bypass Route,Guwahati,LOC_GHY,Dimapur,LOC_DMP,260,80,26.5,75,Good,Plain,110,4,0,0,High,8.1,26.1445,91.7362,25.9060,93.7270,ACCESSIBLE,LOW,70
+RD_21,NH-37 Guwahati-Nagaon-Jorhat Highway,Guwahati,LOC_GHY,Jorhat,LOC_JOR,305,82,26.8,78,Good,Plain,95,5,1,0,High,8.0,26.1445,91.7362,26.7509,94.2037,ACCESSIBLE,LOW,70
+RD_22,NH-53 Silchar-Imphal Western Alternative,Silchar,LOC_SIL,Imphal,LOC_IMP,210,180,21.5,88,Poor,Mountainous,820,15,0,1,Medium,5.4,24.8333,92.7789,24.8170,93.9368,RESTRICTED,MODERATE,35
+RD_23,NH-44A Aizawl-Agartala Interstate Shortcut,Aizawl,LOC_AIZ,Agartala,LOC_AGA,230,135,23.5,82,Fair,Hilly,620,8,0,0,Low,6.5,23.7271,92.7176,23.8315,91.2868,RESTRICTED,MODERATE,40
+RD_24,NH-717A Siliguri-Gangtok Monsoon Bypass (Lava-Reshi),Siliguri (Gateway Hub),LOC_SLG,Gangtok,LOC_GKT,138,140,16.0,86,Fair,Hilly,1250,7,0,1,Medium,6.8,26.7271,88.3953,27.3389,88.6065,RESTRICTED,MODERATE,40

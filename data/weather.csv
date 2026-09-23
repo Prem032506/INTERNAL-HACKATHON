@@ -1,0 +1,16 @@
+location_id,location_name,state,temp_c,rainfall_mm,humidity_pct,wind_speed_kmh,visibility_km,condition,pressure_hpa,alert_level,last_updated
+LOC_GHY,Guwahati,Assam,28.2,62.0,72,12.5,9.5,Scattered Clouds,1010.5,NORMAL,2026-09-23 13:45
+LOC_SHL,Shillong,Meghalaya,19.4,115.0,88,18.0,4.2,Heavy Fog / Drizzle,1008.2,WATCH,2026-09-23 13:45
+LOC_ITA,Itanagar,Arunachal Pradesh,23.5,145.0,89,14.2,5.0,Continuous Rain,1006.8,WATCH,2026-09-23 13:45
+LOC_IMP,Imphal,Manipur,21.0,170.0,91,15.5,3.8,Moderate Rain,1007.4,ALERT,2026-09-23 13:45
+LOC_AIZ,Aizawl,Mizoram,22.1,155.0,87,13.0,4.5,Overcast Rain,1008.1,WATCH,2026-09-23 13:45
+LOC_KOH,Kohima,Nagaland,18.5,188.0,93,19.0,3.0,Heavy Rain,1005.6,WARNING,2026-09-23 13:45
+LOC_AGA,Agartala,Tripura,29.0,75.0,76,11.0,9.0,Partly Cloudy,1011.0,NORMAL,2026-09-23 13:45
+LOC_GKT,Gangtok,Sikkim,16.8,215.0,95,22.0,2.1,Intense Torrential Rain,1004.2,WARNING,2026-09-23 13:45
+LOC_SLG,Siliguri (Gateway Hub),West Bengal/NER Hub,28.5,58.0,71,10.5,9.8,Humid Breezy,1011.2,NORMAL,2026-09-23 13:45
+LOC_SIL,Silchar,Assam (Barak Valley),25.2,235.0,96,20.5,2.5,Torrential Downpour,1004.9,WARNING,2026-09-23 13:45
+LOC_TEZ,Tezpur,Assam,27.1,70.0,74,13.0,8.5,Light Rain,1010.1,NORMAL,2026-09-23 13:45
+LOC_JOR,Jorhat,Assam,26.4,85.0,80,11.5,8.0,Passing Showers,1009.5,NORMAL,2026-09-23 13:45
+LOC_DIB,Dibrugarh,Assam,25.8,92.0,83,12.0,7.5,Cloudy with Rain,1009.0,NORMAL,2026-09-23 13:45
+LOC_TAW,Tawang,Arunachal Pradesh,10.2,220.0,92,25.0,1.8,Freezing Rain / Fog,1002.5,WARNING,2026-09-23 13:45
+LOC_DMP,Dimapur,Nagaland,26.0,80.0,76,12.2,8.2,Overcast,1010.0,NORMAL,2026-09-23 13:45

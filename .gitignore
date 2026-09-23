@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+package-lock.json.bak
+
+# Production build
+frontend/dist/
+dist/
+build/
+
+# Python & ML
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Logs & Environment
+*.log
+.env
+.env.local
+.env.*.local
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+
+# Test & Coverage
+.coverage
+htmlcov/
+.pytest_cache/

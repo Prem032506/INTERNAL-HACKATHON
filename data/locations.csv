@@ -1,0 +1,21 @@
+location_id,name,state,latitude,longitude,elevation_m,district,is_hub,contact_number
+LOC_GHY,Guwahati,Assam,26.1445,91.7362,55,Kamrup Metropolitan,1,+91-361-2237001
+LOC_SHL,Shillong,Meghalaya,25.5788,91.8933,1525,East Khasi Hills,1,+91-364-2501002
+LOC_ITA,Itanagar,Arunachal Pradesh,27.0844,93.6053,320,Papum Pare,1,+91-360-2212003
+LOC_IMP,Imphal,Manipur,24.8170,93.9368,786,Imphal West,1,+91-385-2451004
+LOC_AIZ,Aizawl,Mizoram,23.7271,92.7176,1132,Aizawl,1,+91-389-2322005
+LOC_KOH,Kohima,Nagaland,25.6751,94.1086,1444,Kohima,1,+91-370-2290006
+LOC_AGA,Agartala,Tripura,23.8315,91.2868,13,West Tripura,1,+91-381-2414007
+LOC_GKT,Gangtok,Sikkim,27.3389,88.6065,1650,East Sikkim,1,+91-3592-202008
+LOC_SLG,Siliguri (Gateway Hub),West Bengal/NER Hub,26.7271,88.3953,122,Darjeeling,1,+91-353-2521009
+LOC_TEZ,Tezpur,Assam,26.6528,92.7926,48,Sonitpur,0,+91-3712-230010
+LOC_JOR,Jorhat,Assam,26.7509,94.2037,116,Jorhat,0,+91-376-2340011
+LOC_DIB,Dibrugarh,Assam,27.4728,94.9120,108,Dibrugarh,0,+91-373-2321012
+LOC_SIL,Silchar,Assam (Barak Valley),24.8333,92.7789,25,Cachar,1,+91-3842-261013
+LOC_PAS,Pasighat,Arunachal Pradesh,28.0667,95.3333,153,East Siang,0,+91-368-2222014
+LOC_TAW,Tawang,Arunachal Pradesh,27.5860,91.8656,3048,Tawang,0,+91-3794-222015
+LOC_DMP,Dimapur,Nagaland,25.9060,93.7270,145,Dimapur,1,+91-3862-231016
+LOC_CHU,Churachandpur,Manipur,24.3333,93.6833,914,Churachandpur,0,+91-3874-233017
+LOC_LUN,Lunglei,Mizoram,22.8800,92.7300,1022,Lunglei,0,+91-372-2322018
+LOC_UDA,Udaipur,Tripura,23.5333,91.4833,22,Gomati,0,+91-3821-222019
+LOC_MNG,Mangan,Sikkim,27.5000,88.5333,1310,North Sikkim,0,+91-3592-234020

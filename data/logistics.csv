@@ -1,0 +1,9 @@
+shipment_id,vehicle_number,cargo_type,priority,origin,origin_id,destination,destination_id,eta_hours,risk_status,shipment_status,carrier_unit,notes
+SHP-8801,AS-01-EC-4412,Medical Supplies,EMERGENCY,Guwahati,LOC_GHY,Imphal,LOC_IMP,11.5,HIGH,In Transit,NER Relief Corps #4,Oxygen cylinders and trauma medications rerouted via Dimapur bypass
+SHP-8802,ML-05-D-9104,Emergency Equipment,EMERGENCY,Guwahati,LOC_GHY,Silchar,LOC_SIL,9.0,CRITICAL,Delayed,Border Roads Logistics,Stalled near Jowai due to NH-06 mudslide; waiting for escort
+SHP-8803,SK-01-A-3211,Food & Rations,HIGH,Siliguri (Gateway Hub),LOC_SLG,Gangtok,LOC_GKT,6.5,MODERATE,Rerouted,Sikkim State Civil Supplies,Successfully diverted via NH-717A Lava-Reshi corridor
+SHP-8804,AS-03-F-1109,Water Purification Units,CRITICAL,Guwahati,LOC_GHY,Aizawl,LOC_AIZ,14.0,HIGH,In Transit,Disaster Response Unit B,Approaching Silchar-Aizawl border link; speed restricted
+SHP-8805,TR-01-B-7744,Agricultural Products,NORMAL,Agartala,LOC_AGA,Silchar,LOC_SIL,7.2,LOW,In Transit,Tripura Agro Fleet,Clear transit along NH-08
+SHP-8806,AR-02-C-5002,Construction Materials,MEDIUM,Tezpur,LOC_TEZ,Itanagar,LOC_ITA,4.8,MODERATE,In Transit,Arunachal PWD Haulers,Operating under cautionary speed limits
+SHP-8807,NL-07-E-6631,Medical Supplies,EMERGENCY,Dimapur,LOC_DMP,Kohima,LOC_KOH,3.5,HIGH,Delayed,Nagaland Health Mission,Hairpin mud creep delay near Medziphema
+SHP-8808,AS-01-Z-9901,Emergency Equipment,EMERGENCY,Guwahati,LOC_GHY,Tezpur,LOC_TEZ,3.0,LOW,Delivered,Air Force Forward Logistics,Mission complete; supplies offloaded at Tezpur base
