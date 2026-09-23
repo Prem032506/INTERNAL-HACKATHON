@@ -45,13 +45,30 @@ def create_database():
                 vehicle_number TEXT UNIQUE,
                 vehicle_type TEXT,
                 driver_name TEXT,
-                contact TEXT,
-                current_lat REAL,
-                current_lng REAL,
-                cargo TEXT,
-                status TEXT
+                region TEXT DEFAULT 'North Eastern Region',
+                lat REAL DEFAULT 26.1445,
+                lng REAL DEFAULT 91.7362,
+                contact TEXT DEFAULT '',
+                cargo TEXT DEFAULT 'Essential Relief Supplies',
+                status TEXT DEFAULT 'Active'
             )
         """)
+
+        # Column migrations for existing databases
+        cursor.execute("PRAGMA table_info(vehicles)")
+        existing_cols = [col[1] for col in cursor.fetchall()]
+        if "region" not in existing_cols:
+            cursor.execute("ALTER TABLE vehicles ADD COLUMN region TEXT DEFAULT 'North Eastern Region'")
+        if "lat" not in existing_cols:
+            cursor.execute("ALTER TABLE vehicles ADD COLUMN lat REAL DEFAULT 26.1445")
+        if "lng" not in existing_cols:
+            cursor.execute("ALTER TABLE vehicles ADD COLUMN lng REAL DEFAULT 91.7362")
+        if "contact" not in existing_cols:
+            cursor.execute("ALTER TABLE vehicles ADD COLUMN contact TEXT DEFAULT ''")
+        if "cargo" not in existing_cols:
+            cursor.execute("ALTER TABLE vehicles ADD COLUMN cargo TEXT DEFAULT 'Essential Relief Supplies'")
+        if "status" not in existing_cols:
+            cursor.execute("ALTER TABLE vehicles ADD COLUMN status TEXT DEFAULT 'Active'")
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS deliveries (
@@ -71,16 +88,16 @@ def create_database():
         count = cursor.fetchone()[0]
         if count == 0:
             seed_vehicles = [
-                ("NER-MED-101", "Cold-Chain Reefer (WHO 2-8°C)", "Tsering Dorjee", "+91 98621 44510", 26.3500, 92.1000, "3,200 Vials Vaccines & Insulin", "In-Transit"),
-                ("NER-OXY-204", "Cryo LMO Tanker (20 Ton)", "Rajen Bora", "+91 94350 88219", 25.8200, 93.8500, "18.5 MT Liquid Medical Oxygen", "Rerouting (SOS)"),
-                ("NER-PDS-309", "Heavy Grain Carrier (FCI)", "Biplab Debbarma", "+91 87941 12093", 24.5000, 92.7000, "450 Qtl Fortified Rice & Wheat", "In-Transit"),
-                ("NER-NDRF-007", "Disaster Relief & Rescue Convoy", "Sub-Inspector M. K. Sharma", "+91 94361 77102", 26.8500, 88.4500, "Satellite Comms & Inflatable Boats", "Priority Green Corridor"),
-                ("NER-PET-512", "POL Fuel Tanker (IOCL)", "Lalthlamuana", "+91 97740 33811", 24.1000, 91.8000, "24,000L Aviation Turbine Fuel", "In-Transit")
+                ("NER-MED-101", "Cold-Chain Reefer (WHO 2-8°C)", "Tsering Dorjee", "North Eastern Region", 26.3500, 92.1000, "+91 98621 44510", "3,200 Vials Vaccines & Insulin", "In-Transit"),
+                ("NER-OXY-204", "Cryo LMO Tanker (20 Ton)", "Rajen Bora", "North Eastern Region", 25.8200, 93.8500, "+91 94350 88219", "18.5 MT Liquid Medical Oxygen", "Rerouting (SOS)"),
+                ("NER-PDS-309", "Heavy Grain Carrier (FCI)", "Biplab Debbarma", "North Eastern Region", 24.5000, 92.7000, "+91 87941 12093", "450 Qtl Fortified Rice & Wheat", "In-Transit"),
+                ("NER-NDRF-007", "Disaster Relief & Rescue Convoy", "Sub-Inspector M. K. Sharma", "North Eastern Region", 26.8500, 88.4500, "+91 94361 77102", "Satellite Comms & Inflatable Boats", "Priority Green Corridor"),
+                ("NER-PET-512", "POL Fuel Tanker (IOCL)", "Lalthlamuana", "North Eastern Region", 24.1000, 91.8000, "+91 97740 33811", "24,000L Aviation Turbine Fuel", "In-Transit")
             ]
             cursor.executemany("""
                 INSERT OR IGNORE INTO vehicles 
-                (vehicle_number, vehicle_type, driver_name, contact, current_lat, current_lng, cargo, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (vehicle_number, vehicle_type, driver_name, region, lat, lng, contact, cargo, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, seed_vehicles)
 
         connection.commit()
@@ -108,6 +125,7 @@ def add_vehicle():
     vehicle_number = data.get("vehicle_number")
     vehicle_type = data.get("vehicle_type", "Standard Transport")
     driver_name = data.get("driver_name", "Unassigned")
+    region = data.get("region", "Global")
     contact = data.get("contact", "")
     lat = data.get("lat", 26.1445)
     lng = data.get("lng", 91.7362)
@@ -120,9 +138,9 @@ def add_vehicle():
         with get_db() as connection:
             cursor = connection.cursor()
             cursor.execute("""
-                INSERT INTO vehicles (vehicle_number, vehicle_type, driver_name, contact, current_lat, current_lng, cargo, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 'Active')
-            """, (vehicle_number, vehicle_type, driver_name, contact, lat, lng, cargo))
+                INSERT INTO vehicles (vehicle_number, vehicle_type, driver_name, region, lat, lng, contact, cargo, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Active')
+            """, (vehicle_number, vehicle_type, driver_name, region, lat, lng, contact, cargo))
             connection.commit()
             return jsonify({"message": "Vehicle registered successfully", "vehicle_number": vehicle_number}), 201
     except sqlite3.IntegrityError:
@@ -141,51 +159,147 @@ def view_vehicles():
             rows = cursor.fetchall()
             vehicle_list = []
             for row in rows:
+                v_keys = row.keys()
+                v_lat = row["lat"] if "lat" in v_keys and row["lat"] is not None else (row["current_lat"] if "current_lat" in v_keys and row["current_lat"] is not None else 26.1445)
+                v_lng = row["lng"] if "lng" in v_keys and row["lng"] is not None else (row["current_lng"] if "current_lng" in v_keys and row["current_lng"] is not None else 91.7362)
+                v_reg = row["region"] if "region" in v_keys and row["region"] else "North Eastern Region"
                 vehicle_list.append({
                     "id": row["id"],
                     "vehicle_number": row["vehicle_number"],
                     "vehicle_type": row["vehicle_type"],
                     "driver_name": row["driver_name"],
-                    "contact": row["contact"] if "contact" in row.keys() else "",
-                    "lat": row["current_lat"] if "current_lat" in row.keys() and row["current_lat"] else 26.1445,
-                    "lng": row["current_lng"] if "current_lng" in row.keys() and row["current_lng"] else 91.7362,
-                    "cargo": row["cargo"] if "cargo" in row.keys() and row["cargo"] else "Essential Goods",
-                    "status": row["status"] if "status" in row.keys() else "Active"
+                    "region": v_reg,
+                    "contact": row["contact"] if "contact" in v_keys and row["contact"] else "",
+                    "lat": v_lat,
+                    "lng": v_lng,
+                    "cargo": row["cargo"] if "cargo" in v_keys and row["cargo"] else "Essential Goods",
+                    "status": row["status"] if "status" in v_keys and row["status"] else "Active"
                 })
             return jsonify(vehicle_list)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
-# Vehicle owner lookup from Excel
+# Vehicle owner lookup from Excel or SQLite
 @app.route("/vehicle-owner", methods=["POST"])
 def vehicle_owner():
     data = request.get_json() or {}
-    vehicle_number = data.get("vehicle_number", "").strip().upper()
+    raw_number = str(data.get("vehicle_number", "")).strip().upper()
 
-    if not vehicle_number:
+    if not raw_number:
         return jsonify({"error": "vehicle_number is required"}), 400
 
+    query_clean = raw_number.replace("-", "").replace(" ", "")
+
+    # 1. Search Excel DataFrame
     vehicles = get_vehicles_df()
-    if vehicles.empty:
-        return jsonify({"message": "Vehicle registry not available"}), 404
+    if not vehicles.empty and "Number Plate" in vehicles.columns:
+        clean_series = (
+            vehicles["Number Plate"]
+            .astype(str)
+            .str.strip()
+            .str.upper()
+            .str.replace("-", "")
+            .str.replace(" ", "")
+        )
+        result = vehicles[clean_series == query_clean]
+        if not result.empty:
+            vehicle = result.iloc[0]
+            region = str(vehicle.get("Region", "Registered Region")) if "Region" in vehicle and pd.notna(vehicle.get("Region")) else "Registered Region"
+            return jsonify({
+                "vehicle_number": str(vehicle.get("Number Plate", raw_number)),
+                "vehicle_type": str(vehicle.get("Vehicle Type", "Commercial Vehicle")),
+                "owner_name": str(vehicle.get("Registered Person Name", "Registered Transporter")),
+                "region": region,
+                "status": "Active / Verified in Registry",
+                "source": "Excel Master Database"
+            })
 
-    # Case-insensitive plate comparison
-    if "Number Plate" in vehicles.columns:
-        result = vehicles[
-            vehicles["Number Plate"].astype(str).str.strip().str.upper() == vehicle_number
-        ]
-        if result.empty:
-            return jsonify({"message": "Vehicle not found"}), 404
+    # 2. Fallback to SQLite Production Database
+    try:
+        with get_db() as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM vehicles")
+            rows = cursor.fetchall()
+            for row in rows:
+                v_num = str(row["vehicle_number"]).strip().upper()
+                if v_num.replace("-", "").replace(" ", "") == query_clean:
+                    v_keys = row.keys()
+                    v_reg = row["region"] if "region" in v_keys and row["region"] else "Global"
+                    v_lat = row["lat"] if "lat" in v_keys and row["lat"] is not None else (row["current_lat"] if "current_lat" in v_keys else 26.1445)
+                    v_lng = row["lng"] if "lng" in v_keys and row["lng"] is not None else (row["current_lng"] if "current_lng" in v_keys else 91.7362)
+                    return jsonify({
+                        "vehicle_number": row["vehicle_number"],
+                        "vehicle_type": row["vehicle_type"],
+                        "owner_name": row["driver_name"],
+                        "region": v_reg,
+                        "lat": v_lat,
+                        "lng": v_lng,
+                        "status": "Active / Verified in Registry",
+                        "source": "SQLite Production Database"
+                    })
+    except Exception as e:
+        print("[WARN] SQLite vehicle lookup warning:", e)
 
-        vehicle = result.iloc[0]
-        return jsonify({
-            "vehicle_number": str(vehicle.get("Number Plate", vehicle_number)),
-            "vehicle_type": str(vehicle.get("Vehicle Type", "Commercial Vehicle")),
-            "owner_name": str(vehicle.get("Registered Person Name", "Registered Transporter"))
-        })
+    return jsonify({"message": f"Vehicle '{raw_number}' not found in registry."}), 404
 
-    return jsonify({"message": "Number Plate column missing in registry"}), 404
+
+# Landmarks & Locations Endpoint
+@app.route("/locations", methods=["GET"])
+def get_locations():
+    region_param = request.args.get("region", "all").strip().lower()
+    try:
+        if region_param in ["andes", "chile", "argentina", "andes_corridor"]:
+            excel_andes = os.path.join(BASE_DIR, "south_american_andes_landmarks.xlsx")
+            json_andes = os.path.join(os.path.dirname(BASE_DIR), "assets", "data", "andes-landmarks.json")
+            locations = []
+            if os.path.exists(excel_andes):
+                df = pd.read_excel(excel_andes)
+                for _, row in df.iterrows():
+                    if pd.notna(row.get("name")):
+                        locations.append({
+                            "id": int(row["id"]) if pd.notna(row.get("id")) else len(locations) + 1,
+                            "name": str(row["name"]),
+                            "country": str(row.get("country", "")),
+                            "region": str(row.get("region", "")),
+                            "classification": str(row.get("category", "Andean Landmark")),
+                            "lat": float(row["lat"]),
+                            "lng": float(row["lng"]),
+                            "elevation": int(row["elevation"]) if pd.notna(row.get("elevation")) else 0,
+                            "route": str(row.get("route", "")),
+                            "hazard": str(row.get("hazard", "")),
+                            "significance": str(row.get("desc", ""))
+                        })
+            elif os.path.exists(json_andes):
+                with open(json_andes, "r", encoding="utf-8") as f:
+                    locations = json.load(f).get("landmarks", [])
+            return jsonify({
+                "region": "South American Andes (50 Landmarks)",
+                "total": len(locations),
+                "locations": locations
+            })
+        else:
+            excel_gunupur = os.path.join(BASE_DIR, "gunupur_location_SIH.xlsx")
+            locations = []
+            if os.path.exists(excel_gunupur):
+                df = pd.read_excel(excel_gunupur)
+                for _, row in df.iterrows():
+                    if pd.notna(row.get("Landmark Name")):
+                        locations.append({
+                            "id": int(row["ID"]) if pd.notna(row.get("ID")) else len(locations) + 1,
+                            "name": str(row["Landmark Name"]),
+                            "classification": str(row.get("Landmark Classification", "Landmark")),
+                            "lat": float(row["Latitude"]) if pd.notna(row.get("Latitude")) else 19.0714,
+                            "lng": float(row["Longitude"]) if pd.notna(row.get("Longitude")) else 83.8148,
+                            "significance": str(row.get("Route & Positional Significance", ""))
+                        })
+            return jsonify({
+                "region": "Gunupur / Odisha",
+                "total": len(locations),
+                "locations": locations
+            })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # Add delivery

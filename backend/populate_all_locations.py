@@ -190,17 +190,35 @@ def populate_sqlite():
             driver_name TEXT,
             region TEXT,
             lat REAL,
-            lng REAL
+            lng REAL,
+            contact TEXT DEFAULT '',
+            cargo TEXT DEFAULT 'Essential Relief Supplies',
+            status TEXT DEFAULT 'Active'
         )
     """)
         
     print("Populating SQLite vehicles table...")
     count = 0
+    # Seed NER vehicles
+    ner_vehicles = [
+        ("NER-MED-101", "Cold-Chain Reefer (WHO 2-8°C)", "Tsering Dorjee", "North Eastern Region", 26.3500, 92.1000, "+91 98621 44510", "3,200 Vials Vaccines & Insulin", "In-Transit"),
+        ("NER-OXY-204", "Cryo LMO Tanker (20 Ton)", "Rajen Bora", "North Eastern Region", 25.8200, 93.8500, "+91 94350 88219", "18.5 MT Liquid Medical Oxygen", "Rerouting (SOS)"),
+        ("NER-PDS-309", "Heavy Grain Carrier (FCI)", "Biplab Debbarma", "North Eastern Region", 24.5000, 92.7000, "+91 87941 12093", "450 Qtl Fortified Rice & Wheat", "In-Transit"),
+        ("NER-NDRF-007", "Disaster Relief & Rescue Convoy", "Sub-Inspector M. K. Sharma", "North Eastern Region", 26.8500, 88.4500, "+91 94361 77102", "Satellite Comms & Inflatable Boats", "Priority Green Corridor"),
+        ("NER-PET-512", "POL Fuel Tanker (IOCL)", "Lalthlamuana", "North Eastern Region", 24.1000, 91.8000, "+91 97740 33811", "24,000L Aviation Turbine Fuel", "In-Transit")
+    ]
+    for plate, v_type, driver, reg, lat, lng, contact, cargo, status in ner_vehicles:
+        cur.execute("""
+            INSERT INTO vehicles (vehicle_number, vehicle_type, driver_name, region, lat, lng, contact, cargo, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (plate, v_type, driver, reg, lat, lng, contact, cargo, status))
+        count += 1
+
     for region_name, v_list in ALL_NEW_DATASETS:
         for idx, v_type, plate, driver, reg, lat, lng in v_list:
             cur.execute("""
-                INSERT INTO vehicles (vehicle_number, vehicle_type, driver_name, region, lat, lng)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO vehicles (vehicle_number, vehicle_type, driver_name, region, lat, lng, contact, cargo, status)
+                VALUES (?, ?, ?, ?, ?, ?, '', 'Essential Relief Supplies', 'Active')
             """, (plate, v_type, driver, reg, lat, lng))
             count += 1
             
@@ -216,8 +234,8 @@ def populate_sqlite():
     ]
     for plate, v_type, driver, reg, lat, lng in odisha_vehicles:
         cur.execute("""
-            INSERT INTO vehicles (vehicle_number, vehicle_type, driver_name, region, lat, lng)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO vehicles (vehicle_number, vehicle_type, driver_name, region, lat, lng, contact, cargo, status)
+            VALUES (?, ?, ?, ?, ?, ?, '', 'Emergency Supply', 'Active')
             ON CONFLICT(vehicle_number) DO UPDATE SET
                 vehicle_type = excluded.vehicle_type,
                 driver_name = excluded.driver_name,

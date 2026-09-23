@@ -26,6 +26,14 @@ class GlobalAppCoordinator {
     // 4. Apply Initial Multilingual Strings
     if (window.i18n) {
       window.i18n.applyTranslations();
+      const curLang = window.i18n.currentLang;
+      document.querySelectorAll('.lang-card').forEach(c => {
+        if (c.getAttribute('data-lang') === curLang) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
     }
 
     // 5. Update initial offline queue count
@@ -42,21 +50,32 @@ class GlobalAppCoordinator {
   }
 
   renderDistrictList(states = []) {
+    if (states && states.length > 0) {
+      this.currentStates = states;
+    } else if (this.currentStates) {
+      states = this.currentStates;
+    }
     const listContainer = document.getElementById('state-connectivity-list');
     if (!listContainer) return;
 
     listContainer.innerHTML = '';
 
+    const t = (k, fallback) => (window.i18n ? window.i18n.get(k) : (fallback || k));
+    const normalLabel = t('statusNormal', 'Normal');
+    const alertLabel = t('statusAlert', 'Alert');
+    const criticalLabel = t('statusCritical', 'Critical');
+    const riskLabel = t('riskLabel', 'Risk:');
+
     states.forEach(st => {
       let badgeClass = 'badge-normal';
-      let statusText = 'Normal';
+      let statusText = normalLabel;
 
       if (st.vulnerabilityScore > 80) {
         badgeClass = 'badge-critical';
-        statusText = 'Critical';
+        statusText = criticalLabel;
       } else if (st.vulnerabilityScore > 65) {
         badgeClass = 'badge-warning';
-        statusText = 'Alert';
+        statusText = alertLabel;
       }
 
       const item = document.createElement('div');
@@ -65,7 +84,7 @@ class GlobalAppCoordinator {
       item.innerHTML = `
         <div class="state-info">
           <span class="state-name">${st.name}</span>
-          <span class="state-capital">${st.capital} • Risk: ${st.vulnerabilityScore}%</span>
+          <span class="state-capital">${st.capital} • ${riskLabel} ${st.vulnerabilityScore}%</span>
         </div>
         <span class="status-badge ${badgeClass}">${statusText}</span>
       `;
@@ -99,6 +118,41 @@ class GlobalAppCoordinator {
         window.mapEngine.setBasemap(layer);
       });
     });
+
+    // Vehicle Registry Lookup Modal Triggers
+    const lookupBtn = document.getElementById('btn-open-vehicle-lookup');
+    const lookupModal = document.getElementById('vehicle-lookup-modal');
+
+    if (lookupBtn && lookupModal) {
+      lookupBtn.addEventListener('click', () => {
+        lookupModal.classList.add('active');
+        document.getElementById('vehicle-lookup-input')?.focus();
+      });
+    }
+
+    // Quick Sample Buttons
+    document.querySelectorAll('.quick-plate-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const plate = btn.getAttribute('data-plate');
+        const input = document.getElementById('vehicle-lookup-input');
+        if (input) {
+          input.value = plate;
+          this.handleVehicleLookup(plate);
+        }
+      });
+    });
+
+    // Vehicle Lookup Form Submit
+    const lookupForm = document.getElementById('vehicle-lookup-form');
+    if (lookupForm) {
+      lookupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('vehicle-lookup-input');
+        if (input && input.value.trim()) {
+          this.handleVehicleLookup(input.value.trim());
+        }
+      });
+    }
 
     // Language Selector Modal Triggers
     const langBtn = document.getElementById('lang-selector-btn');
@@ -134,6 +188,27 @@ class GlobalAppCoordinator {
         card.classList.add('active');
         langModal.classList.remove('active');
       });
+    });
+
+    // Global Language Change Event Listener
+    window.addEventListener('languageChanged', (e) => {
+      const curLang = e.detail?.lang || (window.i18n ? window.i18n.currentLang : 'en');
+      document.querySelectorAll('.lang-card').forEach(c => {
+        if (c.getAttribute('data-lang') === curLang) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+      if (this.currentStates) {
+        this.renderDistrictList(this.currentStates);
+      }
+      if (this.lastCalculatedRouteResult) {
+        this.renderRouteResults(this.lastCalculatedRouteResult);
+      }
+      if (window.i18n) {
+        window.i18n.applyTranslations();
+      }
     });
 
     // Close Modals on backdrop click or close button
@@ -699,6 +774,33 @@ class GlobalAppCoordinator {
       };
     }
 
+    this.lastCalculatedRouteResult = result;
+    this.renderRouteResults(result);
+
+    // Draw high-density real road comparison polylines with start/finish pins on Leaflet map
+    if (window.mapEngine && result.primary?.coordinates && result.alternate?.coordinates) {
+      window.mapEngine.drawRouteComparison(result.primary.coordinates, result.alternate.coordinates, {
+        originName: result.origin,
+        destName: result.destination,
+        primaryDist: result.primary.distanceKm,
+        altDist: result.alternate.distanceKm
+      });
+    }
+  }
+
+  renderRouteResults(result) {
+    const container = document.getElementById('route-results-container');
+    if (!container || !result) return;
+
+    const t = (k, fallback) => (window.i18n ? window.i18n.get(k) : (fallback || k));
+    const labelDist = t('labelHighwayDist', 'Real Highway Dist');
+    const labelEst = t('labelEstTime', 'Est. Time');
+    const labelDelay = t('labelWeatherDelay', 'Weather Delay');
+    const labelHazard = t('labelHazardRisk', 'Hazard Risk');
+    const labelSaved = t('labelTimeSaved', 'Time Saved');
+    const labelDirect = t('labelStandardDirect', 'Standard Direct');
+    const labelBypass = t('labelAiBypass', 'AI Resilient Road Bypass');
+
     const liveWeatherBadge = result.liveWeather ? `
       <span class="status-badge" style="background:rgba(16,185,129,0.12);color:var(--neon-emerald);border:1px solid rgba(16,185,129,0.3);font-size:0.75rem;">
         🛰️ Live Radar: ${result.liveWeather.status} (+${result.liveWeather.dynamicDelayHours || 0.4}h delay)
@@ -708,7 +810,7 @@ class GlobalAppCoordinator {
     const accuracyPill = `
       <div class="accuracy-badge-pill" style="margin-bottom:0.6rem;">
         <span class="pulse-emerald-dot"></span>
-        <span>${result.dataSource || '100% Real-World Highway Geometry (OSRM)'}</span>
+        <span>${result.dataSource || t('osrmAccuracyBadge', '100% Real-World Highway Geometry (OSRM)')}</span>
       </div>
     `;
 
@@ -770,7 +872,7 @@ class GlobalAppCoordinator {
       <div class="route-card disrupted">
         <div class="route-header">
           <span class="route-name" style="color:#ef4444;">
-            ⚠️ Standard Direct: ${result.primary.name}
+            ⚠️ ${labelDirect}: ${result.primary.name}
           </span>
           <span class="status-badge badge-critical">
             ${result.primary.status}
@@ -778,19 +880,19 @@ class GlobalAppCoordinator {
         </div>
         <div class="route-stats-grid">
           <div class="stat-item">
-            <span class="stat-label">Real Highway Dist</span>
+            <span class="stat-label">${labelDist}</span>
             <span class="stat-val">${result.primary.distanceKm} km</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Est. Time</span>
+            <span class="stat-label">${labelEst}</span>
             <span class="stat-val" style="color:#ef4444;">${result.primary.totalTimeHours} hrs</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Weather Delay</span>
+            <span class="stat-label">${labelDelay}</span>
             <span class="stat-val" style="color:#f87171;">+${result.primary.weatherDelayHours} hrs</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Hazard Risk</span>
+            <span class="stat-label">${labelHazard}</span>
             <span class="stat-val" style="color:#ef4444;">${result.primary.hazardRisk}</span>
           </div>
         </div>
@@ -799,7 +901,7 @@ class GlobalAppCoordinator {
       <div class="route-card selected">
         <div class="route-header">
           <span class="route-name" style="color:#00f2fe;">
-            ✨ AI Resilient Road Bypass: ${result.alternate.name}
+            ✨ ${labelBypass}: ${result.alternate.name}
           </span>
           <span class="status-badge badge-normal">
             ${result.alternate.status}
@@ -807,15 +909,15 @@ class GlobalAppCoordinator {
         </div>
         <div class="route-stats-grid">
           <div class="stat-item">
-            <span class="stat-label">Real Highway Dist</span>
+            <span class="stat-label">${labelDist}</span>
             <span class="stat-val">${result.alternate.distanceKm} km</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Est. Time</span>
+            <span class="stat-label">${labelEst}</span>
             <span class="stat-val" style="color:#10b981;">${result.alternate.totalTimeHours} hrs</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Time Saved</span>
+            <span class="stat-label">${labelSaved}</span>
             <span class="stat-val" style="color:#00f2fe;">-${Math.max(0.4, (result.primary.totalTimeHours - result.alternate.totalTimeHours)).toFixed(1)} hrs</span>
           </div>
           <div class="stat-item">
@@ -911,6 +1013,103 @@ class GlobalAppCoordinator {
     // Reset upload state and close modal
     this.resetPhotoUploadState();
     document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active'));
+  }
+
+  async handleVehicleLookup(queryPlate) {
+    const resultBox = document.getElementById('vehicle-lookup-result');
+    if (!resultBox) return;
+
+    resultBox.style.display = 'block';
+    resultBox.innerHTML = `
+      <div style="text-align:center;padding:12px;color:var(--neon-cyan);">
+        <span>⏳ Querying Master Vehicle Registry...</span>
+      </div>
+    `;
+
+    try {
+      // 1. Try Flask Backend
+      let data = null;
+      try {
+        const response = await fetch("http://127.0.0.1:5000/vehicle-owner", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vehicle_number: queryPlate })
+        });
+        if (response.ok) {
+          data = await response.json();
+        }
+      } catch (beErr) {
+        console.warn("Backend lookup unreachable, falling back to client telemetry index:", beErr);
+      }
+
+      // 2. Client fallback lookup if backend is offline or unverified
+      if (!data && window.fleetManager) {
+        const v = window.fleetManager.getVehicleById(queryPlate);
+        if (v) {
+          data = {
+            vehicle_number: v.id,
+            vehicle_type: v.category,
+            owner_name: v.driver || v.name,
+            region: v.region || "Verified Global Fleet",
+            lat: v.lat,
+            lng: v.lng,
+            status: "Active / Verified in Registry",
+            source: "Client Telemetry Index"
+          };
+        }
+      }
+
+      if (data && data.owner_name) {
+        const iconEmoji = (data.vehicle_type && data.vehicle_type.toLowerCase().includes('ambulance')) ? '🚑' :
+          ((data.vehicle_type && data.vehicle_type.toLowerCase().includes('bike')) ? '🏍️' :
+          ((data.vehicle_type && data.vehicle_type.toLowerCase().includes('car')) ? '🚗' :
+          ((data.vehicle_type && data.vehicle_type.toLowerCase().includes('truck')) ? '🚛' : '🚚')));
+
+        const vLat = data.lat || 0;
+        const vLng = data.lng || 0;
+
+        resultBox.innerHTML = `
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.6rem;margin-bottom:0.6rem;">
+            <div>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <span style="font-size:1.5rem;">${iconEmoji}</span>
+                <div>
+                  <h4 style="color:#ffffff;font-size:1rem;margin:0;">${data.owner_name}</h4>
+                  <span style="font-size:0.75rem;color:var(--neon-cyan);font-weight:700;">Plate: ${data.vehicle_number}</span>
+                </div>
+              </div>
+            </div>
+            <span class="status-badge badge-normal" style="font-size:0.7rem;">${data.status || 'Verified Registered'}</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-size:0.78rem;">
+            <div><span style="color:var(--text-secondary);">Vehicle Type:</span> <strong style="color:#ffffff;">${data.vehicle_type}</strong></div>
+            <div><span style="color:var(--text-secondary);">Region:</span> <strong style="color:var(--neon-emerald);">${data.region || 'Registered Sector'}</strong></div>
+            <div><span style="color:var(--text-secondary);">Registry DB:</span> <span style="color:#94a3b8;">${data.source || 'Master Registry'}</span></div>
+            <div><span style="color:var(--text-secondary);">Telemetry:</span> <span style="color:#10b981;">● Online / Monitored</span></div>
+          </div>
+
+          ${vLat && vLng ? `
+            <button class="btn-primary-action" style="width:100%;margin-top:0.75rem;padding:0.4rem;font-size:0.78rem;" onclick="if(window.mapEngine){ window.mapEngine.flyToLocation(${vLat}, ${vLng}, 11); document.getElementById('vehicle-lookup-modal').classList.remove('active'); }">
+              <span>📍</span> Focus Vehicle on Satellite Map
+            </button>
+          ` : ''}
+        `;
+      } else {
+        resultBox.innerHTML = `
+          <div style="text-align:center;padding:12px;color:#ef4444;">
+            <span>⚠️ Vehicle "${queryPlate}" not found in current regional databases.</span>
+            <p style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;">Please verify plate number formatting or select from quick samples above.</p>
+          </div>
+        `;
+      }
+    } catch (err) {
+      resultBox.innerHTML = `
+        <div style="text-align:center;padding:12px;color:#ef4444;">
+          <span>⚠️ Query Error: ${err.message}</span>
+        </div>
+      `;
+    }
   }
 
   triggerDisasterSimulation() {

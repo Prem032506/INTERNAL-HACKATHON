@@ -1,10 +1,10 @@
 /**
- * Global-Setu Service Worker v6 (Live Disruption Ticker Fix & Weather Radar Sync)
+ * Global-Setu Service Worker v7 (Full Multilingual i18n Localization & Radar Sync)
  * Network-First strategy to ensure users always receive live meteorological telemetry
  * and 100% accurate road updates immediately, with 100% Offline fallback.
  */
 
-const CACHE_NAME = 'global-setu-v6-ticker-fix';
+const CACHE_NAME = 'global-setu-v8-verified-master';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -26,7 +26,8 @@ const STATIC_ASSETS = [
   './js/presentation.js',
   './assets/data/global-regions.json',
   './assets/data/mock-telemetry.json',
-  './assets/data/cached-road-routes.json'
+  './assets/data/cached-road-routes.json',
+  './assets/data/andes-landmarks.json'
 ];
 
 self.addEventListener('install', (event) => {

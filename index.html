@@ -11,9 +11,9 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/main.css?v=20260919-v6">
-  <link rel="stylesheet" href="css/map.css?v=20260919-v6">
-  <link rel="stylesheet" href="css/components.css?v=20260919-v6">
+  <link rel="stylesheet" href="css/main.css?v=20260919-v7">
+  <link rel="stylesheet" href="css/map.css?v=20260919-v7">
+  <link rel="stylesheet" href="css/components.css?v=20260919-v7">
 </head>
 <body>
   <div class="bg-mesh-overlay"></div>
@@ -28,7 +28,7 @@
           </svg>
         </div>
         <div class="brand-text">
-          <h1 data-i18n="appTitle">Global-Setu <span class="badge-ner">GLOBAL INTELLIGENCE</span></h1>
+          <h1><span data-i18n="appTitle">Global-Setu</span> <span class="badge-ner" data-i18n="globalIntelligenceBadge">GLOBAL INTELLIGENCE</span></h1>
           <p class="brand-subtitle" data-i18n="appSubtitle">AI-Based Smart Logistics & Disaster Accessibility Intelligence Platform</p>
         </div>
       </div>
@@ -38,25 +38,29 @@
         <div style="display:flex; align-items:center; gap:0.4rem; background:rgba(255,255,255,0.04); border:1px solid var(--border-glass); padding:0.25rem 0.6rem; border-radius:var(--radius-md);">
           <span style="font-size:0.85rem;">🌍</span>
           <select id="global-region-select" style="background:transparent; border:none; color:var(--neon-cyan); font-family:var(--font-heading); font-size:0.82rem; font-weight:700; outline:none; cursor:pointer;">
-            <option value="NER_INDIA" style="background:#0b1424; color:#fff;">🇮🇳 North Eastern Region (NER, India)</option>
-            <option value="HIMALAYAN_ARC" style="background:#0b1424; color:#fff;">🏔️ Northern Himalayan Arc (Ladakh, J&K, HP, UK)</option>
-            <option value="EURO_ALPS" style="background:#0b1424; color:#fff;">🇪🇺 European Alps Corridor (CH, IT, FR, AT)</option>
-            <option value="ANDES_CORRIDOR" style="background:#0b1424; color:#fff;">🏔️ South American Andes (Chile, Argentina)</option>
+            <option value="NER_INDIA" data-i18n="regionNER" style="background:#0b1424; color:#fff;">🇮🇳 North Eastern Region (NER, India)</option>
+            <option value="HIMALAYAN_ARC" data-i18n="regionHIM" style="background:#0b1424; color:#fff;">🏔️ Northern Himalayan Arc (Ladakh, J&K, HP, UK)</option>
+            <option value="EURO_ALPS" data-i18n="regionALPS" style="background:#0b1424; color:#fff;">🇪🇺 European Alps Corridor (CH, IT, FR, AT)</option>
+            <option value="ANDES_CORRIDOR" data-i18n="regionANDES" style="background:#0b1424; color:#fff;">🏔️ South American Andes (Chile, Argentina)</option>
+            <option value="ODISHA_GUNUPUR" data-i18n="regionOdisha" style="background:#0b1424; color:#fff;">📍 Odisha & Gunupur Sector (SH-4 Lifeline)</option>
           </select>
         </div>
 
         <nav class="nav-links">
           <a href="index.html" class="nav-link-btn active">
-            <span>🗺️</span> Command Center
+            <span>🗺️</span> <span data-i18n="navCommandCenter">Command Center</span>
           </a>
+          <button class="nav-link-btn" id="btn-open-vehicle-lookup" style="background:transparent;border:1px solid var(--neon-cyan);color:var(--neon-cyan);cursor:pointer;">
+            <span>🔍</span> <span data-i18n="navVehicleLookup">Vehicle Registry Lookup</span>
+          </button>
           <a href="presentation.html" class="nav-link-btn">
-            <span>📊</span> Pitch PPT Deck
+            <span>📊</span> <span data-i18n="navPitchDeck">Pitch PPT Deck</span>
           </a>
           <a href="architecture.html" class="nav-link-btn">
-            <span>📐</span> Block Diagrams
+            <span>📐</span> <span data-i18n="navDiagrams">Block Diagrams</span>
           </a>
           <a href="document.html" class="nav-link-btn">
-            <span>📑</span> Solution Document
+            <span>📑</span> <span data-i18n="navDocument">Solution Document</span>
           </a>
         </nav>
 
@@ -66,12 +70,12 @@
         </div>
 
         <!-- Language Selector Button -->
-        <button class="btn-icon" id="lang-selector-btn" title="Change Language / Select Language (11 Languages)">
+        <button class="btn-icon" id="lang-selector-btn" data-i18n-title="langSelectTooltip" title="Change Language / Select Language (11 Languages)">
           <span id="current-lang-name" style="font-size:0.75rem;font-weight:800;">EN (Global)</span>
         </button>
 
         <!-- Offline Sync Indicator -->
-        <button class="btn-icon" id="btn-offline-sync" title="Offline Buffered Reports">
+        <button class="btn-icon" id="btn-offline-sync" data-i18n-title="offlineSyncTooltip" title="Offline Buffered Reports">
           <span>📡</span>
           <span class="badge-count" id="offline-queue-badge" style="display:none;">0</span>
         </button>
@@ -84,32 +88,32 @@
         <span>⚠️</span> <span data-i18n="disruptionAlert">CRITICAL ALERTS</span>:
       </div>
       <div class="ticker-viewport">
-        <div class="ticker-content">
+        <div class="ticker-content" id="ticker-content-track">
           <!-- Item Set 1 -->
-          <div class="ticker-item">
-            <strong>[NH-29 Nagaland, India]</strong> Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
+          <div class="ticker-item" data-i18n="tickerNagaland">
+            [NH-29 Nagaland, India] Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
           </div>
-          <div class="ticker-item">
-            <strong>[NH-1 Ladakh/Kashmir]</strong> Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
+          <div class="ticker-item" data-i18n="tickerLadakh">
+            [NH-1 Ladakh/Kashmir] Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
           </div>
-          <div class="ticker-item">
-            <strong>[A2 Gotthard, Switzerland]</strong> Heavy Alpine snowfall warning. Heavy freight metering active.
+          <div class="ticker-item" data-i18n="tickerAlps">
+            [A2 Gotthard, Switzerland] Heavy Alpine snowfall warning. Heavy freight metering active.
           </div>
-          <div class="ticker-item">
-            <strong>[Paso Los Libertadores, Andes]</strong> Blizzard warning on international border pass. Standby clearance units deployed.
+          <div class="ticker-item" data-i18n="tickerAndes">
+            [Paso Los Libertadores, Andes] Blizzard warning on international border pass. Standby clearance units deployed.
           </div>
           <!-- Item Set 2 (Seamless Infinite Marquee) -->
-          <div class="ticker-item">
-            <strong>[NH-29 Nagaland, India]</strong> Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
+          <div class="ticker-item" data-i18n="tickerNagaland">
+            [NH-29 Nagaland, India] Pagala Pahar Mudslide Disruption. Est. Delay: +7.5 Hrs. Heavy convoys diverting via Wokha Bypass.
           </div>
-          <div class="ticker-item">
-            <strong>[NH-1 Ladakh/Kashmir]</strong> Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
+          <div class="ticker-item" data-i18n="tickerLadakh">
+            [NH-1 Ladakh/Kashmir] Zoji La Pass heavy snow alert. High-clearance 4x4 convoys active.
           </div>
-          <div class="ticker-item">
-            <strong>[A2 Gotthard, Switzerland]</strong> Heavy Alpine snowfall warning. Heavy freight metering active.
+          <div class="ticker-item" data-i18n="tickerAlps">
+            [A2 Gotthard, Switzerland] Heavy Alpine snowfall warning. Heavy freight metering active.
           </div>
-          <div class="ticker-item">
-            <strong>[Paso Los Libertadores, Andes]</strong> Blizzard warning on international border pass. Standby clearance units deployed.
+          <div class="ticker-item" data-i18n="tickerAndes">
+            [Paso Los Libertadores, Andes] Blizzard warning on international border pass. Standby clearance units deployed.
           </div>
         </div>
       </div>
@@ -129,31 +133,31 @@
           <!-- Quick Metric Stats -->
           <div class="metrics-row">
             <div class="metric-card">
-              <span class="metric-title">Monitored Corridors</span>
-              <span class="metric-value" style="color:var(--neon-crimson);">18 Active</span>
-              <span class="metric-sub" style="color:#fca5a5;">4 Extreme Risk</span>
+              <span class="metric-title" data-i18n="metricMonitoredCorridors">Monitored Corridors</span>
+              <span class="metric-value" data-i18n="metric18Active" style="color:var(--neon-crimson);">18 Active</span>
+              <span class="metric-sub" data-i18n="metric4HighRisk" style="color:#fca5a5;">4 Extreme Risk</span>
             </div>
             <div class="metric-card">
-              <span class="metric-title">Humanitarian Convoys</span>
-              <span class="metric-value" style="color:var(--neon-emerald);">42 In-Transit</span>
-              <span class="metric-sub" style="color:#a7f3d0;">UN / Red Cross / NDRF</span>
+              <span class="metric-title" data-i18n="metricFieldConvoys">Humanitarian Convoys</span>
+              <span class="metric-value" data-i18n="metric42InTransit" style="color:var(--neon-emerald);">42 In-Transit</span>
+              <span class="metric-sub" data-i18n="metricConvoysSub" style="color:#a7f3d0;">UN / Red Cross / NDRF</span>
             </div>
           </div>
 
           <div class="metrics-row">
             <div class="metric-card">
-              <span class="metric-title">Cold-Chain Vaccines</span>
-              <span class="metric-value" style="color:var(--neon-cyan);">4.2°C</span>
-              <span class="metric-sub" style="color:#bae6fd;">WHO Compliant</span>
+              <span class="metric-title" data-i18n="metricColdChain">Cold-Chain Vaccines</span>
+              <span class="metric-value" data-i18n="metric42C" style="color:var(--neon-cyan);">4.2°C</span>
+              <span class="metric-sub" data-i18n="metricWhoCompliant" style="color:#bae6fd;">WHO Compliant</span>
             </div>
             <div class="metric-card" id="global-weather-risk-card">
-              <span class="metric-title">Global Rain / Snow Risk</span>
-              <span class="metric-value" id="global-weather-risk-val" style="color:var(--neon-amber);">78% High</span>
-              <span class="metric-sub" id="global-weather-risk-sub" style="color:#fde68a;">Live Satellite Radar</span>
+              <span class="metric-title" data-i18n="metricPrecipitationRisk">Global Rain / Snow Risk</span>
+              <span class="metric-value" id="global-weather-risk-val" data-i18n="metric78High" style="color:var(--neon-amber);">78% High</span>
+              <span class="metric-sub" id="global-weather-risk-sub" data-i18n="metricLiveSatelliteRadar" style="color:#fde68a;">Live Satellite Radar</span>
             </div>
           </div>
 
-          <div style="margin: 0.75rem 0 0.4rem; font-size:0.75rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">
+          <div style="margin: 0.75rem 0 0.4rem; font-size:0.75rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;" data-i18n="sectorConnectivityHealth">
             Sector Connectivity Health
           </div>
 
@@ -168,9 +172,9 @@
       <section class="map-viewport-panel">
         <!-- Floating Map Layer Controllers -->
         <div class="map-floating-bar">
-          <button class="map-control-btn active" data-layer="dark">🌌 Dark Radar</button>
-          <button class="map-control-btn" data-layer="terrain">⛰️ Global Mountain Topo</button>
-          <button class="map-control-btn" data-layer="satellite">🛰️ Satellite InSAR</button>
+          <button class="map-control-btn active" data-layer="dark" data-i18n="mapDarkRadar">🌌 Dark Radar</button>
+          <button class="map-control-btn" data-layer="terrain" data-i18n="mapMountainTopo">⛰️ Global Mountain Topo</button>
+          <button class="map-control-btn" data-layer="satellite" data-i18n="mapSatelliteInSAR">🛰️ Satellite InSAR</button>
         </div>
 
         <!-- Leaflet Map Container -->
@@ -182,7 +186,7 @@
             <span>🧭</span> <span data-i18n="routeOptimizer">AI Route Optimizer</span>
           </button>
           <button class="btn-secondary-action" id="btn-map-quick-route" style="border-color:var(--neon-cyan);color:var(--neon-cyan);">
-            <span>📍</span> <span>Map Click-to-Route</span>
+            <span>📍</span> <span data-i18n="mapClickToRoute">Map Click-to-Route</span>
           </button>
           <button class="btn-secondary-action" onclick="window.app.showFieldReportModal()">
             <span>📷</span> <span data-i18n="fieldReport">Report Road Disruption</span>
@@ -199,64 +203,10 @@
           <div class="panel-title">
             <span>🚚</span> <span data-i18n="fleetTracking">Live Fleet Telemetry</span>
           </div>
-          <span class="system-status-pill" style="padding:2px 8px;font-size:0.65rem;">GPS ACTIVE</span>
+          <span class="system-status-pill" data-i18n="gpsActive" style="padding:2px 8px;font-size:0.65rem;">GPS ACTIVE</span>
         </div>
         <div class="panel-body" id="fleet-telemetry-feed">
-          <!-- Active Essential Fleet Cards -->
-          <div class="telemetry-card">
-            <div class="truck-header">
-              <span class="truck-id">UN-MED-101</span>
-              <span class="cargo-tag">WHO Vaccine Reefer</span>
-            </div>
-            <div class="truck-route">Regional Central Depot ➔ Mountain District Hospital</div>
-            <div class="truck-meta">
-              <span>Speed: <strong>48 km/h</strong></span>
-              <span>Temp: <strong style="color:var(--neon-emerald);">4.2°C</strong></span>
-              <span>ETA: <strong>18:45 Local</strong></span>
-            </div>
-          </div>
-
-          <div class="telemetry-card" style="border-color:rgba(239, 68, 68, 0.4);background:rgba(239, 68, 68, 0.05);">
-            <div class="truck-header">
-              <span class="truck-id" style="color:var(--neon-crimson);">EMRG-OXY-204 (SOS)</span>
-              <span class="cargo-tag" style="background:rgba(239,68,68,0.2);color:#ef4444;">Cryo Medical O2</span>
-            </div>
-            <div class="truck-route">Oxygen Generating Plant ➔ Highland Hospital</div>
-            <div class="truck-meta">
-              <span>Speed: <strong>22 km/h</strong></span>
-              <span>Cryo: <strong>-183°C</strong></span>
-              <span>Delay: <strong style="color:var(--neon-crimson);">+5.5 hrs</strong></span>
-            </div>
-            <p style="font-size:0.7rem;color:#fca5a5;margin-top:6px;line-height:1.3;">
-              ⚠️ <strong>Diverted:</strong> Mountain landslide ahead. AI routing via secondary pass bypass.
-            </p>
-          </div>
-
-          <div class="telemetry-card">
-            <div class="truck-header">
-              <span class="truck-id">WFP-FOOD-309</span>
-              <span class="cargo-tag" style="background:rgba(245,158,11,0.15);color:#f59e0b;">WFP Food Grain Relief</span>
-            </div>
-            <div class="truck-route">Strategic Grain Silo ➔ Emergency Food Bank</div>
-            <div class="truck-meta">
-              <span>Speed: <strong>38 km/h</strong></span>
-              <span>Cargo: <strong>450 Qtl</strong></span>
-              <span>ETA: <strong>20:30 Local</strong></span>
-            </div>
-          </div>
-
-          <div class="telemetry-card">
-            <div class="truck-header">
-              <span class="truck-id">RESCUE-007</span>
-              <span class="cargo-tag" style="background:rgba(16,185,129,0.15);color:#10b981;">Disaster Response</span>
-            </div>
-            <div class="truck-route">Emergency Depot ➔ Disaster Sector Base</div>
-            <div class="truck-meta">
-              <span>Speed: <strong>54 km/h</strong></span>
-              <span>Status: <strong>Priority Convoy</strong></span>
-              <span>ETA: <strong>19:10 Local</strong></span>
-            </div>
-          </div>
+          <!-- Active Essential Fleet Cards (Dynamic via fleet-telemetry.js) -->
         </div>
       </aside>
     </main>
@@ -267,7 +217,7 @@
     <div class="modal-dialog" style="max-width:740px;">
       <div class="modal-header">
         <div class="modal-title">
-          <span>🧭</span> AI Disruption-Resilient Route Optimizer
+          <span>🧭</span> <span data-i18n="routeModalTitle">AI Disruption-Resilient Route Optimizer</span>
         </div>
         <button class="modal-close">&times;</button>
       </div>
@@ -275,27 +225,27 @@
         <form id="route-planner-form">
           <!-- Quick Region Filter Buttons -->
           <div class="region-filter-chips">
-            <button type="button" class="chip-filter active" data-region-filter="ALL">🌐 All Corridors</button>
-            <button type="button" class="chip-filter" data-region-filter="NER">🏔️ North East India (NER)</button>
-            <button type="button" class="chip-filter" data-region-filter="HIM">❄️ Himalayan Arc</button>
-            <button type="button" class="chip-filter" data-region-filter="ALPS">🇪🇺 European Alps</button>
-            <button type="button" class="chip-filter" data-region-filter="ANDES">🌋 Andes Corridors</button>
+            <button type="button" class="chip-filter active" data-region-filter="ALL" data-i18n="chipAll">🌐 All Corridors</button>
+            <button type="button" class="chip-filter" data-region-filter="NER" data-i18n="chipNER">🏔️ North East India (NER)</button>
+            <button type="button" class="chip-filter" data-region-filter="HIM" data-i18n="chipHIM">❄️ Himalayan Arc</button>
+            <button type="button" class="chip-filter" data-region-filter="ALPS" data-i18n="chipALPS">🇪🇺 European Alps</button>
+            <button type="button" class="chip-filter" data-region-filter="ANDES" data-i18n="chipANDES">🌋 Andes Corridors</button>
           </div>
 
           <!-- Quick Hub Text Search Bar -->
           <div class="route-quick-search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="route-hub-search" class="form-input" placeholder="Quick filter hubs or terminals (e.g. Leh, Shillong, Manali, Aizawl, Tawang, Geneva)...">
+            <input type="text" id="route-hub-search" class="form-input" data-i18n-placeholder="searchHubPlaceholder" placeholder="Quick filter hubs or terminals (e.g. Leh, Shillong, Manali, Aizawl, Tawang, Geneva)...">
           </div>
 
           <!-- Real-World Road Accuracy Status & Map Picker -->
           <div style="display:flex;justify-content:space-between;align-items:center;margin:0.6rem 0 0.85rem;flex-wrap:wrap;gap:0.5rem;">
             <div class="accuracy-badge-pill">
               <span class="pulse-emerald-dot"></span>
-              <span>100% Real-World Highway Geometry Active (OSRM)</span>
+              <span data-i18n="osrmAccuracyBadge">100% Real-World Highway Geometry Active (OSRM)</span>
             </div>
             <button type="button" id="btn-modal-map-pick" class="btn-map-picker">
-              <span>📍</span> <span>Click 2 Points on Map</span>
+              <span>📍</span> <span data-i18n="btnModalMapPick">Click 2 Points on Map</span>
             </button>
           </div>
 
@@ -304,7 +254,7 @@
             <div class="form-group">
               <label class="form-label" data-i18n="origin">Origin Logistics Hub</label>
               <select class="form-select" id="route-origin">
-                <optgroup label="🏔️ North East India (NER)" data-region="NER">
+                <optgroup label="🏔️ North East India (NER)" data-region="NER" data-i18n-label="chipNER">
                   <option value="Guwahati" selected>Guwahati Central Gateway Hub (Assam)</option>
                   <option value="Siliguri">Siliguri Strategic Logistics Depot (WB)</option>
                   <option value="Shillong">Shillong Mountain Depot (Meghalaya)</option>
@@ -316,7 +266,7 @@
                   <option value="Dibrugarh">Dibrugarh Upper Assam Depot (Assam)</option>
                   <option value="Silchar">Silchar Barak Valley Base (Assam)</option>
                 </optgroup>
-                <optgroup label="❄️ Northern Himalayan Arc" data-region="HIM">
+                <optgroup label="❄️ Northern Himalayan Arc" data-region="HIM" data-i18n-label="chipHIM">
                   <option value="Srinagar">Srinagar Central Base (J&K)</option>
                   <option value="Leh">Leh High-Altitude Base (Ladakh)</option>
                   <option value="Kargil">Kargil Mountain Transit Station (Ladakh)</option>
@@ -327,7 +277,7 @@
                   <option value="Rishikesh">Rishikesh Arterial Depot (Uttarakhand)</option>
                   <option value="Dharamshala">Dharamshala Mountain Depot (Himachal)</option>
                 </optgroup>
-                <optgroup label="🇪🇺 European Alps" data-region="ALPS">
+                <optgroup label="🇪🇺 European Alps" data-region="ALPS" data-i18n-label="chipALPS">
                   <option value="Zurich">Zurich Intermodal Hub (Switzerland)</option>
                   <option value="Milan">Milan Freight Terminal (Italy)</option>
                   <option value="Geneva">Geneva Cross-Border Center (Switzerland)</option>
@@ -336,7 +286,7 @@
                   <option value="Bern">Bern Strategic Depot (Switzerland)</option>
                   <option value="Turin">Turin Industrial Freight Hub (Italy)</option>
                 </optgroup>
-                <optgroup label="🌋 South American Andes" data-region="ANDES">
+                <optgroup label="🌋 South American Andes" data-region="ANDES" data-i18n-label="chipANDES">
                   <option value="Santiago">Santiago Logistics Base (Chile)</option>
                   <option value="Mendoza">Mendoza Trans-Andean Depot (Argentina)</option>
                   <option value="Valparaíso">Valparaíso Pacific Port Gateway (Chile)</option>
@@ -349,7 +299,7 @@
             <div class="form-group">
               <label class="form-label" data-i18n="destination">Destination District / Terminal</label>
               <select class="form-select" id="route-dest">
-                <optgroup label="🏔️ North East India (NER)" data-region="NER">
+                <optgroup label="🏔️ North East India (NER)" data-region="NER" data-i18n-label="chipNER">
                   <option value="Kohima" selected>Kohima Terminal (Nagaland)</option>
                   <option value="Itanagar">Itanagar Civil Center (Arunachal)</option>
                   <option value="Gangtok">Gangtok Transit Depot (Sikkim)</option>
@@ -360,7 +310,7 @@
                   <option value="Dimapur">Dimapur Transit Center (Nagaland)</option>
                   <option value="Silchar">Silchar Terminal (Assam)</option>
                 </optgroup>
-                <optgroup label="❄️ Northern Himalayan Arc" data-region="HIM">
+                <optgroup label="❄️ Northern Himalayan Arc" data-region="HIM" data-i18n-label="chipHIM">
                   <option value="Leh">Leh High-Altitude Base (Ladakh)</option>
                   <option value="Kargil">Kargil Border Terminal (Ladakh)</option>
                   <option value="Keylong">Keylong Trans-Himalayan Depot (Himachal)</option>
@@ -368,13 +318,13 @@
                   <option value="Joshimath">Joshimath High-Altitude Camp (Uttarakhand)</option>
                   <option value="Srinagar">Srinagar Freight Center (J&K)</option>
                 </optgroup>
-                <optgroup label="🇪🇺 European Alps" data-region="ALPS">
+                <optgroup label="🇪🇺 European Alps" data-region="ALPS" data-i18n-label="chipALPS">
                   <option value="Milan">Milan Freight Terminal (Italy)</option>
                   <option value="Bellinzona">Bellinzona Alpine Terminal (Switzerland)</option>
                   <option value="Innsbruck">Innsbruck Transit Terminal (Austria)</option>
                   <option value="Zurich">Zurich North Platform (Switzerland)</option>
                 </optgroup>
-                <optgroup label="🌋 South American Andes" data-region="ANDES">
+                <optgroup label="🌋 South American Andes" data-region="ANDES" data-i18n-label="chipANDES">
                   <option value="Mendoza">Mendoza Trans-Andean Depot (Argentina)</option>
                   <option value="Uspallata">Uspallata Border Terminal (Argentina)</option>
                   <option value="Santiago">Santiago Central Depot (Chile)</option>
@@ -389,35 +339,35 @@
             <div class="form-group">
               <label class="form-label" data-i18n="commodityType">Essential Cargo Category</label>
               <select class="form-select" id="route-cargo">
-                <option value="MEDICAL" selected>💉 Medical Vaccines, Insulin & Liquid O2 (Cold Chain)</option>
-                <option value="BLOOD_PLASMA">🩸 Blood Plasma, Antivenom & Surgical Kits (Emergency)</option>
-                <option value="FOOD_SECURITY">🌾 Humanitarian Food Grains & Rations (WFP / FCI)</option>
-                <option value="FUEL">⛽ POL Petroleum, Diesel & Aviation Fuel (Hazmat)</option>
-                <option value="EMERGENCY">🚨 Disaster Rescue Equipment, Boats & Comms (NDRF / Red Cross)</option>
-                <option value="WATER">💧 Emergency Drinking Water Purification Units</option>
-                <option value="HEAVY_PLANT">🚜 Heavy Road Clearing Machinery & BRO Spares</option>
+                <option value="MEDICAL" selected data-i18n="cargoMedical">💉 Medical Vaccines, Insulin & Liquid O2 (Cold Chain)</option>
+                <option value="BLOOD_PLASMA" data-i18n="cargoBlood">🩸 Blood Plasma, Antivenom & Surgical Kits (Emergency)</option>
+                <option value="FOOD_SECURITY" data-i18n="cargoFood">🌾 Humanitarian Food Grains & Rations (WFP / FCI)</option>
+                <option value="FUEL" data-i18n="cargoFuel">⛽ POL Petroleum, Diesel & Aviation Fuel (Hazmat)</option>
+                <option value="EMERGENCY" data-i18n="cargoRescue">🚨 Disaster Rescue Equipment, Boats & Comms (NDRF / Red Cross)</option>
+                <option value="WATER" data-i18n="cargoWater">💧 Emergency Drinking Water Purification Units</option>
+                <option value="HEAVY_PLANT" data-i18n="cargoHeavyPlant">🚜 Heavy Road Clearing Machinery & BRO Spares</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Fleet Transit Vehicle Class</label>
+              <label class="form-label" data-i18n="vehicleClassLabel">Fleet Transit Vehicle Class</label>
               <select class="form-select" id="route-vehicle">
-                <option value="HEAVY_4X4" selected>🚛 Heavy All-Terrain 4x4 Carrier (25-Ton Convoy Class)</option>
-                <option value="REEFER">❄️ Cryo-Reefer Insulated Van (Active 2-8°C Sensor)</option>
-                <option value="HAZMAT">⛽ Hazmat Fuel Tanker (Retarder & Hazard Escort)</option>
-                <option value="LIGHT_4WD">🚐 Light Mountain Quick-Response 4WD (NDRF Quick Recon)</option>
-                <option value="ELECTRIC">⚡ Heavy Hybrid / Electric Eco Mountain Hauler</option>
+                <option value="HEAVY_4X4" selected data-i18n="vehicleHeavy4x4">🚛 Heavy All-Terrain 4x4 Carrier (25-Ton Convoy Class)</option>
+                <option value="REEFER" data-i18n="vehicleReefer">❄️ Cryo-Reefer Insulated Van (Active 2-8°C Sensor)</option>
+                <option value="HAZMAT" data-i18n="vehicleHazmat">⛽ Hazmat Fuel Tanker (Retarder & Hazard Escort)</option>
+                <option value="LIGHT_4WD" data-i18n="vehicleLight4wd">🚐 Light Mountain Quick-Response 4WD (NDRF Quick Recon)</option>
+                <option value="ELECTRIC" data-i18n="vehicleElectric">⚡ Heavy Hybrid / Electric Eco Mountain Hauler</option>
               </select>
             </div>
           </div>
 
           <!-- Strategy Row -->
           <div class="form-group">
-            <label class="form-label">AI Optimization Strategy</label>
+            <label class="form-label" data-i18n="strategyLabel">AI Optimization Strategy</label>
             <select class="form-select" id="route-strategy">
-              <option value="MAX_RESILIENCE" selected>🛡️ Maximum Disaster Resilience (Avoid All Active Landslide / Avalanche Zones)</option>
-              <option value="FASTEST">⚡ Shortest Transit Duration (Emergency Priority Clearance)</option>
-              <option value="BRIDGE_CAPACITY">🌉 Heavy Axle Capacity (Verify Bridges Rating >35 Tons)</option>
-              <option value="WEATHER_SHIELD">🌧️ Weather & Monsoon Shielding (Bypass Active Cloudburst Zones)</option>
+              <option value="MAX_RESILIENCE" selected data-i18n="stratResilience">🛡️ Maximum Disaster Resilience (Avoid All Active Landslide / Avalanche Zones)</option>
+              <option value="FASTEST" data-i18n="stratFastest">⚡ Shortest Transit Duration (Emergency Priority Clearance)</option>
+              <option value="BRIDGE_CAPACITY" data-i18n="stratBridge">🌉 Heavy Axle Capacity (Verify Bridges Rating >35 Tons)</option>
+              <option value="WEATHER_SHIELD" data-i18n="stratWeather">🌧️ Weather & Monsoon Shielding (Bypass Active Cloudburst Zones)</option>
             </select>
           </div>
 
@@ -426,24 +376,24 @@
             <div class="weather-card-header">
               <div class="weather-card-title">
                 <span class="pulse-radar-dot"></span>
-                <span>REAL-TIME SATELLITE METEOROLOGICAL RADAR</span>
-                <span id="weather-live-tag" class="weather-live-tag">LIVE SATELLITE</span>
+                <span data-i18n="weatherRadarHeader">REAL-TIME SATELLITE METEOROLOGICAL RADAR</span>
+                <span id="weather-live-tag" class="weather-live-tag" data-i18n="weatherLiveTag">LIVE SATELLITE</span>
               </div>
-              <button type="button" id="btn-refresh-weather" class="btn-refresh-weather" title="Refresh Live Doppler Weather Telemetry">
-                <span class="refresh-icon">🔄</span> <span class="refresh-label">Sync Radar</span>
+              <button type="button" id="btn-refresh-weather" class="btn-refresh-weather" data-i18n-title="syncRadarBtn" title="Refresh Live Doppler Weather Telemetry">
+                <span class="refresh-icon">🔄</span> <span class="refresh-label" data-i18n="syncRadarBtn">Sync Radar</span>
               </button>
             </div>
 
             <div class="weather-telemetry-grid">
               <!-- Origin Weather Box -->
               <div class="weather-hub-box" id="weather-origin-box">
-                <div class="hub-direction-badge">ORIGIN HUB</div>
+                <div class="hub-direction-badge" data-i18n="originHubBadge">ORIGIN HUB</div>
                 <div class="hub-name-display" id="weather-origin-name">Guwahati Central Hub</div>
                 <div class="hub-temp-row">
                   <span class="weather-icon-large" id="weather-origin-icon">☀️</span>
                   <span class="weather-temp-val" id="weather-origin-temp">--°C</span>
                 </div>
-                <div class="weather-cond-label" id="weather-origin-cond">Connecting satellite radar...</div>
+                <div class="weather-cond-label" id="weather-origin-cond" data-i18n="connectingRadar">Connecting satellite radar...</div>
                 <div class="hub-metrics-row">
                   <span>💧 <strong id="weather-origin-hum">--%</strong></span>
                   <span>💨 <strong id="weather-origin-wind">-- km/h</strong></span>
@@ -453,24 +403,24 @@
 
               <!-- Corridor Atmospheric Summary -->
               <div class="weather-corridor-box" id="weather-corridor-box">
-                <div class="corridor-radar-heading">CORRIDOR ATMOSPHERE</div>
-                <div class="corridor-status-badge" id="weather-corridor-badge">ANALYZING RADAR...</div>
-                <div class="corridor-advice-text" id="weather-corridor-advice">Computing satellite cloudburst & mountain pass visibility...</div>
+                <div class="corridor-radar-heading" data-i18n="corridorAtmoBadge">CORRIDOR ATMOSPHERE</div>
+                <div class="corridor-status-badge" id="weather-corridor-badge" data-i18n="analyzingRadar">ANALYZING RADAR...</div>
+                <div class="corridor-advice-text" id="weather-corridor-advice" data-i18n="computingAtmosphere">Computing satellite cloudburst & mountain pass visibility...</div>
                 <div class="corridor-delay-impact">
-                  <span>Live Weather Delay:</span>
+                  <span data-i18n="liveWeatherDelayLabel">Live Weather Delay:</span>
                   <strong id="weather-corridor-delay" style="color:var(--neon-emerald);">+0.2 hrs</strong>
                 </div>
               </div>
 
               <!-- Destination Weather Box -->
               <div class="weather-hub-box" id="weather-dest-box">
-                <div class="hub-direction-badge">DESTINATION TERMINAL</div>
+                <div class="hub-direction-badge" data-i18n="destHubBadge">DESTINATION TERMINAL</div>
                 <div class="hub-name-display" id="weather-dest-name">Kohima Terminal</div>
                 <div class="hub-temp-row">
                   <span class="weather-icon-large" id="weather-dest-icon">🌤️</span>
                   <span class="weather-temp-val" id="weather-dest-temp">--°C</span>
                 </div>
-                <div class="weather-cond-label" id="weather-dest-cond">Connecting satellite radar...</div>
+                <div class="weather-cond-label" id="weather-dest-cond" data-i18n="connectingRadar">Connecting satellite radar...</div>
                 <div class="hub-metrics-row">
                   <span>💧 <strong id="weather-dest-hum">--%</strong></span>
                   <span>💨 <strong id="weather-dest-wind">-- km/h</strong></span>
@@ -480,8 +430,8 @@
             </div>
 
             <div class="weather-telemetry-footer">
-              <span>📡 Open-Meteo & IMD Meteorological Feeds</span>
-              <span id="weather-timestamp-display">Updated: Just now</span>
+              <span data-i18n="openMeteoFooter">📡 Open-Meteo & IMD Meteorological Feeds</span>
+              <span id="weather-timestamp-display" data-i18n="updatedJustNow">Updated: Just now</span>
             </div>
           </div>
 
@@ -502,7 +452,7 @@
     <div class="modal-dialog">
       <div class="modal-header">
         <div class="modal-title">
-          <span>📷</span> Field Official Disruption & Road Damage Report
+          <span>📷</span> <span data-i18n="fieldReportModalTitle">Field Official Disruption & Road Damage Report</span>
         </div>
         <button class="modal-close">&times;</button>
       </div>
@@ -512,10 +462,10 @@
             <div class="form-group">
               <label class="form-label" data-i18n="incidentType">Disruption Type</label>
               <select class="form-select" id="report-type">
-                <option value="Landslide">Landslide / Mudslide / Slope Sinking</option>
-                <option value="Flash Flood">Flash Flood / River Overwash</option>
-                <option value="Bridge Damage">Bridge Weakness / Load Limit Restriction</option>
-                <option value="Rockfall">High Altitude Rockfall / Avalanche / Snow Closure</option>
+                <option value="Landslide" data-i18n="optLandslide">Landslide / Mudslide / Slope Sinking</option>
+                <option value="Flash Flood" data-i18n="optFlood">Flash Flood / River Overwash</option>
+                <option value="Bridge Damage" data-i18n="optBridge">Bridge Weakness / Load Limit Restriction</option>
+                <option value="Rockfall" data-i18n="optRockfall">High Altitude Rockfall / Avalanche / Snow Closure</option>
               </select>
             </div>
             <div class="form-group">
@@ -525,28 +475,28 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Incident Headline</label>
+            <label class="form-label" data-i18n="incidentHeadline">Incident Headline</label>
             <input type="text" class="form-input" id="report-title" value="Major slope collapse blocking both carriageways" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Field Description & Clearance Estimate</label>
-            <textarea class="form-textarea" id="report-desc" rows="3" placeholder="Describe extent of debris, bridge condition, estimated clearance time..."></textarea>
+            <label class="form-label" data-i18n="fieldDesc">Field Description & Clearance Estimate</label>
+            <textarea class="form-textarea" id="report-desc" rows="3" data-i18n-placeholder="fieldDescPlaceholder" placeholder="Describe extent of debris, bridge condition, estimated clearance time..."></textarea>
           </div>
 
           <div class="form-group" id="photo-evidence-group">
             <label class="form-label">
-              <span data-i18n="photoEvidence">Geo-Tagged Photo Evidence</span> <span style="color:#ef4444;font-weight:700;">* (Mandatory Field Evidence)</span>
+              <span data-i18n="photoEvidence">Geo-Tagged Photo Evidence</span> <span style="color:#ef4444;font-weight:700;" data-i18n="mandatoryEvidence">* (Mandatory Field Evidence)</span>
             </label>
             <div class="photo-upload-zone" id="photo-upload-zone" onclick="document.getElementById('sim-file-input').click()">
               <input type="file" id="sim-file-input" style="display:none;" accept="image/*">
-              <span id="photo-upload-label">📸 Click to Capture / Upload Geo-Tagged Field Photograph</span>
-              <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">
+              <span id="photo-upload-label" data-i18n="photoUploadLabel">📸 Click to Capture / Upload Geo-Tagged Field Photograph</span>
+              <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;" data-i18n="photoUploadSub">
                 Auto-tags GPS Latitude, Longitude, Altitude & Local Timestamp. Works 100% Offline in remote mountain passes worldwide.
               </p>
             </div>
             <div id="photo-error-message" class="field-error-msg" style="display:none;">
-              <span>⚠️</span> <span>Photo evidence is mandatory! Field responders must attach photographic proof to verify disruption.</span>
+              <span>⚠️</span> <span data-i18n="photoErrorMsg">Photo evidence is mandatory! Field responders must attach photographic proof to verify disruption.</span>
             </div>
             <div id="photo-preview-container" style="display:none;margin-top:8px;position:relative;">
               <img id="photo-preview-img" src="" alt="Evidence Preview" style="width:100%;max-height:160px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--neon-cyan);">
@@ -573,7 +523,7 @@
     <div class="modal-dialog" style="max-width:580px;">
       <div class="modal-header">
         <div class="modal-title">
-          <span>🌐</span> Select Global Language (11 Supported)
+          <span>🌐</span> <span data-i18n="langModalTitle">Select Global Language (11 Supported)</span>
         </div>
         <button class="modal-close">&times;</button>
       </div>
@@ -633,18 +583,59 @@
     <div class="modal-dialog" style="max-width:560px;">
       <div class="modal-header">
         <div class="modal-title">
-          <span>📡</span> Offline Buffered Field Reports Queue
+          <span>📡</span> <span data-i18n="offlineModalTitle">Offline Buffered Field Reports Queue</span>
         </div>
         <button class="modal-close">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;">
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem;" data-i18n="offlineModalDesc">
           Geo-tagged incident reports recorded during zero-cellular mountain blackouts. Buffered safely in browser IndexedDB.
         </p>
         <div id="offline-reports-list" style="max-height:280px;overflow-y:auto;"></div>
         <button class="btn-primary-action" style="width:100%;margin-top:1rem;" onclick="window.fieldReports.syncPendingReports().then(() => window.app.showOfflineQueueModal())">
-          <span>🔄</span> Force Immediate Cloud Synchronization
+          <span>🔄</span> <span data-i18n="forceSyncBtn">Force Immediate Cloud Synchronization</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Registry & Owner Lookup Modal -->
+  <div class="modal-backdrop" id="vehicle-lookup-modal">
+    <div class="modal-dialog" style="max-width:620px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🔍</span> <span data-i18n="vehicleLookupModalTitle">Vehicle Registry & Owner Information Lookup</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.75rem;" data-i18n="vehicleLookupModalDesc">
+          Query official databases across <strong>Ladakh, Uttarakhand, Himachal Pradesh, Jammu & Kashmir, Chile, Argentina, and Odisha</strong>.
+        </p>
+
+        <form id="vehicle-lookup-form" style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+          <input type="text" id="vehicle-lookup-input" class="form-input" placeholder="e.g. LA-01-AB-1021, UK-01-AB-1021, HP-01-A-1021, JK-01-AB-1021, AB 102 AA, AB-CD-21" style="flex:1;" required>
+          <button type="submit" class="btn-primary-action" style="white-space:nowrap;padding:0.5rem 1rem;">
+            <span>🔎</span> <span data-i18n="searchMasterDb">Search Master DB</span>
+          </button>
+        </form>
+
+        <div style="margin-bottom:0.75rem;">
+          <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;" data-i18n="quickQuerySamples">Quick Query Samples:</span>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.35rem;">
+            <button type="button" class="quick-plate-btn" data-plate="LA-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">LA-01-AB-1021 (Ladakh)</button>
+            <button type="button" class="quick-plate-btn" data-plate="UK-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">UK-01-AB-1021 (UK)</button>
+            <button type="button" class="quick-plate-btn" data-plate="HP-01-A-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">HP-01-A-1021 (HP)</button>
+            <button type="button" class="quick-plate-btn" data-plate="JK-01-AB-1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">JK-01-AB-1021 (JK)</button>
+            <button type="button" class="quick-plate-btn" data-plate="AB 102 AA" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">AB 102 AA (Argentina)</button>
+            <button type="button" class="quick-plate-btn" data-plate="AB-CD-21" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">AB-CD-21 (Chile)</button>
+            <button type="button" class="quick-plate-btn" data-plate="OD 18 AB 1021" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--neon-cyan);padding:2px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">OD 18 AB 1021 (Odisha)</button>
+          </div>
+        </div>
+
+        <div id="vehicle-lookup-result" style="display:none;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1rem;">
+          <!-- Result injected dynamically -->
+        </div>
       </div>
     </div>
   </div>
@@ -652,25 +643,25 @@
   <!-- Floating Offline Notification Toast -->
   <div class="offline-sync-toast" id="offline-sync-toast">
     <span>📡</span>
-    <span id="toast-message-text" style="font-size:0.85rem;color:var(--text-primary);">Data Synced Successfully</span>
+    <span id="toast-message-text" style="font-size:0.85rem;color:var(--text-primary);" data-i18n="toastDataSynced">Data Synced Successfully</span>
   </div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Application JS Modules -->
-  <script src="js/i18n.js?v=20260919-v6"></script>
-  <script src="js/ai-prediction.js?v=20260919-v6"></script>
-  <script src="js/fleet-telemetry.js?v=20260919-v6"></script>
-  <script src="js/field-report.js?v=20260919-v6"></script>
-  <script src="js/map-engine.js?v=20260919-v6"></script>
-  <script src="js/app.js?v=20260919-v6"></script>
+  <script src="js/i18n.js?v=20260919-v8"></script>
+  <script src="js/ai-prediction.js?v=20260919-v8"></script>
+  <script src="js/fleet-telemetry.js?v=20260919-v8"></script>
+  <script src="js/field-report.js?v=20260919-v8"></script>
+  <script src="js/map-engine.js?v=20260919-v8"></script>
+  <script src="js/app.js?v=20260919-v8"></script>
 
   <!-- PWA Service Worker Registration with Instant Auto-Update -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20260919-v6').then((reg) => {
-          console.log('[SW] ServiceWorker v6 registered with scope:', reg.scope);
+        navigator.serviceWorker.register('./sw.js?v=20260919-v8').then((reg) => {
+          console.log('[SW] ServiceWorker registered with scope:', reg.scope);
           reg.update();
         }).catch((err) => {
           console.log('[SW] ServiceWorker registration skipped:', err);

@@ -9,6 +9,10 @@ class FleetTelemetryManager {
     this.subscribers = [];
     this.timer = null;
     this.isBackendConnected = false;
+
+    window.addEventListener('languageChanged', () => {
+      this.updateFleetPanel();
+    });
   }
 
   async initialize() {
@@ -159,6 +163,7 @@ class FleetTelemetryManager {
               category: bv.vehicle_type.includes('Med') || bv.vehicle_type.includes('Reefer') ? 'MEDICAL' : 'EMERGENCY',
               cargo: bv.cargo || 'Essential Relief Commodities',
               driver: bv.driver_name,
+              region: bv.region || 'Global',
               contact: bv.contact || '',
               lat: bv.lat || (26.1445 + (idx * 0.08)),
               lng: bv.lng || (91.7362 + (idx * 0.08)),
@@ -206,13 +211,15 @@ class FleetTelemetryManager {
     const fleetFeed = document.getElementById('fleet-telemetry-feed');
     if (!fleetFeed) return;
 
+    const t = (k, fallback) => (window.i18n ? window.i18n.get(k) : (fallback || k));
+
     if (this.vehicles.length === 0) {
       fleetFeed.innerHTML = `
         <div class="telemetry-card">
           <div class="truck-header">
-            <span class="truck-id">No Vehicles</span>
+            <span class="truck-id">${t('noVehicles', 'No Vehicles')}</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">No active supply convoys in database.</p>
+          <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${t('noActiveConvoys', 'No active supply convoys in database.')}</p>
         </div>
       `;
       return;
@@ -229,12 +236,22 @@ class FleetTelemetryManager {
       }
 
       const tempBadge = vehicle.tempCelsius !== undefined
-        ? `<span>Temp: <strong style="color:${vehicle.tempCelsius < 8 ? 'var(--neon-emerald)' : 'var(--neon-crimson)'};">${vehicle.tempCelsius}°C</strong></span>`
+        ? `<span>${t('labelTemp', 'Temp:')} <strong style="color:${vehicle.tempCelsius < 8 ? 'var(--neon-emerald)' : 'var(--neon-crimson)'};">${vehicle.tempCelsius}°C</strong></span>`
         : '';
 
       const badgeColor = vehicle.category === 'MEDICAL' 
         ? 'var(--neon-cyan)' 
         : (vehicle.category === 'EMERGENCY' ? 'var(--neon-crimson)' : 'var(--neon-amber)');
+
+      let etaDisplay = vehicle.eta || '';
+      if (etaDisplay.includes('Local')) {
+        etaDisplay = etaDisplay.replace('Local', t('labelLocal', 'Local'));
+      }
+      if (etaDisplay.includes('delay')) {
+        etaDisplay = etaDisplay.replace('delay', t('labelDelay', 'delay'));
+      }
+
+      const sosText = vehicle.sosReason ? vehicle.sosReason : t('sosAlertDesc', 'Mountain slope hazard ahead. AI rerouting engaged.');
 
       card.innerHTML = `
         <div class="truck-header">
@@ -249,13 +266,13 @@ class FleetTelemetryManager {
           ${vehicle.origin || 'Depot'} ➔ ${vehicle.destination || 'Terminal'}
         </div>
         <div class="truck-meta">
-          <span>Speed: <strong>${vehicle.speedKmH} km/h</strong></span>
+          <span>${t('labelSpeed', 'Speed:')} <strong>${vehicle.speedKmH} km/h</strong></span>
           ${tempBadge}
-          <span>ETA: <strong>${vehicle.eta}</strong></span>
+          <span>${t('labelEta', 'ETA:')} <strong>${etaDisplay}</strong></span>
         </div>
         ${vehicle.sos ? `
           <p style="font-size:0.7rem;color:#fca5a5;margin-top:6px;line-height:1.3;">
-            ⚠️ <strong>SOS ALERT:</strong> ${vehicle.sosReason || 'Mountain slope hazard ahead. AI rerouting engaged.'}
+            ${t('sosAlertTag', '⚠️ SOS ALERT:')} <strong>${sosText}</strong>
           </p>
         ` : ''}
       `;

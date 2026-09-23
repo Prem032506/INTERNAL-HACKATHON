@@ -1870,6 +1870,36 @@
           "lng": -68.8458
         }
       ]
+    },
+    {
+      "id": "ODISHA_GUNUPUR",
+      "name": "Odisha & Gunupur Sub-Division Lifeline Network",
+      "country": "India (Odisha)",
+      "centerLat": 19.0714,
+      "centerLng": 83.81488,
+      "zoom": 13,
+      "states": [
+        { "id": "GN_TOWN", "name": "Gunupur Town Center", "capital": "Gandhi Chowk", "lat": 19.0714, "lng": 83.81488, "vulnerabilityScore": 45, "riskStatus": "Operational (Urban Central Core)" },
+        { "id": "GN_SDH", "name": "Hospital & Healthcare Sector", "capital": "SDH Hospital Zone", "lat": 19.0717, "lng": 83.80931, "vulnerabilityScore": 72, "riskStatus": "High Priority (Emergency 24x7 Referral)" },
+        { "id": "GN_GIET", "name": "GIET Campus & University Zone", "capital": "Gobriguda SH-4", "lat": 19.0473, "lng": 83.8311, "vulnerabilityScore": 50, "riskStatus": "Moderate (Educational Hub)" },
+        { "id": "GN_RIVER", "name": "Vamsadhara River Corridor", "capital": "Bansadhara Bridge SH-4", "lat": 19.0664, "lng": 83.8258, "vulnerabilityScore": 84, "riskStatus": "Critical (Monsoon River Swell / Floods)" }
+      ],
+      "corridors": [
+        {
+          "id": "OD-01",
+          "name": "State Highway 4 (SH-4 Gunupur - Rayagada / Paralakhemundi)",
+          "type": "Arterial Highway & River Crossing",
+          "riskLevel": "Moderate",
+          "coordinates": [[19.0825, 83.8052], [19.0714, 83.81488], [19.0664, 83.8258], [19.0473, 83.8311]]
+        }
+      ],
+      "hubs": [
+        { "name": "Gandhi Chowk Town Center", "lat": 19.0714, "lng": 83.81488 },
+        { "name": "Gunupur Central Bus Station", "lat": 19.06926, "lng": 83.81228 },
+        { "name": "Govt. Sub-Divisional Hospital (SDH)", "lat": 19.0717, "lng": 83.80931 },
+        { "name": "GIET University Campus Hub", "lat": 19.0473, "lng": 83.8311 },
+        { "name": "Gunupur Railway Station", "lat": 19.0697, "lng": 83.81044 }
+      ]
     }
   ]
 }
